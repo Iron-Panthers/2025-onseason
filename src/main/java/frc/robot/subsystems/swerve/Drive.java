@@ -119,6 +119,7 @@ public class Drive extends SubsystemBase {
         "Swerve/Magnitude",
         MathUtil.clamp(
             Math.hypot(targetSpeeds.vxMetersPerSecond, targetSpeeds.vyMetersPerSecond), 0, 3));
+    Logger.recordOutput("Swerve/ArbitraryYaw", arbitraryYaw);
     if (headingController != null) {
       Logger.recordOutput(
           "Swerve/HeadingTarget", headingController.getTargetHeading().getRadians());

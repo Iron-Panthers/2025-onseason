@@ -90,7 +90,7 @@ public class DriveConstants {
       };
 
   public static final HeadingControllerConstants HEADING_CONTROLLER_CONSTANTS =
-      new HeadingControllerConstants(1.5, 0, 5, 200, 0.02);
+      new HeadingControllerConstants(4, 0, 5, 200, 0.002);
 
   public record DrivebaseConfig(
       double wheelRadius,
