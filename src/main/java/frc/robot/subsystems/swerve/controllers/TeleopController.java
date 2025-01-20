@@ -60,7 +60,9 @@ public class TeleopController {
 
   public Translation2d calculateLinearVelocity(double x, double y) {
 
-    Rotation2d theta = new Rotation2d(x, y);
+    Rotation2d theta;
+    if (x != 0 || y != 0) theta = new Rotation2d(x, y);
+    else theta = new Rotation2d(0);
 
     double magnitude = MathUtil.applyDeadband(Math.hypot(x, y), 0.1);
 
