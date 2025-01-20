@@ -16,17 +16,19 @@ public class DriveConstants {
             Units.inchesToMeters(22.5),
             Units.inchesToMeters(38.5),
             Units.inchesToMeters(33),
-            5, // FIXME
-            5);
+            4.5, // FIXME
+            5,
+            3);
         case ALPHA -> new DrivebaseConfig(
-            Units.inchesToMeters(1.94),
+            Units.inchesToMeters(1.903),
             Units.inchesToMeters(22.5),
             Units.inchesToMeters(38.5),
             Units.inchesToMeters(33),
             // 5.4764, // FIXME
             // 6.7759);
-            3.3,
-            5);
+            4,
+            5,
+            2.7);
       };
 
   public static final Translation2d[] MODULE_TRANSLATIONS =
@@ -68,9 +70,9 @@ public class DriveConstants {
   public static final ModuleConstants MODULE_CONSTANTS =
       switch (getRobotType()) {
         case PROG, SIM -> new ModuleConstants(
-            new Gains(0, 0, 0, 50, 0, 0), // revisit kP
+            new Gains(0.25, 2.26, 0, 50, 0, 0), // revisit kP
             new MotionProfileGains(4, 64, 640), // revisit all
-            new Gains(0, 0, 0, 0, 0, 0), // FIXME placeholder, to do
+            new Gains(0.3, 0.63, 0, 1.5, 0, 0), // FIXME placeholder, to do
             12.8,
             6.75,
             3.125);
@@ -86,8 +88,11 @@ public class DriveConstants {
   public static final TrajectoryFollowerConstants TRAJECTORY_CONFIG =
       switch (getRobotType()) {
         case PROG, SIM -> new TrajectoryFollowerConstants(0, 0, 0, 0);
-        case ALPHA -> new TrajectoryFollowerConstants(15, 0, 0, 0);
+        case ALPHA -> new TrajectoryFollowerConstants(13, 0, 11, 0);
       };
+
+  public static final HeadingControllerConstants HEADING_CONTROLLER_CONSTANTS =
+      new HeadingControllerConstants(2.7, 0, 5, 200, 0.002);
 
   public record DrivebaseConfig(
       double wheelRadius,
@@ -95,7 +100,8 @@ public class DriveConstants {
       double bumperWidthX,
       double bumperWidthY,
       double maxLinearVelocity,
-      double maxAngularVelocity) {}
+      double maxAngularVelocity,
+      double maxLinearAcceleration) {}
 
   public record ModuleConfig(
       int driveID,
@@ -119,6 +125,10 @@ public class DriveConstants {
   public record Gains(double kS, double kV, double kA, double kP, double kI, double kD) {}
 
   public record MotionProfileGains(double cruiseVelocity, double acceleration, double jerk) {}
+
+  /* tolerance in degrees */
+  public record HeadingControllerConstants(
+      double kP, double kD, double maxVelocity, double maxAcceleration, double tolerance) {}
 
   private enum Mk4iReductions {
     MK4I_L3((50 / 14) * (16 / 28) * (45 / 15)),

@@ -1,12 +1,11 @@
 package frc.robot.subsystems.swerve;
 
-import static frc.robot.subsystems.swerve.DriveConstants.DRIVE_CONFIG;
 import static frc.robot.subsystems.swerve.DriveConstants.KINEMATICS;
 
 import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -15,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotState;
+import frc.robot.subsystems.swerve.controllers.HeadingController;
 import frc.robot.subsystems.swerve.controllers.TeleopController;
 import frc.robot.subsystems.swerve.controllers.TrajectoryController;
 import java.util.Arrays;
@@ -43,6 +43,7 @@ public class Drive extends SubsystemBase {
 
   private final TeleopController teleopController;
   private TrajectoryController trajectoryController = null;
+  private HeadingController headingController = null;
 
   public Drive(GyroIO gyroIO, ModuleIO fl, ModuleIO fr, ModuleIO bl, ModuleIO br) {
     this.gyroIO = gyroIO;
@@ -77,11 +78,16 @@ public class Drive extends SubsystemBase {
     RobotState.getInstance()
         .addOdometryMeasurement(
             new RobotState.OdometryMeasurement(
-                wheelPositions, gyroInputs.yawPosition, Timer.getFPGATimestamp()));
+                wheelPositions, arbitraryYaw, Timer.getFPGATimestamp()));
 
     switch (driveMode) {
       case TELEOP -> {
         targetSpeeds = teleopController.update();
+        if (headingController != null) {
+          // 0.0001 to make the wheels stop in a diamond shape instead of straight so they do not
+          // vibrate
+          targetSpeeds.omegaRadiansPerSecond = headingController.update() + 0.0001;
+        }
       }
       case TRAJECTORY -> {
         targetSpeeds = trajectoryController.update();
@@ -96,16 +102,25 @@ public class Drive extends SubsystemBase {
         ChassisSpeeds.discretize(targetSpeeds, Constants.PERIODIC_LOOP_SEC);
 
     SwerveModuleState[] moduleTargetStates = KINEMATICS.toSwerveModuleStates(discretizedSpeeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(
-        moduleTargetStates, DRIVE_CONFIG.maxLinearVelocity());
+    // SwerveDriveKinematics.desaturateWheelSpeeds(
+    //     moduleTargetStates, DRIVE_CONFIG.maxLinearVelocity()); //We assume module will limit
 
     for (int i = 0; i < modules.length; i++) {
       modules[i].runToSetpoint(moduleTargetStates[i]);
     }
-
     Logger.recordOutput("Swerve/ModuleStates", moduleTargetStates);
     Logger.recordOutput("Swerve/TargetSpeeds", targetSpeeds);
     Logger.recordOutput("Swerve/DriveMode", driveMode);
+    Logger.recordOutput(
+        "Swerve/Magnitude",
+        MathUtil.clamp(
+            Math.hypot(targetSpeeds.vxMetersPerSecond, targetSpeeds.vyMetersPerSecond), 0, 3));
+    Logger.recordOutput("Swerve/ArbitraryYaw", arbitraryYaw);
+    if (headingController != null) {
+      Logger.recordOutput(
+          "Swerve/HeadingTarget", headingController.getTargetHeading().getRadians());
+      Logger.recordOutput("Swerve/HeadingOutput", headingController.update());
+    }
   }
 
   public void driveTeleopController(double xAxis, double yAxis, double omega) {
@@ -135,6 +150,7 @@ public class Drive extends SubsystemBase {
 
   private void zeroGyro() {
     gyroYawOffset = gyroInputs.yawPosition;
+    headingController = null;
   }
 
   public Command zeroGyroCommand() {
@@ -151,5 +167,19 @@ public class Drive extends SubsystemBase {
   @AutoLogOutput(key = "Swerve/RobotSpeeds")
   public ChassisSpeeds getRobotSpeeds() {
     return KINEMATICS.toChassisSpeeds(getModuleStates());
+  }
+
+  public double setTargetHeading(Rotation2d targetHeading) {
+    if (headingController == null) {
+      headingController = new HeadingController(targetHeading);
+    } else {
+      headingController.setTargeHeading(targetHeading);
+    }
+
+    return targetHeading.getRadians();
+  }
+
+  public void clearHeadingControl() {
+    headingController = null;
   }
 }
