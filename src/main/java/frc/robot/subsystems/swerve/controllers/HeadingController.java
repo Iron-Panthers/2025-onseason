@@ -38,7 +38,7 @@ public class HeadingController {
             RobotState.getInstance().getOdometryPose().getRotation().getRadians(),
             targetHeading.getRadians());
 
-    return Math.abs(output) > 0.02 ? output : 0; //To prevent jittering 
+    return Math.abs(output) > 0.02 ? output : 0; // To prevent jittering
   }
 
   @AutoLogOutput(key = "Swerve/AtTarget")
