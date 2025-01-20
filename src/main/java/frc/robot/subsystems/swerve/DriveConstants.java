@@ -28,7 +28,7 @@ public class DriveConstants {
             // 6.7759);
             4,
             5,
-            3);
+            2.7);
       };
 
   public static final Translation2d[] MODULE_TRANSLATIONS =
@@ -92,7 +92,7 @@ public class DriveConstants {
       };
 
   public static final HeadingControllerConstants HEADING_CONTROLLER_CONSTANTS =
-      new HeadingControllerConstants(4, 0, 5, 200, 0.002);
+      new HeadingControllerConstants(2.7, 0, 5, 200, 0.002);
 
   public record DrivebaseConfig(
       double wheelRadius,
