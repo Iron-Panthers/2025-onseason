@@ -10,7 +10,7 @@ public class Pivot extends GenericSuperstructure<Pivot.PivotTarget> {
     SETUP_L1(0),
     SETUP_L2(30),
     SETUP_L3(30),
-    SETUP_L4(30),
+    SETUP_L4(45),
     SCORE_L1(0),
     SCORE_L2(20),
     SCORE_L3(20),
