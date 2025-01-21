@@ -195,9 +195,9 @@ public class Drive extends SubsystemBase {
     }
 
     if (headingController == null) {
-      headingController = new HeadingController(new Rotation2d(closest / (2 * Math.PI))); // convert to radians
+      headingController = new HeadingController(new Rotation2d(Math.toRadians(closest))); // convert to radians
     } else {
-      headingController.setTargeHeading(new Rotation2d(closest / (2 * Math.PI)));
+      headingController.setTargeHeading(new Rotation2d(Math.toRadians(closest)));
     }
   }
 
