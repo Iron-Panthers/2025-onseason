@@ -119,11 +119,9 @@ public class RobotContainer {
                       -driverA.getLeftX(),
                       driverA.getLeftTriggerAxis() - driverA.getRightTriggerAxis());
                   if (Math.abs(driverA.getRightY()) > 0.2 || Math.abs(driverA.getRightX()) > 0.2) {
-                    swerve.setTargetHeading(
-                        new Rotation2d(
-                            MathUtil.applyDeadband(-driverA.getRightY(), 0.1),
-                            MathUtil.applyDeadband(
-                                -driverA.getRightX(), 0.1))); // FIXME to circular deadband
+                    swerve.snapTargetHeading(new Rotation2d(
+                      MathUtil.applyDeadband(-driverA.getRightY(), 0.1),
+                      MathUtil.applyDeadband(-driverA.getRightX(), 0.1))); // FIXME apply circular
                   }
                   if (Math.abs(driverA.getLeftTriggerAxis()) > 0.1
                       || Math.abs(driverA.getRightTriggerAxis()) > 0.1) {

@@ -8,6 +8,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
 import frc.robot.RobotState;
+import frc.robot.subsystems.swerve.DriveConstants;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 
 public class HeadingController {
