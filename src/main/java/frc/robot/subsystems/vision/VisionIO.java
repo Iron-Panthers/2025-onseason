@@ -8,9 +8,10 @@ public interface VisionIO {
   public class VisionIOInputs {
     public boolean connected = false;
     public PoseObservation[] observations = new PoseObservation[0];
+    public int[] tagIDs = new int[0];
   }
 
-  // from EstimatedRobotPose
+  // from photonvision/**/EstimatedRobotPose
   public static record PoseObservation(
       double timestamp,
       Pose3d estimatedPose,
