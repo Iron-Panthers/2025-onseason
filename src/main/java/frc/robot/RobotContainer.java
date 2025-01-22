@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.Mode;
@@ -227,8 +226,10 @@ public class RobotContainer {
                 rollers.setTargetCommand(RollerState.INTAKE),
                 elevator.goToPositionCommand(ElevatorTarget.INTAKE),
                 new WaitUntilCommand(() -> rollers.getTargetState() == RollerState.HOLD),
-                new ScoringSequenceCommand(
-                        elevator, pivot, rollers, ElevatorTarget.L3, PivotTarget.SETUP_L3)
+                elevator.goToPositionCommand(ElevatorTarget.SETUP_INTAKE),
+                pivot.goToPositionCommand(PivotTarget.TOP),
+                elevator
+                    .goToPositionCommand(ElevatorTarget.BOTTOM)
                     .alongWith(rollers.setTargetCommand(RollerState.IDLE))));
 
     driverB // eject
@@ -237,11 +238,8 @@ public class RobotContainer {
             rollers
                 .setTargetCommand(Rollers.RollerState.EJECT)
                 .alongWith(pivot.goToPositionCommand(PivotTarget.SCORE_L4))
-                .andThen(
-                    new WaitCommand(1)
-                        .andThen(elevator.goToPositionCommand(ElevatorTarget.INTAKE))
-                        .alongWith(pivot.goToPositionCommand(PivotTarget.TOP))
-                        .alongWith(rollers.setTargetCommand(RollerState.IDLE))));
+                .andThen(elevator.goToPositionCommand(ElevatorTarget.L1))
+                .andThen(rollers.setTargetCommand(RollerState.IDLE)));
   }
 
   private void configureAutos() {

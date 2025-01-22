@@ -6,10 +6,10 @@ import frc.robot.subsystems.superstructure.GenericSuperstructure;
 
 public class Pivot extends GenericSuperstructure<Pivot.PivotTarget> {
   public enum PivotTarget implements GenericSuperstructure.PositionTarget {
-    TOP(90), // FIXME: Add zeroing code to make sure the robot ACTUALLY goes to 0
+    TOP(90),
     SETUP_L1(0),
-    SETUP_L2(30),
-    SETUP_L3(30),
+    SETUP_L2(90),
+    SETUP_L3(90),
     SETUP_L4(45),
     SCORE_L1(0),
     SCORE_L2(20),
