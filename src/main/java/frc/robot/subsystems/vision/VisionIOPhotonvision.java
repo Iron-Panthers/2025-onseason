@@ -28,7 +28,7 @@ public class VisionIOPhotonvision implements VisionIO {
   public void updateInputs(VisionIOInputs inputs) {
     inputs.connected = camera.isConnected();
     List<PhotonPipelineResult> results = camera.getAllUnreadResults();
-    PoseObservation[] observations = new PoseObservation[results.size()];
+    List<PoseObservation> observations = new ArrayList<PoseObservation>();
 
     List<Short> allTagIDs = new ArrayList<Short>();
 
@@ -56,10 +56,10 @@ public class VisionIOPhotonvision implements VisionIO {
               frame.getMultiTagResult().get().estimatedPose.ambiguity,
               results.get(frameIndex).targets.size(),
               totalDistance / results.get(frameIndex).targets.size());
-      observations[frameIndex] = observation;
+      observations.add(observation);
     }
 
-    inputs.observations = observations;
+    inputs.observations = observations.toArray(new PoseObservation[observations.size()]);
 
     inputs.tagIDs = new int[allTagIDs.size()];
     int i = 0;

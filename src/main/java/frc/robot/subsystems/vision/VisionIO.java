@@ -5,7 +5,7 @@ import org.littletonrobotics.junction.AutoLog;
 
 public interface VisionIO {
   @AutoLog
-  public class VisionIOInputs {
+  public static class VisionIOInputs {
     public boolean connected = false;
     public PoseObservation[] observations = new PoseObservation[0];
     public int[] tagIDs = new int[0];
