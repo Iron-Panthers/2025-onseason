@@ -26,9 +26,9 @@ public class DriveConstants {
             Units.inchesToMeters(33),
             // 5.4764, // FIXME
             // 6.7759);
-            3.3,
+            3.1,
             5,
-            2.7);
+            3);
       };
 
   public static final Translation2d[] MODULE_TRANSLATIONS =
@@ -92,7 +92,9 @@ public class DriveConstants {
       };
 
   public static final HeadingControllerConstants HEADING_CONTROLLER_CONSTANTS =
-      new HeadingControllerConstants(2.7, 0, 5, 200, 0.002);
+      new HeadingControllerConstants(3, 0, 5, 200, 0.002);
+
+  public static final double[] REEF_SNAP_ANGLES = {-120, -60, 0, 60, 120, 180};
 
   public record DrivebaseConfig(
       double wheelRadius,
