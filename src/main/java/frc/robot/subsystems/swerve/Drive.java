@@ -179,28 +179,6 @@ public class Drive extends SubsystemBase {
     return targetHeading.getRadians();
   }
 
-  public static double relativeAngularDifference(double currentAngle, double newAngle) {
-    double a = ((currentAngle - newAngle) % 360 + 360) % 360;
-    double b = ((currentAngle - newAngle) % 360 + 360) % 360;
-    return a < b ? a : -b;
-  }
-
-  public void snapTargetHeading(Rotation2d targetHeading) {
-    double closest = DriveConstants.REEF_SNAP_ANGLES[0];
-    for (double snap : DriveConstants.REEF_SNAP_ANGLES) {
-      if (Math.abs(relativeAngularDifference(targetHeading.getDegrees(), snap))
-          < Math.abs(relativeAngularDifference(targetHeading.getDegrees(), closest))) {
-        closest = snap;
-      }
-    }
-
-    if (headingController == null) {
-      headingController = new HeadingController(new Rotation2d(Math.toRadians(closest))); // convert to radians
-    } else {
-      headingController.setTargeHeading(new Rotation2d(Math.toRadians(closest)));
-    }
-  }
-
   public void clearHeadingControl() {
     headingController = null;
   }
