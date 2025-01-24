@@ -26,7 +26,7 @@ public class DriveConstants {
             Units.inchesToMeters(33),
             // 5.4764, // FIXME
             // 6.7759);
-            3.1,
+            2.7,
             5,
             3);
       };

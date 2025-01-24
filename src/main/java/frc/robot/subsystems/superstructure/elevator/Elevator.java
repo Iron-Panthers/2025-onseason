@@ -11,7 +11,7 @@ public class Elevator extends GenericSuperstructure<Elevator.ElevatorTarget> {
     L4(53.75),
     SOURCE(20),
     SETUP_INTAKE(22),
-    INTAKE(17.5); // FIXME
+    INTAKE(16.5); // FIXME
     private double position = 0;
 
     private ElevatorTarget(double position) {
