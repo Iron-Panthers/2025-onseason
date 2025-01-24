@@ -13,8 +13,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
 import frc.robot.autonomous.PathCommand;
 import frc.robot.subsystems.superstructure.Superstructure;
@@ -118,19 +120,27 @@ public class RobotContainer {
                       -driverA.getLeftY(),
                       -driverA.getLeftX(),
                       driverA.getLeftTriggerAxis() - driverA.getRightTriggerAxis());
-                  if (Math.abs(driverA.getRightY()) > 0.2 || Math.abs(driverA.getRightX()) > 0.2) {
-                    swerve.setTargetHeading(
-                        new Rotation2d(
-                            MathUtil.applyDeadband(-driverA.getRightY(), 0.1),
-                            MathUtil.applyDeadband(
-                                -driverA.getRightX(), 0.1))); // FIXME to circular deadband
-                  }
                   if (Math.abs(driverA.getLeftTriggerAxis()) > 0.1
                       || Math.abs(driverA.getRightTriggerAxis()) > 0.1) {
                     swerve.clearHeadingControl();
                   }
                 })
             .withName("Drive Teleop"));
+
+    new Trigger(
+            () -> (Math.abs(driverA.getRightY()) > 0.2) || (Math.abs(driverA.getRightX()) > 0.2))
+        .whileTrue(
+            new FunctionalCommand(
+                () -> {},
+                () ->
+                    swerve.setTargetHeading(
+                        calculateSnapTargetHeading(
+                            new Rotation2d(
+                                Math.atan2(
+                                    MathUtil.applyDeadband(-driverA.getRightX(), 0.1),
+                                    MathUtil.applyDeadband(-driverA.getRightY(), 0.1))))),
+                interrupted -> {},
+                () -> false));
 
     driverA.start().onTrue(swerve.zeroGyroCommand());
 
@@ -222,5 +232,22 @@ public class RobotContainer {
 
   public Command getAutoCommand() {
     return autoChooser.getSelected();
+  }
+
+  public static double relativeAngularDifference(double currentAngle, double newAngle) {
+    double a = ((currentAngle - newAngle) % 360 + 360) % 360;
+    double b = ((currentAngle - newAngle) % 360 + 360) % 360;
+    return a < b ? a : -b;
+  }
+
+  public static Rotation2d calculateSnapTargetHeading(Rotation2d targetHeading) {
+    double closest = DriveConstants.REEF_SNAP_ANGLES[0];
+    for (double snap : DriveConstants.REEF_SNAP_ANGLES) {
+      if (Math.abs(relativeAngularDifference(targetHeading.getDegrees(), snap))
+          < Math.abs(relativeAngularDifference(targetHeading.getDegrees(), closest))) {
+        closest = snap;
+      }
+    }
+    return new Rotation2d(Math.toRadians(closest));
   }
 }
