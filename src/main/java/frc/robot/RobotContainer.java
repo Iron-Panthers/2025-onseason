@@ -213,7 +213,7 @@ public class RobotContainer {
 
     AutoBuilder.configureCustom(
         (path) -> new PathCommand(path, flipAlliance, swerve, passRobotConfig),
-        () -> RobotState.getInstance().getOdometryPose(),
+        () -> RobotState.getInstance().getEstimatedPose(),
         (pose) -> RobotState.getInstance().resetPose(pose),
         flipAlliance,
         true);

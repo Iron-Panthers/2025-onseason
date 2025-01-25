@@ -1,6 +1,5 @@
 package frc.robot.subsystems.vision;
 
-import edu.wpi.first.math.geometry.Transform3d;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +20,7 @@ public class VisionIOPhotonvision implements VisionIO {
         new PhotonPoseEstimator(
             VisionConstants.APRIL_TAG_FIELD_LAYOUT,
             PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
-            new Transform3d()); // FIXME transform
+            VisionConstants.CAMERA_TRANSFORM[index - 1]);
   }
 
   @Override
@@ -44,6 +43,7 @@ public class VisionIOPhotonvision implements VisionIO {
       for (PhotonTrackedTarget target : frame.getTargets()) {
         totalDistance += target.getBestCameraToTarget().getTranslation().getNorm();
       }
+      System.out.println("processed" + frameIndex);
 
       // FIXME
       List<Short> FIDs = frame.getMultiTagResult().get().fiducialIDsUsed;

@@ -33,8 +33,7 @@ public class TrajectoryController {
 
   // reference pathplannerlib/**/PPHolonomicDriveController.java
   public ChassisSpeeds update() {
-    Pose2d currentPose =
-        RobotState.getInstance().getOdometryPose(); // FIXME change to estimatedpose
+    Pose2d currentPose = RobotState.getInstance().getEstimatedPose();
 
     // sample trajectory
     PathPlannerTrajectoryState setpointState = trajectory.sample(timer.get());

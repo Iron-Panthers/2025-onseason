@@ -29,13 +29,13 @@ public class HeadingController {
             Constants.PERIODIC_LOOP_SEC);
     controller.setTolerance(Units.degreesToRadians(HEADING_CONTROLLER_CONSTANTS.tolerance()));
     controller.enableContinuousInput(-Math.PI, Math.PI);
-    controller.reset(RobotState.getInstance().getOdometryPose().getRotation().getRadians());
+    controller.reset(RobotState.getInstance().getEstimatedPose().getRotation().getRadians());
   }
 
   public double update() {
     double output =
         controller.calculate(
-            RobotState.getInstance().getOdometryPose().getRotation().getRadians(),
+            RobotState.getInstance().getEstimatedPose().getRotation().getRadians(),
             targetHeading.getRadians());
 
     return Math.abs(output) > 0.02 ? output : 0; // To prevent jittering
