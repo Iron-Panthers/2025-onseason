@@ -4,8 +4,10 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -40,7 +42,7 @@ public class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
 
   protected final VoltageOut voltageOutput = new VoltageOut(0).withUpdateFreqHz(0);
   private final NeutralOut neutralOutput = new NeutralOut();
-  private final PositionVoltage positionControl = new PositionVoltage(0).withUpdateFreqHz(0);
+  private final MotionMagicVoltage positionControl = new MotionMagicVoltage(0).withUpdateFreqHz(0);
 
   /**
    * Constructs a new GenericSuperstructureIOTalonFX.
@@ -185,7 +187,10 @@ public class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
       double kV,
       double kA,
       double kG,
+      double motionMagicAcceleration,
+      double motionMagicCruiseVelocity,
       GravityTypeValue gravityTypeValue) {
+
     Slot0Configs gainsConfig = new Slot0Configs();
     gainsConfig.kP = kP;
     gainsConfig.kI = kI;
@@ -195,7 +200,12 @@ public class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
     gainsConfig.kA = kA;
     gainsConfig.kG = kG;
     gainsConfig.GravityType = gravityTypeValue;
+    
+    MotionMagicConfigs motionMagicConfig = new MotionMagicConfigs();
+    motionMagicConfig.MotionMagicAcceleration = motionMagicAcceleration;
+    motionMagicConfig.MotionMagicCruiseVelocity = motionMagicCruiseVelocity;
 
     talon.getConfigurator().apply(gainsConfig);
+    talon.getConfigurator().apply(motionMagicConfig);
   }
 }
