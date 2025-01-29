@@ -9,16 +9,23 @@ import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.subsystems.swerve.DriveConstants;
 import org.littletonrobotics.junction.AutoLogOutput;
 
 /* based on wpimath/../PoseEstimator.java */
 public class RobotState {
+  public static final double fieldSizeX = Units.feetToMeters(57.573);
+  public static final double fieldSizeY = Units.feetToMeters(26.417);
+
   public record OdometryMeasurement(
       SwerveModulePosition[] wheelPositions, Rotation2d gyroAngle, double timestamp) {}
 
@@ -27,6 +34,10 @@ public class RobotState {
   private static final double poseBufferSizeSeconds = 2; // shorter?
   private static final Matrix<N3, N1> stateStdDevs =
       VecBuilder.fill(0.1, 0.1, 0.1); // FIXME defaults
+  private static final Pose2d initialPose =
+      DriverStation.getAlliance().get() == Alliance.Red
+          ? mirrorPose(DriveConstants.INITAL_POSE)
+          : DriveConstants.INITAL_POSE;
 
   private final Matrix<N3, N1> matrixQ = new Matrix<>(Nat.N3(), Nat.N1());
   private final Matrix<N3, N3> kalmanGain = new Matrix<>(Nat.N3(), Nat.N3());
@@ -34,8 +45,8 @@ public class RobotState {
   private TimeInterpolatableBuffer<Pose2d> poseBuffer =
       TimeInterpolatableBuffer.createBuffer(poseBufferSizeSeconds);
 
-  private Pose2d odometryPose = new Pose2d();
-  private Pose2d estimatedPose = new Pose2d(); // vision adjusted
+  private Pose2d odometryPose = initialPose;
+  private Pose2d estimatedPose = initialPose; // vision adjusted
 
   private SwerveModulePosition[] lastWheelPositions =
       new SwerveModulePosition[] {
@@ -147,5 +158,11 @@ public class RobotState {
   @AutoLogOutput(key = "RobotState/EstimatedPose")
   public Pose2d getEstimatedPose() {
     return estimatedPose;
+  }
+
+  public static Pose2d mirrorPose(Pose2d pose) {
+    return new Pose2d(
+        new Translation2d(fieldSizeX - pose.getX(), pose.getY()),
+        Rotation2d.kPi.minus(pose.getRotation()));
   }
 }

@@ -78,7 +78,7 @@ public class Drive extends SubsystemBase {
     RobotState.getInstance()
         .addOdometryMeasurement(
             new RobotState.OdometryMeasurement(
-                wheelPositions, arbitraryYaw, Timer.getFPGATimestamp()));
+                wheelPositions, gyroInputs.yawPosition, Timer.getFPGATimestamp()));
 
     switch (driveMode) {
       case TELEOP -> {
@@ -171,7 +171,7 @@ public class Drive extends SubsystemBase {
 
   public double setTargetHeading(Rotation2d targetHeading) {
     if (headingController == null) {
-      headingController = new HeadingController(targetHeading);
+      headingController = new HeadingController(() -> arbitraryYaw, targetHeading);
     } else {
       headingController.setTargeHeading(targetHeading);
     }

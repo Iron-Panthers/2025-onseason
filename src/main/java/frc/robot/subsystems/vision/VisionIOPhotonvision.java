@@ -29,7 +29,7 @@ public class VisionIOPhotonvision implements VisionIO {
     List<PhotonPipelineResult> results = camera.getAllUnreadResults();
     List<PoseObservation> observations = new ArrayList<PoseObservation>();
 
-    List<Short> allTagIDs = new ArrayList<Short>();
+    List<Integer> allTagIDs = new ArrayList<Integer>();
 
     for (int frameIndex = 0; frameIndex < results.size(); ++frameIndex) {
       PhotonPipelineResult frame = results.get(frameIndex);
@@ -43,17 +43,18 @@ public class VisionIOPhotonvision implements VisionIO {
       for (PhotonTrackedTarget target : frame.getTargets()) {
         totalDistance += target.getBestCameraToTarget().getTranslation().getNorm();
       }
-      System.out.println("processed" + frameIndex);
 
-      // FIXME
-      List<Short> FIDs = frame.getMultiTagResult().get().fiducialIDsUsed;
+      List<Integer> FIDs = new ArrayList<Integer>();
+      for (PhotonTrackedTarget target : estimation.targetsUsed) {
+        FIDs.add(target.getFiducialId());
+      }
       allTagIDs.addAll(FIDs);
 
       var observation =
           new PoseObservation(
               frame.getTimestampSeconds(),
               estimation.estimatedPose,
-              frame.getMultiTagResult().get().estimatedPose.ambiguity,
+              estimation.targetsUsed.get(0).poseAmbiguity,
               results.get(frameIndex).targets.size(),
               totalDistance / results.get(frameIndex).targets.size());
       observations.add(observation);
@@ -61,10 +62,6 @@ public class VisionIOPhotonvision implements VisionIO {
 
     inputs.observations = observations.toArray(new PoseObservation[observations.size()]);
 
-    inputs.tagIDs = new int[allTagIDs.size()];
-    int i = 0;
-    for (int id : allTagIDs) {
-      inputs.tagIDs[i++] = id;
-    }
+    inputs.tagIDs = allTagIDs.stream().mapToInt(i -> i).toArray();
   }
 }

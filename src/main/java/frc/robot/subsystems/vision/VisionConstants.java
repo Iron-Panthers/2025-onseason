@@ -11,7 +11,7 @@ public class VisionConstants {
 
   // index 0 -> arducam-1, etc
   public static final Transform3d[] CAMERA_TRANSFORM = {
-    new Transform3d(0.2477, 0, 0.4255, new Rotation3d(0, -0.8727, 0))
+    new Transform3d(0.258, 0, 0.454, new Rotation3d(Math.PI, -0.6109, 0))
   };
 
   public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT =
