@@ -129,6 +129,40 @@ public class RobotContainer {
     if (pivot == null) {
       pivot = new Pivot(new PivotIO() {});
     }
+    NamedCommands.registerCommand(
+        "Zero",
+        new ParallelCommandGroup(
+            elevator.zeroingCommand().andThen(elevator.goToPositionCommand(ElevatorTarget.BOTTOM)),
+            pivot.zeroingCommand().andThen(pivot.goToPositionCommand(PivotTarget.TOP))));
+    NamedCommands.registerCommand(
+        "Setup Intake",
+        new ScoringSequenceCommand(
+            elevator, pivot, rollers, ElevatorTarget.L3, PivotTarget.SETUP_L3));
+    NamedCommands.registerCommand(
+        "Intake",
+        new SequentialCommandGroup(
+            new ParallelCommandGroup(
+                elevator.goToPositionCommand(ElevatorTarget.SETUP_INTAKE),
+                pivot.goToPositionCommand(PivotTarget.INTAKE)),
+            rollers.setTargetCommand(RollerState.INTAKE),
+            elevator.goToPositionCommand(ElevatorTarget.INTAKE),
+            new WaitUntilCommand(() -> rollers.getTargetState() == RollerState.HOLD),
+            elevator.goToPositionCommand(ElevatorTarget.SETUP_INTAKE),
+            pivot.goToPositionCommand(PivotTarget.TOP),
+            elevator
+                .goToPositionCommand(ElevatorTarget.BOTTOM)
+                .alongWith(rollers.setTargetCommand(RollerState.IDLE))));
+    NamedCommands.registerCommand(
+        "L4",
+        new ScoringSequenceCommand(
+            elevator, pivot, rollers, ElevatorTarget.L4, PivotTarget.SETUP_L4));
+    NamedCommands.registerCommand(
+        "Score",
+        rollers
+            .setTargetCommand(Rollers.RollerState.EJECT)
+            .alongWith(pivot.goToPositionCommand(PivotTarget.SCORE_L4))
+            .andThen(elevator.goToPositionCommand(ElevatorTarget.L1))
+            .andThen(rollers.setTargetCommand(RollerState.IDLE)));
     // superstructure = new Superstructure(elevator, pivot);
     configureBindings();
     configureAutos();
