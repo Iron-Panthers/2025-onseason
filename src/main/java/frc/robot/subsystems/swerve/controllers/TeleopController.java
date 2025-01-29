@@ -46,9 +46,12 @@ public class TeleopController {
             Math.abs(linearVelocity.getDistance(pastLinearVelocity)),
             0,
             DRIVE_CONFIG.maxLinearAcceleration() * (Constants.PERIODIC_LOOP_SEC));
+    Rotation2d velocityTheta;
+    if (linearVelocityDiff.getX() != 0 || linearVelocityDiff.getY() != 0)
+      velocityTheta = linearVelocityDiff.getAngle();
+    else velocityTheta = new Rotation2d();
     Translation2d newVelocity =
-        pastLinearVelocity.plus(
-            new Translation2d(clampedVelocityDiff, linearVelocityDiff.getAngle()));
+        pastLinearVelocity.plus(new Translation2d(clampedVelocityDiff, velocityTheta));
     pastLinearVelocity = newVelocity;
 
     return ChassisSpeeds.fromFieldRelativeSpeeds(

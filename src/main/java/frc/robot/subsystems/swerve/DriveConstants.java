@@ -2,6 +2,7 @@ package frc.robot.subsystems.swerve;
 
 import static frc.robot.Constants.*;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -22,8 +23,8 @@ public class DriveConstants {
         case ALPHA -> new DrivebaseConfig(
             Units.inchesToMeters(1.903),
             Units.inchesToMeters(22.5),
-            Units.inchesToMeters(38.5),
-            Units.inchesToMeters(33),
+            Units.inchesToMeters(34),
+            Units.inchesToMeters(34),
             // 5.4764, // FIXME
             // 6.7759);
             2.7,
@@ -95,6 +96,9 @@ public class DriveConstants {
       new HeadingControllerConstants(3, 0, 5, 200, 0.002);
 
   public static final double[] REEF_SNAP_ANGLES = {-120, -60, 0, 60, 120, 180};
+
+  // FIXME
+  public static final Pose2d INITAL_POSE = new Pose2d(2.9, 3.8, new Rotation2d());
 
   public record DrivebaseConfig(
       double wheelRadius,

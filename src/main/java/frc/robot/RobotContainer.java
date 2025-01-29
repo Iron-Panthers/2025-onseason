@@ -1,5 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
@@ -42,6 +40,8 @@ import frc.robot.subsystems.swerve.GyroIO;
 import frc.robot.subsystems.swerve.GyroIOPigeon2;
 import frc.robot.subsystems.swerve.ModuleIO;
 import frc.robot.subsystems.swerve.ModuleIOTalonFX;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIOPhotonvision;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -59,6 +59,7 @@ public class RobotContainer {
   private Rotation2d targetHeading = new Rotation2d();
 
   private Drive swerve; // FIXME make final, implement other robot types
+  private Vision vision;
   private Intake intake;
   private Rollers rollers;
 
@@ -93,6 +94,7 @@ public class RobotContainer {
                   new ModuleIOTalonFX(DriveConstants.MODULE_CONFIGS[1]),
                   new ModuleIOTalonFX(DriveConstants.MODULE_CONFIGS[2]),
                   new ModuleIOTalonFX(DriveConstants.MODULE_CONFIGS[3]));
+          vision = new Vision(new VisionIOPhotonvision(1));
           intake = new Intake(new IntakeIOTalonFX());
           pivot = new Pivot(new PivotIOTalonFX());
           elevator = new Elevator(new ElevatorIOTalonFX());
@@ -321,7 +323,7 @@ public class RobotContainer {
 
     AutoBuilder.configureCustom(
         (path) -> new PathCommand(path, flipAlliance, swerve, passRobotConfig),
-        () -> RobotState.getInstance().getOdometryPose(),
+        () -> RobotState.getInstance().getEstimatedPose(),
         (pose) -> RobotState.getInstance().resetPose(pose),
         flipAlliance,
         true);
