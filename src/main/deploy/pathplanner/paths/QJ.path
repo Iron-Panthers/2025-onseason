@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.422972972972973,
-        "y": 7.157516891891891
+        "x": 1.403,
+        "y": 7.207
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1242798229312525,
-        "y": 6.78773136964363
+        "x": 2.1043068499582804,
+        "y": 6.837214477751739
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Q"
     },
     {
       "anchor": {
-        "x": 4.990287162162162,
-        "y": 5.250337837837837
+        "x": 4.960641891891893,
+        "y": 5.220692567567567
       },
       "prevControl": {
-        "x": 4.26629398309637,
-        "y": 5.608524236345627
+        "x": 4.2366487128261,
+        "y": 5.578878966075356
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "J"
     }
   ],
   "rotationTargets": [],
@@ -48,7 +48,7 @@
   "folder": "Autos",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 37.0
+    "rotation": 127.00000000000001
   },
   "useDefaultConstraints": true
 }

@@ -1,0 +1,37 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CenterI"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "IQ"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "QJ"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "JQ"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
