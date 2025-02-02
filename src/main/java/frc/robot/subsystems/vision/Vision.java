@@ -87,7 +87,7 @@ public class Vision extends SubsystemBase {
         RobotState.getInstance().addVisionMeasurement(measurement, visionStdDevs);
       }
 
-      // FIXME performance considerations?
+      // FIXME performance?
       Logger.recordOutput(
           "Vision/Camera" + cameraIndex + "/TagPoses",
           tagPoses.toArray(new Pose3d[tagPoses.size()]));
