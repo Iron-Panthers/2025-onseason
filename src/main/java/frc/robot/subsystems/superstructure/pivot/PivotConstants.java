@@ -5,15 +5,19 @@ import frc.robot.Constants;
 import java.util.Optional;
 
 public class PivotConstants {
+  // FIXME
   public static final PivotConfig PIVOT_CONFIG =
       switch (Constants.getRobotType()) {
-        case ALPHA -> new PivotConfig(15, Optional.empty(), 21.6 / 360); // FIXME
-        case PROG -> new PivotConfig(0, Optional.empty(), 1); // FIXME
-        case SIM -> new PivotConfig(0, Optional.empty(), 1); // FIXME
+        case COMP -> new PivotConfig(0, Optional.empty(), 1);
+        case ALPHA -> new PivotConfig(15, Optional.empty(), 21.6 / 360);
+        case PROG -> new PivotConfig(0, Optional.empty(), 1);
+        case SIM -> new PivotConfig(0, Optional.empty(), 1);
       };
 
+  // FIXME
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
+        case COMP -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
         case ALPHA -> new PIDGains(1.5, 0, 0.01, 0.03, 0.09, 0, 0.51);
         case PROG -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
         case SIM -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
