@@ -22,7 +22,7 @@ public class IntakeIOTalonFX extends GenericRollersIOTalonFX implements IntakeIO
         case ALPHA -> true;
         default -> false;
       };
-  private static final boolean brake = 
+  private static final boolean brake =
       switch (Constants.getRobotType()) {
         default -> false;
       };
