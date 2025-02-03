@@ -33,4 +33,30 @@ public class Pivot extends GenericSuperstructure<Pivot.PivotTarget> {
     setPositionTarget(PivotTarget.TOP);
     setControlMode(ControlMode.STOP);
   }
+
+  public PivotTarget nextScorePosition(){
+    switch (this.getPositionTarget()) { 
+      case SETUP_L1 -> { 
+       return PivotTarget.SCORE_L1;
+      }
+      case SETUP_L2 -> { 
+        return PivotTarget.SCORE_L2;
+       }
+       case SETUP_L3 -> { 
+        return PivotTarget.SCORE_L3;
+       }
+       case SETUP_L4 -> { 
+        return PivotTarget.SCORE_L4;
+       }
+      case TOP -> {
+        return PivotTarget.TOP;
+      }
+      case INTAKE -> {
+        return PivotTarget.INTAKE;
+      }
+      
+
+
+
+  }
 }
