@@ -2,6 +2,7 @@ package frc.robot.subsystems.swerve;
 
 import static frc.robot.Constants.*;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -11,6 +12,14 @@ public class DriveConstants {
   // measures in meters (per sec) and radians (per sec)
   public static final DrivebaseConfig DRIVE_CONFIG =
       switch (getRobotType()) {
+        case COMP -> new DrivebaseConfig(
+            Units.inchesToMeters(2),
+            Units.inchesToMeters(22.5),
+            Units.inchesToMeters(34),
+            Units.inchesToMeters(34),
+            4.5, // FIXME
+            5,
+            3);
         case PROG, SIM -> new DrivebaseConfig(
             Units.inchesToMeters(2),
             Units.inchesToMeters(22.5),
@@ -22,8 +31,8 @@ public class DriveConstants {
         case ALPHA -> new DrivebaseConfig(
             Units.inchesToMeters(1.903),
             Units.inchesToMeters(22.5),
-            Units.inchesToMeters(38.5),
-            Units.inchesToMeters(33),
+            Units.inchesToMeters(34),
+            Units.inchesToMeters(34),
             // 5.4764, // FIXME
             // 6.7759);
             2.7,
@@ -47,6 +56,13 @@ public class DriveConstants {
   // fl, fr, bl, br; negate offsets
   public static final ModuleConfig[] MODULE_CONFIGS =
       switch (getRobotType()) {
+          // FIXME
+        case COMP -> new ModuleConfig[] {
+          new ModuleConfig(5, 6, 1, new Rotation2d(0), true, false),
+          new ModuleConfig(7, 8, 2, new Rotation2d(0), true, true),
+          new ModuleConfig(11, 12, 3, new Rotation2d(0), true, false),
+          new ModuleConfig(9, 10, 4, new Rotation2d(0), true, true)
+        };
         case PROG -> new ModuleConfig[] {
           new ModuleConfig(5, 6, 1, new Rotation2d(-0.1503), false, false),
           new ModuleConfig(7, 8, 2, new Rotation2d(-0.18254), false, true),
@@ -69,6 +85,13 @@ public class DriveConstants {
 
   public static final ModuleConstants MODULE_CONSTANTS =
       switch (getRobotType()) {
+        case COMP -> new ModuleConstants(
+            new Gains(0, 0, 0, 0, 0, 0),
+            new MotionProfileGains(0, 0, 0),
+            new Gains(0, 0, 0, 0, 0, 0),
+            5.357142857142857,
+            21.428571428571427,
+            3.125);
         case PROG, SIM -> new ModuleConstants(
             new Gains(0.25, 2.26, 0, 50, 0, 0), // revisit kP
             new MotionProfileGains(4, 64, 640), // revisit all
@@ -87,14 +110,22 @@ public class DriveConstants {
 
   public static final TrajectoryFollowerConstants TRAJECTORY_CONFIG =
       switch (getRobotType()) {
-        case PROG, SIM -> new TrajectoryFollowerConstants(0, 0, 0, 0);
+        case COMP -> new TrajectoryFollowerConstants(0, 0, 0, 0);
         case ALPHA -> new TrajectoryFollowerConstants(13, 0, 11, 0);
+        default -> new TrajectoryFollowerConstants(0, 0, 0, 0);
       };
 
   public static final HeadingControllerConstants HEADING_CONTROLLER_CONSTANTS =
-      new HeadingControllerConstants(3, 0, 5, 200, 0.002);
+      switch (getRobotType()) {
+        case COMP -> new HeadingControllerConstants(0, 0, 0, 0, 0);
+        case ALPHA -> new HeadingControllerConstants(3, 0, 5, 200, 0.002);
+        default -> new HeadingControllerConstants(0, 0, 0, 0, 0);
+      };
 
   public static final double[] REEF_SNAP_ANGLES = {-120, -60, 0, 60, 120, 180};
+
+  // FIXME
+  public static final Pose2d INITAL_POSE = new Pose2d(2.9, 3.8, new Rotation2d());
 
   public record DrivebaseConfig(
       double wheelRadius,

@@ -78,7 +78,6 @@ public class ModuleIOTalonFX implements ModuleIO {
             : InvertedValue.CounterClockwise_Positive;
 
     driveConfig.Feedback.SensorToMechanismRatio = MODULE_CONSTANTS.driveReduction();
-    // steerConfig.Feedback.SensorToMechanismRatio = MODULE_CONSTANTS.steerReduction();
     steerConfig.ClosedLoopGeneral.ContinuousWrap = true;
     steerConfig.Feedback.FeedbackRemoteSensorID = config.encoderID();
     steerConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
@@ -123,6 +122,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     steerTalon.optimizeBusUtilization();
     encoder.optimizeBusUtilization();
 
+    driveTalon.setPosition(0, 1.0);
     steerTalon.setPosition(steerAbsolutePosition.get().getRotations(), 1.0);
   }
 

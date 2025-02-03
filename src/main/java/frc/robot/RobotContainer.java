@@ -1,11 +1,8 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -42,6 +39,8 @@ import frc.robot.subsystems.swerve.GyroIO;
 import frc.robot.subsystems.swerve.GyroIOPigeon2;
 import frc.robot.subsystems.swerve.ModuleIO;
 import frc.robot.subsystems.swerve.ModuleIOTalonFX;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIOPhotonvision;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -53,26 +52,35 @@ import java.util.function.BooleanSupplier;
 public class RobotContainer {
   private final RobotState robotState = RobotState.getInstance();
 
+  private SendableChooser<Command> autoChooser;
+
   private final CommandXboxController driverA = new CommandXboxController(0);
   private final CommandXboxController driverB = new CommandXboxController(1);
 
-  private Rotation2d targetHeading = new Rotation2d();
-
-  private Drive swerve; // FIXME make final, implement other robot types
+  private Drive swerve;
+  private Vision vision;
   private Intake intake;
   private Rollers rollers;
-
-  private SendableChooser<Command> autoChooser;
-
-  // superstructure
   private Elevator elevator;
   private Pivot pivot;
-  // private Superstructure superstructure;
 
   public RobotContainer() {
     intake = null;
     if (Constants.getRobotMode() != Mode.REPLAY) {
       switch (Constants.getRobotType()) {
+        case COMP -> {
+          swerve =
+              new Drive(
+                  new GyroIOPigeon2(),
+                  new ModuleIOTalonFX(DriveConstants.MODULE_CONFIGS[0]),
+                  new ModuleIOTalonFX(DriveConstants.MODULE_CONFIGS[1]),
+                  new ModuleIOTalonFX(DriveConstants.MODULE_CONFIGS[2]),
+                  new ModuleIOTalonFX(DriveConstants.MODULE_CONFIGS[3]));
+          vision = new Vision();
+          intake = new Intake(new IntakeIOTalonFX());
+          elevator = new Elevator(new ElevatorIOTalonFX());
+          pivot = new Pivot(new PivotIOTalonFX());
+        }
         case PROG -> {
           swerve =
               new Drive(
@@ -93,6 +101,7 @@ public class RobotContainer {
                   new ModuleIOTalonFX(DriveConstants.MODULE_CONFIGS[1]),
                   new ModuleIOTalonFX(DriveConstants.MODULE_CONFIGS[2]),
                   new ModuleIOTalonFX(DriveConstants.MODULE_CONFIGS[3]));
+          vision = new Vision(new VisionIOPhotonvision(1));
           intake = new Intake(new IntakeIOTalonFX());
           pivot = new Pivot(new PivotIOTalonFX());
           elevator = new Elevator(new ElevatorIOTalonFX());
@@ -119,17 +128,19 @@ public class RobotContainer {
               new ModuleIO() {},
               new ModuleIO() {});
     }
+    if (vision == null) {
+      vision = new Vision();
+    }
 
     rollers = new Rollers(intake);
 
-    // superstructure
     if (elevator == null) {
       elevator = new Elevator(new ElevatorIO() {});
     }
     if (pivot == null) {
       pivot = new Pivot(new PivotIO() {});
     }
-    // superstructure = new Superstructure(elevator, pivot);
+
     configureBindings();
     configureAutos();
   }
@@ -177,10 +188,6 @@ public class RobotContainer {
         .b()
         .onTrue(
             new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(Math.toRadians(232)))));
-
-    // -----Intake Controls-----
-
-    // -----Flywheel Controls-----
 
     // -----Superstructure Controls-----
     driverB // GO TO BOTTOM
@@ -253,15 +260,7 @@ public class RobotContainer {
   }
 
   private void configureAutos() {
-    NamedCommands.registerCommand(
-        "TestPrintCommand",
-        new InstantCommand(
-            () ->
-                System.out.println(
-                    "\nWe'd do something if we had the subsystems to do it :( \n"))); // FIXME Only
-    // for testing
-    // event
-    // markers
+
     RobotConfig robotConfig;
     try {
       robotConfig = RobotConfig.fromGUISettings();
@@ -287,7 +286,7 @@ public class RobotContainer {
 
     AutoBuilder.configureCustom(
         (path) -> new PathCommand(path, flipAlliance, swerve, passRobotConfig),
-        () -> RobotState.getInstance().getOdometryPose(),
+        () -> RobotState.getInstance().getEstimatedPose(),
         (pose) -> RobotState.getInstance().resetPose(pose),
         flipAlliance,
         true);
@@ -307,6 +306,9 @@ public class RobotContainer {
   }
 
   public static Rotation2d calculateSnapTargetHeading(Rotation2d targetHeading) {
+    targetHeading =
+        targetHeading.rotateBy(
+            new Rotation2d(Math.PI + Math.toRadians(30))); // because back of robot
     double closest = DriveConstants.REEF_SNAP_ANGLES[0];
     for (double snap : DriveConstants.REEF_SNAP_ANGLES) {
       if (Math.abs(relativeAngularDifference(targetHeading.getDegrees(), snap))

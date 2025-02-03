@@ -50,7 +50,7 @@ public class PathCommand extends Command {
     trajectory =
         path.generateTrajectory(
             drive.getRobotSpeeds(),
-            RobotState.getInstance().getOdometryPose().getRotation(),
+            RobotState.getInstance().getEstimatedPose().getRotation(),
             robotConfig);
 
     PathPlannerAuto.setCurrentTrajectory(trajectory);
