@@ -96,7 +96,7 @@ public class GenericSuperstructure<G extends GenericSuperstructure.PositionTarge
     return filteredSupplyCurrentAmps;
   }
 
-  public double position() {
+  public double getPosition() {
     return inputs.positionRotations;
   }
 

@@ -28,4 +28,8 @@ public class Elevator extends GenericSuperstructure<Elevator.ElevatorTarget> {
     setPositionTarget(ElevatorTarget.BOTTOM);
     setControlMode(ControlMode.STOP);
   }
+
+  public boolean aboveSafeHeightForPivot(){
+    return this.getPosition() > ElevatorConstants.MIN_SAFE_HEIGHT_FOR_PIVOT;
+  }
 }
