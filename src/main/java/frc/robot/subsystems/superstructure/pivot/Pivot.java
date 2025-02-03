@@ -7,6 +7,8 @@ import frc.robot.subsystems.superstructure.GenericSuperstructure;
 public class Pivot extends GenericSuperstructure<Pivot.PivotTarget> {
   public enum PivotTarget implements GenericSuperstructure.PositionTarget {
     TOP(90),
+    INTAKE(-90),
+    STOW(45), // FIXME
     SETUP_L1(0),
     SETUP_L2(90),
     SETUP_L3(90),
@@ -14,8 +16,7 @@ public class Pivot extends GenericSuperstructure<Pivot.PivotTarget> {
     SCORE_L1(0),
     SCORE_L2(20),
     SCORE_L3(20),
-    SCORE_L4(0),
-    INTAKE(-90);
+    SCORE_L4(0);
 
     private double position;
 
@@ -34,29 +35,37 @@ public class Pivot extends GenericSuperstructure<Pivot.PivotTarget> {
     setControlMode(ControlMode.STOP);
   }
 
+  
   public PivotTarget nextScorePosition(){
     switch (this.getPositionTarget()) { 
       case SETUP_L1 -> { 
-       return PivotTarget.SCORE_L1;
+        return PivotTarget.SCORE_L1;
       }
       case SETUP_L2 -> { 
         return PivotTarget.SCORE_L2;
-       }
-       case SETUP_L3 -> { 
+      }
+      case SETUP_L3 -> { 
         return PivotTarget.SCORE_L3;
-       }
-       case SETUP_L4 -> { 
+      }
+      case SETUP_L4 -> { 
         return PivotTarget.SCORE_L4;
-       }
+      }
+      case SCORE_L1, SCORE_L2, SCORE_L3, SCORE_L4, STOW -> {
+        return PivotTarget.STOW;
+      }
+
+      // For scoring, these states don't matter
       case TOP -> {
         return PivotTarget.TOP;
       }
       case INTAKE -> {
         return PivotTarget.INTAKE;
       }
-      
 
-
-
+      // This should never be reachedS
+      default -> {
+        return PivotTarget.STOW;
+      }
   }
+}
 }
