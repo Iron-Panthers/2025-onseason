@@ -17,35 +17,12 @@ public class Superstructure extends SubsystemBase {
   public enum SuperstructureState {
     STOP, // Stop the superstructure
     SCORE_L4, // Scoring in L4
-    SETUP_L4(SuperstructureState.SCORE_L4), // Setting up for scoring in L4
     SCORE_L3, // Scoring in L3
-    SETUP_L3(SuperstructureState.SCORE_L3), // Setting up for scoring in L3
     SCORE_L2, // Scoring in L2
-    SETUP_L2(SuperstructureState.SCORE_L2), // Setting up for scoring in L2
     SCORE_L1, // Scoring in the trough
-    SETUP_L1(SuperstructureState.SCORE_L1), // Setting up the position to score in the trough
     INTAKE,
-    SETUP_INTAKE(SuperstructureState.INTAKE),
     STOW, // Going to the lowest position
     ZERO; // Zero the motor
-
-    private Optional<SuperstructureState> nextState;
-
-    public SuperstructureState getNextState() {
-      // If it exists, just return the next state
-      if (nextState.isPresent()) return nextState.get();
-
-      // Default is to just return to stow
-      return STOW;
-    }
-
-    private SuperstructureState() {
-      this.nextState = Optional.empty();
-    }
-
-    private SuperstructureState(SuperstructureState nextState) {
-      this.nextState = Optional.of(nextState);
-    }
   }
 
   private SuperstructureState targetState = SuperstructureState.ZERO; // current target state
@@ -63,57 +40,27 @@ public class Superstructure extends SubsystemBase {
   @Override
   public void periodic() {
     switch (targetState) { // switch on the target state
-      case SETUP_L1 -> { // go to the position before scoring
-        elevator.setPositionTarget(ElevatorTarget.L1);
-        pivot.setPositionTarget(PivotTarget.SETUP_L1);
-        if (superstructureReachedTarget()) {
-          setTargetState(SuperstructureState.SETUP_L1.getNextState());
-        }
-      }
       case SCORE_L1 -> {
         elevator.setPositionTarget(ElevatorTarget.L1);
         pivot.setPositionTarget(PivotTarget.SCORE_L1);
-      }
-      case SETUP_L2 -> { // go to the position before scoring
-        elevator.setPositionTarget(ElevatorTarget.L2);
-        pivot.setPositionTarget(PivotTarget.SETUP_L2);
-        if (superstructureReachedTarget()) {
-          setTargetState(SuperstructureState.SETUP_L2.getNextState());
-        }
+
       }
       case SCORE_L2 -> {
         elevator.setPositionTarget(ElevatorTarget.L2);
         pivot.setPositionTarget(PivotTarget.SCORE_L2);
       }
-      case SETUP_L3 -> { // go to the position before scoring
-        elevator.setPositionTarget(ElevatorTarget.L3);
-        pivot.setPositionTarget(PivotTarget.SETUP_L3);
-        if (superstructureReachedTarget()) {
-          setTargetState(SuperstructureState.SETUP_L3.getNextState());
-        }
-      }
       case SCORE_L3 -> {
         elevator.setPositionTarget(ElevatorTarget.L3);
         pivot.setPositionTarget(PivotTarget.SCORE_L3);
       }
-      case SETUP_L4 -> { // go to the position before scoring
-        elevator.setPositionTarget(ElevatorTarget.L4);
-        pivot.setPositionTarget(PivotTarget.SETUP_L4);
-        if (superstructureReachedTarget()) {
-          setTargetState(SuperstructureState.SETUP_L4.getNextState());
-        }
-      }
       case SCORE_L4 -> {
         elevator.setPositionTarget(ElevatorTarget.L4);
         pivot.setPositionTarget(PivotTarget.SCORE_L4);
+
       }
       case STOW -> {
         elevator.setPositionTarget(ElevatorTarget.BOTTOM);
         pivot.setPositionTarget(PivotTarget.TOP);
-      }
-      case SETUP_INTAKE -> {
-        elevator.setPositionTarget(ElevatorTarget.SETUP_INTAKE);
-        pivot.setPositionTarget(PivotTarget.INTAKE);
       }
       case INTAKE -> {
         elevator.setPositionTarget(ElevatorTarget.INTAKE);
