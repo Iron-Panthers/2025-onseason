@@ -1,32 +1,35 @@
 package frc.robot.subsystems.superstructure;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import java.util.HashMap;
+
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.superstructure.GenericSuperstructure.ControlMode;
 import frc.robot.subsystems.superstructure.elevator.Elevator;
 import frc.robot.subsystems.superstructure.elevator.Elevator.ElevatorTarget;
-import frc.robot.subsystems.superstructure.elevator.ElevatorConstants;
 import frc.robot.subsystems.superstructure.pivot.Pivot;
 import frc.robot.subsystems.superstructure.pivot.Pivot.PivotTarget;
 import frc.robot.subsystems.superstructure.pivot.PivotConstants;
-import java.util.Optional;
-import org.littletonrobotics.junction.Logger;
 
 public class Superstructure extends SubsystemBase {
   public enum SuperstructureState {
-    SCORE_L4, // Scoring in L4
-    SCORE_L3, // Scoring in L3
-    SCORE_L2, // Scoring in L2
-    SCORE_L1, // Scoring in the trough
+    L4, // Scoring in L4
+    L3, // Scoring in L3
+    L2, // Scoring in L2
+    L1, // Scoring in the trough
     TOP, // Apex
     INTAKE,
     STOW, // Going to the lowest position
     ZERO, // Zero the motor
     STOP; // Stop the superstructure
+
+
   }
 
+  private SuperstructureState currentState = SuperstructureState.ZERO; // current state
   private SuperstructureState targetState = SuperstructureState.ZERO; // current target state
+  
 
   private final Elevator elevator;
   private final Pivot pivot;
@@ -35,42 +38,105 @@ public class Superstructure extends SubsystemBase {
     this.elevator = elevator;
     this.pivot = pivot;
     pivot.setPositionTarget(PivotTarget.TOP);
-    elevator.setPositionTarget(ElevatorTarget.BOTTOM);
+    elevator.setPositionTarget(ElevatorTarget.BOTTOM);     
+
   }
 
   @Override
   public void periodic() {
-    switch (targetState) { // switch on the target state
-      case SCORE_L1 -> {
+
+    switch (currentState) { // switch on the target state
+      case L1 -> {
         elevator.setPositionTarget(ElevatorTarget.L1);
         pivot.setPositionTarget(PivotTarget.SCORE_L1);
 
+        // check for state transitions
+        if(this.superstructureReachedTarget()){
+            if(targetState == SuperstructureState.L2){
+                this.currentState = SuperstructureState.L2;
+            } else if(targetState != currentState){
+                this.currentState = SuperstructureState.STOW;
+            }
+        }
       }
-      case SCORE_L2 -> {
+      case L2 -> {
         elevator.setPositionTarget(ElevatorTarget.L2);
         pivot.setPositionTarget(PivotTarget.SCORE_L2);
+
+                // check for state transitions
+                if(this.superstructureReachedTarget()){
+                    if(targetState != currentState){
+                        this.currentState = SuperstructureState.L1;
+                    } 
+                }
+        
       }
-      case SCORE_L3 -> {
+      case L3 -> {
         elevator.setPositionTarget(ElevatorTarget.L3);
         pivot.setPositionTarget(PivotTarget.SCORE_L3);
+
+        // check for state transitions
+        if(this.superstructureReachedTarget()){
+            if(targetState != currentState){
+                this.currentState = SuperstructureState.L4;
+            } 
+        }
       }
-      case SCORE_L4 -> {
+      case L4 -> {
         elevator.setPositionTarget(ElevatorTarget.L4);
         pivot.setPositionTarget(PivotTarget.SCORE_L4);
 
+        // check for state transitions
+        if(this.superstructureReachedTarget()){
+            if(targetState == SuperstructureState.L3){
+                this.currentState = SuperstructureState.L3;
+            } else if(targetState != currentState){
+                this.currentState = SuperstructureState.TOP;
+            }
+        }
+        
       }
       case TOP -> {
         elevator.setPositionTarget(ElevatorTarget.BOTTOM);
         pivot.setPositionTarget(PivotTarget.TOP);
+
+        // check for state transitions
+        if(this.superstructureReachedTarget()){
+            if(targetState == SuperstructureState.L4 || targetState == SuperstructureState.L3){
+                this.currentState = SuperstructureState.L4;
+            } else if(targetState != currentState){
+                this.currentState = SuperstructureState.STOW;
+            }
+        }
       }
 
       case STOW -> {
         elevator.setPositionTarget(ElevatorTarget.BOTTOM);
         pivot.setPositionTarget(PivotTarget.TOP);
+
+        
+        // check for state transitions
+        if(this.superstructureReachedTarget()){
+            if(targetState == SuperstructureState.INTAKE){
+                this.currentState = SuperstructureState.INTAKE;
+            } else if(targetState == SuperstructureState.L1 || targetState == SuperstructureState.L2){
+                this.currentState = SuperstructureState.L1;
+            } else if(targetState != currentState){
+                this.currentState = SuperstructureState.TOP;
+            }
+        }
       }
       case INTAKE -> {
         elevator.setPositionTarget(ElevatorTarget.INTAKE);
         pivot.setPositionTarget(PivotTarget.INTAKE);
+
+        
+        // check for state transitions
+        if(this.superstructureReachedTarget()){
+            if(targetState != currentState){
+                this.currentState = SuperstructureState.STOW;
+            }
+        }
       }
       case ZERO -> {
         if (notZeroing()) { // set our mechanisms to zero if they aren't already
@@ -100,6 +166,7 @@ public class Superstructure extends SubsystemBase {
         pivot.setControlMode(ControlMode.STOP);
       }
     }
+
     elevator.periodic();
     pivot.periodic();
 
@@ -168,21 +235,4 @@ public class Superstructure extends SubsystemBase {
     return elevator.reachedTarget() && pivot.reachedTarget();
   }
 
-  public Command initiateScoringSequence(SuperstructureState superstructureState) {
-    return new FunctionalCommand(
-        () -> this.setTargetState(superstructureState),
-        () -> {
-          // Execute logic here (if any)
-        },
-        interrupted -> {
-          // End logic here (if any)
-        },
-        () -> {
-          // Ends when we've transitioned to the next state (the score state)
-          // AND we've reached the target (we're ready to place)
-          return this.targetState == superstructureState.getNextState()
-              && this.superstructureReachedTarget();
-        },
-        this);
-  }
 }
