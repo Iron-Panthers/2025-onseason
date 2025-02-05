@@ -308,7 +308,7 @@ public class RobotContainer {
   public static Rotation2d calculateSnapTargetHeading(Rotation2d targetHeading) {
     targetHeading =
         targetHeading.rotateBy(
-            new Rotation2d(Math.PI + Math.toRadians(30))); // because back of robot
+            new Rotation2d(Math.toRadians(30))); 
     double closest = DriveConstants.REEF_SNAP_ANGLES[0];
     for (double snap : DriveConstants.REEF_SNAP_ANGLES) {
       if (Math.abs(relativeAngularDifference(targetHeading.getDegrees(), snap))
