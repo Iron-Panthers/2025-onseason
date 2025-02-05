@@ -15,14 +15,15 @@ import org.littletonrobotics.junction.Logger;
 
 public class Superstructure extends SubsystemBase {
   public enum SuperstructureState {
-    STOP, // Stop the superstructure
     SCORE_L4, // Scoring in L4
     SCORE_L3, // Scoring in L3
     SCORE_L2, // Scoring in L2
     SCORE_L1, // Scoring in the trough
+    TOP, // Apex
     INTAKE,
     STOW, // Going to the lowest position
-    ZERO; // Zero the motor
+    ZERO, // Zero the motor
+    STOP; // Stop the superstructure
   }
 
   private SuperstructureState targetState = SuperstructureState.ZERO; // current target state
@@ -58,6 +59,11 @@ public class Superstructure extends SubsystemBase {
         pivot.setPositionTarget(PivotTarget.SCORE_L4);
 
       }
+      case TOP -> {
+        elevator.setPositionTarget(ElevatorTarget.BOTTOM);
+        pivot.setPositionTarget(PivotTarget.TOP);
+      }
+
       case STOW -> {
         elevator.setPositionTarget(ElevatorTarget.BOTTOM);
         pivot.setPositionTarget(PivotTarget.TOP);
