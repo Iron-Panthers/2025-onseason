@@ -4,6 +4,8 @@ import java.util.HashMap;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.superstructure.GenericSuperstructure.ControlMode;
 import frc.robot.subsystems.superstructure.elevator.Elevator;
@@ -183,6 +185,17 @@ public class Superstructure extends SubsystemBase {
 
   public SuperstructureState getTargetState() {
     return targetState;
+  }
+
+  // go to target state command factory
+  public Command goToStateCommand(SuperstructureState superstructureState) {
+    return new FunctionalCommand(() -> {
+      setTargetState(superstructureState);
+    }, 
+    () -> {}, 
+    (e) -> {}, 
+    () -> {return currentState == targetState && superstructureReachedTarget();}, 
+    this);
   }
 
   /**

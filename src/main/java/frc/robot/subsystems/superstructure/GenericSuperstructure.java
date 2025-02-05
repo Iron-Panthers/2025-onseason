@@ -6,8 +6,7 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
-public class GenericSuperstructure<G extends GenericSuperstructure.PositionTarget>
-    extends SubsystemBase {
+public class GenericSuperstructure<G extends GenericSuperstructure.PositionTarget> {
   public interface PositionTarget {
     double getPosition();
   }
@@ -110,34 +109,34 @@ public class GenericSuperstructure<G extends GenericSuperstructure.PositionTarge
         <= superstructureIO.getPositionTargetEpsilon();
   }
 
-  public Command zeroingCommand() {
-    return new FunctionalCommand(
-        () -> {},
-        () -> { // execute
-          // nothing needs to happen here
-          setControlMode(ControlMode.ZERO);
-        },
-        (e) -> { // on end
-          setOffset();
-          setControlMode(ControlMode.POSITION);
-        },
-        () ->
-            (getFilteredSupplyCurrentAmps()
-                > superstructureIO.getZeroingVoltageThreshold()) // TODO: Make this work for both
-        ,
-        this);
-  }
+  // public Command zeroingCommand() {
+  //   return new FunctionalCommand(
+  //       () -> {},
+  //       () -> { // execute
+  //         // nothing needs to happen here
+  //         setControlMode(ControlMode.ZERO);
+  //       },
+  //       (e) -> { // on end
+  //         setOffset();
+  //         setControlMode(ControlMode.POSITION);
+  //       },
+  //       () ->
+  //           (getFilteredSupplyCurrentAmps()
+  //               > superstructureIO.getZeroingVoltageThreshold()) // TODO: Make this work for both
+  //       ,
+  //       this);
+  // }
 
-  public Command goToPositionCommand(G position) {
-    return new FunctionalCommand(
-        () -> {
-          setPositionTarget(position);
-        },
-        () -> { // execute
-        },
-        (e) -> { // on end
-        },
-        () -> reachedTarget(),
-        this);
-  }
+  // public Command goToPositionCommand(G position) {
+  //   return new FunctionalCommand(
+  //       () -> {
+  //         setPositionTarget(position);
+  //       },
+  //       () -> { // execute
+  //       },
+  //       (e) -> { // on end
+  //       },
+  //       () -> reachedTarget(),
+  //       this);
+  // }
 }
