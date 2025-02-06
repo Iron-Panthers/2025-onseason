@@ -58,10 +58,10 @@ public class DriveConstants {
       switch (getRobotType()) {
           // FIXME
         case COMP -> new ModuleConfig[] {
-          new ModuleConfig(5, 6, 1, new Rotation2d(0), true, false),
-          new ModuleConfig(7, 8, 2, new Rotation2d(0), true, true),
-          new ModuleConfig(11, 12, 3, new Rotation2d(0), true, false),
-          new ModuleConfig(9, 10, 4, new Rotation2d(0), true, true)
+          new ModuleConfig(19, 18, 2, new Rotation2d(-1.148), true, false),
+          new ModuleConfig(17, 16, 1, new Rotation2d(-0.405), true, true),
+          new ModuleConfig(21, 20, 3, new Rotation2d(1.012), true, false),
+          new ModuleConfig(23, 22, 4, new Rotation2d(-2.831), true, true)
         };
         case PROG -> new ModuleConfig[] {
           new ModuleConfig(5, 6, 1, new Rotation2d(-0.1503), false, false),
