@@ -13,29 +13,21 @@ public class GenericSuperstructure<G extends GenericSuperstructure.PositionTarge
 
   public enum ControlMode {
     POSITION,
-    ZERO,
     STOP,
   }
 
   private ControlMode controlMode = ControlMode.STOP;
 
-  private final String name;
-  private final GenericSuperstructureIO superstructureIO;
+  protected final String name;
+  protected final GenericSuperstructureIO superstructureIO;
 
   private GenericSuperstructureIOInputsAutoLogged inputs =
       new GenericSuperstructureIOInputsAutoLogged();
   private G positionTarget;
 
-  // linear filter for superstrucure
-  private final LinearFilter supplyCurrentFilter;
-  private double filteredSupplyCurrentAmps = 0;
-
   public GenericSuperstructure(String name, GenericSuperstructureIO superstructureIO) {
     this.name = name;
     this.superstructureIO = superstructureIO;
-
-    // setup the linear filter
-    supplyCurrentFilter = LinearFilter.movingAverage(30);
   }
 
   public void periodic() {
@@ -48,21 +40,13 @@ public class GenericSuperstructure<G extends GenericSuperstructure.PositionTarge
       case POSITION -> {
         superstructureIO.runPosition(positionTarget.getPosition());
       }
-      case ZERO -> {
-        superstructureIO.runCharacterization();
-      }
       case STOP -> {
         superstructureIO.stop();
       }
     }
 
-    // calculate our new filtered supply current for the elevator
-    filteredSupplyCurrentAmps = supplyCurrentFilter.calculate(getSupplyCurrentAmps());
-
     Logger.recordOutput("Superstructure/" + name + "/Target", positionTarget.toString());
     Logger.recordOutput("Superstructure/" + name + "/Control Mode", controlMode.toString());
-    Logger.recordOutput(
-        "Superstructure/" + name + "/Filtered supply current amps", getFilteredSupplyCurrentAmps());
     Logger.recordOutput("Superstructure/" + name + "/Reached target", reachedTarget());
   }
 
@@ -91,9 +75,6 @@ public class GenericSuperstructure<G extends GenericSuperstructure.PositionTarge
     return inputs.supplyCurrentAmps;
   }
 
-  public double getFilteredSupplyCurrentAmps() {
-    return filteredSupplyCurrentAmps;
-  }
 
   public double getPosition() {
     return inputs.positionRotations;

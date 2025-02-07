@@ -9,7 +9,9 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.superstructure.GenericSuperstructure.ControlMode;
 import frc.robot.subsystems.superstructure.elevator.Elevator;
+import frc.robot.subsystems.superstructure.elevator.ElevatorConstants;
 import frc.robot.subsystems.superstructure.elevator.Elevator.ElevatorTarget;
+import frc.robot.subsystems.superstructure.elevator.ElevatorConstants.ElevatorConfig;
 import frc.robot.subsystems.superstructure.pivot.Pivot;
 import frc.robot.subsystems.superstructure.pivot.Pivot.PivotTarget;
 import frc.robot.subsystems.superstructure.pivot.PivotConstants;
@@ -50,7 +52,7 @@ public class Superstructure extends SubsystemBase {
     switch (currentState) { // switch on the target state
       case L1 -> {
         elevator.setPositionTarget(ElevatorTarget.L1);
-        pivot.setPositionTarget(PivotTarget.SCORE_L1);
+        pivot.setPositionTarget(PivotTarget.L1);
 
         // check for state transitions
         if(this.superstructureReachedTarget()){
@@ -63,7 +65,7 @@ public class Superstructure extends SubsystemBase {
       }
       case L2 -> {
         elevator.setPositionTarget(ElevatorTarget.L2);
-        pivot.setPositionTarget(PivotTarget.SCORE_L2);
+        pivot.setPositionTarget(PivotTarget.L2);
 
                 // check for state transitions
                 if(this.superstructureReachedTarget()){
@@ -75,7 +77,7 @@ public class Superstructure extends SubsystemBase {
       }
       case L3 -> {
         elevator.setPositionTarget(ElevatorTarget.L3);
-        pivot.setPositionTarget(PivotTarget.SCORE_L3);
+        pivot.setPositionTarget(PivotTarget.L3);
 
         // check for state transitions
         if(this.superstructureReachedTarget()){
@@ -86,7 +88,7 @@ public class Superstructure extends SubsystemBase {
       }
       case L4 -> {
         elevator.setPositionTarget(ElevatorTarget.L4);
-        pivot.setPositionTarget(PivotTarget.SCORE_L4);
+        pivot.setPositionTarget(PivotTarget.L4);
 
         // check for state transitions
         if(this.superstructureReachedTarget()){
@@ -141,27 +143,15 @@ public class Superstructure extends SubsystemBase {
         }
       }
       case ZERO -> {
-        if (notZeroing()) { // set our mechanisms to zero if they aren't already
-          elevator.setControlMode(ControlMode.ZERO);
-          pivot.setControlMode(ControlMode.ZERO);
-        } else { // if our mechanisms are currently zeroing run this logic
-          if (true) { // check if the elevator is done zeroing and set
+          elevator.setZeroing(true);
+          if (elevator.getFilteredSupplyCurrentAmps() > ElevatorConstants.ZEROING_VOLTAGE_THRESHOLD) { // check if the elevator is done zeroing and set
             // offsets accordingly
             elevator.setOffset();
             elevator.setControlMode(ControlMode.POSITION);
-          }
-          if (pivot.getFilteredSupplyCurrentAmps()
-              > PivotConstants
-                  .ZEROING_VOLTAGE_THRESHOLD) { // check if pivot is done zeroing and set offsets
-            // accordingly
-            pivot.setOffset();
-            pivot.setControlMode(ControlMode.POSITION);
-          }
-          if (notZeroing()) { // if both of our mechanisms aren't zeroing anymore, exit out of
-            // madness
+            elevator.setZeroing(false);
+
             setTargetState(SuperstructureState.STOW);
           }
-        }
       }
       case STOP -> {
         elevator.setControlMode(ControlMode.STOP);
@@ -237,8 +227,7 @@ public class Superstructure extends SubsystemBase {
    * @return a boolean that says weather or not both of our mechanisms have finished zeroing
    */
   public boolean notZeroing() {
-    return elevator.getControlMode() != ControlMode.ZERO
-        && pivot.getControlMode() != ControlMode.ZERO;
+    return !elevator.isZeroing();
   }
 
   /**
