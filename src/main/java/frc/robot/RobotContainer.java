@@ -248,7 +248,7 @@ public class RobotContainer {
                 elevator
                     .goToPositionCommand(ElevatorTarget.BOTTOM)
                     .alongWith(rollers.setTargetCommand(RollerState.IDLE))));
-
+    SmartDashboard.putBoolean("Pressed?", driverA.isConnected());
     driverB // eject
         .rightTrigger()
         .onTrue(
