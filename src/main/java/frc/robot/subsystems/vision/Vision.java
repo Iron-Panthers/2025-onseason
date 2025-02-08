@@ -61,7 +61,7 @@ public class Vision extends SubsystemBase {
         boolean rejectPose =
             observation.tagCount() == 0
                 || (observation.tagCount() == 1 && observation.ambiguity() > AMBIGUITY_CUTOFF)
-                || observation.ambiguity() == -1
+                || (observation.ambiguity() == -1 && observation.tagCount() == 1)
                 || Math.abs(observation.estimatedPose().getZ())
                     > Z_ERROR_CUTOFF // Must have realistic Z coordinate
 
@@ -87,7 +87,6 @@ public class Vision extends SubsystemBase {
         RobotState.getInstance().addVisionMeasurement(measurement, visionStdDevs);
       }
 
-      // FIXME performance?
       Logger.recordOutput(
           "Vision/Camera" + cameraIndex + "/TagPoses",
           tagPoses.toArray(new Pose3d[tagPoses.size()]));
