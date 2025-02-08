@@ -8,8 +8,7 @@ public abstract class GenericRollers<G extends GenericRollers.VoltageTarget> {
     double getVolts();
   }
 
-  private LinearFilter filter;
-  private double filteredCurrent;
+  private boolean beamBreakBroken;
 
   private final String name;
   private final GenericRollersIO rollerIO;
@@ -20,7 +19,6 @@ public abstract class GenericRollers<G extends GenericRollers.VoltageTarget> {
   public GenericRollers(String name, GenericRollersIO rollerIO) {
     this.name = name;
     this.rollerIO = rollerIO;
-    this.filter = LinearFilter.movingAverage(100);
   }
 
   public void periodic() {
@@ -30,8 +28,8 @@ public abstract class GenericRollers<G extends GenericRollers.VoltageTarget> {
     rollerIO.runVolts(voltageTarget.getVolts());
     Logger.recordOutput("Rollers/" + name + "/Target", voltageTarget.toString());
 
-    filteredCurrent = this.filter.calculate(inputs.supplyCurrentAmps);
-    Logger.recordOutput("Rollers/" + name + "/FilteredCurrent", filteredCurrent);
+    beamBreakBroken = inputs.beamBreakBroken;
+    Logger.recordOutput("Rollers/" + name + "/BeamBreakBroken", beamBreakBroken);
   }
 
   public G getVoltageTarget() {
@@ -42,8 +40,8 @@ public abstract class GenericRollers<G extends GenericRollers.VoltageTarget> {
     return inputs.supplyCurrentAmps;
   }
 
-  public double getFilteredCurrent() {
-    return filteredCurrent;
+  public boolean getBeamBreakBroken() {
+    return beamBreakBroken;
   }
 
   public void setVoltageTarget(G voltageTarget) {

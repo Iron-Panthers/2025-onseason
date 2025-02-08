@@ -13,9 +13,12 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
   private final TalonFX talon;
+
+  private final DigitalInput beambreak;
 
   private final StatusSignal<Angle> position;
   private final StatusSignal<AngularVelocity> velocity;
@@ -28,8 +31,9 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
   private final double mechanismReduction;
 
   public GenericRollersIOTalonFX(
-      int id, int currentLimitAmps, boolean inverted, boolean brake, double reduction) {
+      int id, int currentLimitAmps, boolean inverted, boolean brake, double reduction, int beambreakID) {
     talon = new TalonFX(id);
+    beambreak = new DigitalInput(beambreakID);
 
     mechanismReduction = reduction;
 
@@ -60,6 +64,7 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
         Units.rotationsToRadians(velocity.getValueAsDouble()) / mechanismReduction;
     inputs.appliedVolts = appliedVolts.getValueAsDouble();
     inputs.supplyCurrentAmps = supplyCurrent.getValueAsDouble();
+    inputs.beamBreakBroken = beambreak.get(); 
   }
 
   @Override

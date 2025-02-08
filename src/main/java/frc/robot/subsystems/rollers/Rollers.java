@@ -33,7 +33,7 @@ public class Rollers extends SubsystemBase {
       }
       case INTAKE -> {
         intake.setVoltageTarget(Intake.Target.INTAKE);
-        if (intake.getFilteredCurrent() < -0.5) {
+        if (intake.getBeamBreakBroken()) {
           this.targetState = RollerState.HOLD;
         }
       }

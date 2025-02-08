@@ -32,8 +32,14 @@ public class IntakeIOTalonFX extends GenericRollersIOTalonFX implements IntakeIO
         case ALPHA -> 2;
         default -> 1;
       };
+  private static final int beamBreakID =
+      switch (Constants.getRobotType()) {
+        case COMP -> 0;
+        default -> 0;
+      };
+
 
   public IntakeIOTalonFX() {
-    super(id, currentLimitAmps, inverted, brake, reduction);
+    super(id, currentLimitAmps, inverted, brake, reduction, beamBreakID);
   }
 }
