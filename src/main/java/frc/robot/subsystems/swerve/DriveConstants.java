@@ -86,11 +86,11 @@ public class DriveConstants {
   public static final ModuleConstants MODULE_CONSTANTS =
       switch (getRobotType()) {
         case COMP -> new ModuleConstants(
-            new Gains(0, 0, 0, 0, 0, 0),
-            new MotionProfileGains(0, 0, 0),
-            new Gains(0, 0, 0, 0, 0, 0),
-            5.357142857142857,
-            21.428571428571427,
+            new Gains(0.25, 2.26, 0, 50, 0, 0),
+            new MotionProfileGains(4, 64, 640),
+            new Gains(0.3, 0.63, 0, 1.5, 0, 0), // FIXME diff gear ratio
+            (45.0 / 15) * (17.0 / 27) * (50.0 / 16), // MK4i L2.5 16 tooth
+            150.0 / 7,
             3.125);
         case PROG, SIM -> new ModuleConstants(
             new Gains(0.25, 2.26, 0, 50, 0, 0), // revisit kP
