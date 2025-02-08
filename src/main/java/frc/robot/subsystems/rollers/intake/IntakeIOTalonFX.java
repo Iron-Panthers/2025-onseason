@@ -6,7 +6,7 @@ import frc.robot.subsystems.rollers.GenericRollersIOTalonFX;
 public class IntakeIOTalonFX extends GenericRollersIOTalonFX implements IntakeIO {
   private static final int id =
       switch (Constants.getRobotType()) {
-        case COMP -> 14;
+        case COMP -> 30;
         case ALPHA -> 14;
         default -> 0;
       };
@@ -24,20 +24,19 @@ public class IntakeIOTalonFX extends GenericRollersIOTalonFX implements IntakeIO
       };
   private static final boolean brake =
       switch (Constants.getRobotType()) {
-        default -> false;
+        default -> true;
       };
   private static final double reduction =
       switch (Constants.getRobotType()) {
-        case COMP -> 1;
+        case COMP -> 3;
         case ALPHA -> 2;
         default -> 1;
       };
   private static final int beamBreakID =
       switch (Constants.getRobotType()) {
-        case COMP -> 0;
+        case COMP -> 7;
         default -> 0;
       };
-
 
   public IntakeIOTalonFX() {
     super(id, currentLimitAmps, inverted, brake, reduction, beamBreakID);

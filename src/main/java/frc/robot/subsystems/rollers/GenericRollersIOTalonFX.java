@@ -31,7 +31,12 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
   private final double mechanismReduction;
 
   public GenericRollersIOTalonFX(
-      int id, int currentLimitAmps, boolean inverted, boolean brake, double reduction, int beambreakID) {
+      int id,
+      int currentLimitAmps,
+      boolean inverted,
+      boolean brake,
+      double reduction,
+      int beambreakID) {
     talon = new TalonFX(id);
     beambreak = new DigitalInput(beambreakID);
 
@@ -64,7 +69,7 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
         Units.rotationsToRadians(velocity.getValueAsDouble()) / mechanismReduction;
     inputs.appliedVolts = appliedVolts.getValueAsDouble();
     inputs.supplyCurrentAmps = supplyCurrent.getValueAsDouble();
-    inputs.beamBreakBroken = beambreak.get(); 
+    inputs.beamBreakBroken = !beambreak.get();
   }
 
   @Override

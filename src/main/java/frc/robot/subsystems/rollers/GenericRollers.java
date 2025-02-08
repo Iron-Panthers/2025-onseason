@@ -1,6 +1,5 @@
 package frc.robot.subsystems.rollers;
 
-import edu.wpi.first.math.filter.LinearFilter;
 import org.littletonrobotics.junction.Logger;
 
 public abstract class GenericRollers<G extends GenericRollers.VoltageTarget> {
