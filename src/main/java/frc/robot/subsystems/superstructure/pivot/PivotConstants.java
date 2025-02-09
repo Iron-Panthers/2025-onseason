@@ -2,6 +2,7 @@ package frc.robot.subsystems.superstructure.pivot;
 
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import frc.robot.Constants;
+
 import java.util.Optional;
 
 public class PivotConstants {
@@ -22,11 +23,22 @@ public class PivotConstants {
         case PROG -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
         case SIM -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
+  
+  public static final MotionMagicConfig MOTION_MAGIC_CONFIG =
+    switch (Constants.getRobotType()) {
+      case COMP -> new MotionMagicConfig(0, 0);
+      case PROG -> new MotionMagicConfig(0, 0);
+      case ALPHA -> new MotionMagicConfig(0, 0);
+      case SIM -> new MotionMagicConfig(0, 0);
+    };
 
   public record PivotConfig(int motorID, Optional<Integer> canCoderID, double reduction) {}
 
   public record PIDGains(
       double kP, double kI, double kD, double kS, double kV, double kA, double kG) {}
+
+  public record MotionMagicConfig(
+    double acceleration, double cruiseVelocity){}
 
   public static final GravityTypeValue GRAVITY_TYPE = GravityTypeValue.Arm_Cosine;
 
