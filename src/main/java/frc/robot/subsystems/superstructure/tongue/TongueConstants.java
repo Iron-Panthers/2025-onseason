@@ -1,6 +1,5 @@
 package frc.robot.subsystems.superstructure.tongue;
 
-import com.ctre.phoenix6.signals.GravityTypeValue;
 import frc.robot.Constants;
 import java.util.Optional;
 
@@ -8,27 +7,13 @@ public class TongueConstants {
   // FIXME
   public static final TongueConfig TONGUE_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new TongueConfig(0, Optional.empty(), 1);
-        case ALPHA -> new TongueConfig(15, Optional.empty(), 21.6 / 360);
-        case PROG -> new TongueConfig(0, Optional.empty(), 1);
-        case SIM -> new TongueConfig(0, Optional.empty(), 1);
+        case COMP -> new TongueConfig(0);
+        case ALPHA -> new TongueConfig(15);
+        case PROG -> new TongueConfig(0);
+        case SIM -> new TongueConfig(0);
       };
 
-  // FIXME
-  public static final PIDGains GAINS =
-      switch (Constants.getRobotType()) {
-        case COMP -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
-        case ALPHA -> new PIDGains(1.5, 0, 0.01, 0.03, 0.09, 0, 0.51);
-        case PROG -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
-        case SIM -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
-      };
-
-  public record TongueConfig(int motorID, Optional<Integer> canCoderID, double reduction) {}
-
-  public record PIDGains(
-      double kP, double kI, double kD, double kS, double kV, double kA, double kG) {}
-
-  public static final GravityTypeValue GRAVITY_TYPE = GravityTypeValue.Arm_Cosine;
+  public record TongueConfig(int servoID) {}
 
   public static final boolean INVERT_MOTOR = true;
 
@@ -46,9 +31,4 @@ public class TongueConstants {
   public static final double UPPER_VOLT_LIMIT = 3;
   public static final double LOWER_VOLT_LIMIT = -3;
   public static final double SUPPLY_CURRENT_LIMIT = 30;
-
-  // ZEROING CONSTANTS
-  public static final double ZEROING_VOLTS = 1;
-  public static final double ZEROING_OFFSET = 110; // offset in degrees
-  public static final double ZEROING_VOLTAGE_THRESHOLD = 5;
 }
