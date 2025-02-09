@@ -11,7 +11,9 @@ public class PivotIOTalonFX extends GenericSuperstructureIOTalonFX implements Pi
   public PivotIOTalonFX() {
     super(
         PIVOT_CONFIG.motorID(),
+        Optional.empty(),
         INVERT_MOTOR,
+        Optional.empty(),
         SUPPLY_CURRENT_LIMIT,
         Optional.empty(),
         PIVOT_CONFIG.reduction(),

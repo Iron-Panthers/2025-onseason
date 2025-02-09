@@ -7,6 +7,7 @@ import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -26,6 +27,8 @@ import java.util.Optional;
 
 public class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
   protected final TalonFX talon;
+  protected final Optional<TalonFX> talon2;
+
 
   private final StatusSignal<Angle> positionRotations;
   private final StatusSignal<AngularVelocity> velocityRPS;
@@ -62,7 +65,9 @@ public class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
    */
   public GenericSuperstructureIOTalonFX(
       int id,
+      Optional<Integer> id2,
       boolean inverted,
+      Optional<Boolean> oposeFirst,
       double supplyCurrentLimit,
       Optional<Integer> canCoderID,
       double reduction,
@@ -75,6 +80,10 @@ public class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
       double zeroingVoltageThreshold,
       double positionTargetEpsilon) {
     talon = new TalonFX(id);
+    if (id2.isPresent()){
+      talon2 = Optional.of(new TalonFX(id2.get()));
+    }
+    else{talon2 = Optional.empty();}
 
     // set the zeroing values such that when the robot zeros it will apply the zeroing volts and
     // when it reaches a resistance from part of the mechanism, it sets the position to the zeroing
@@ -123,6 +132,13 @@ public class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
     talon.getConfigurator().apply(config);
     setOffset();
     talon.setNeutralMode(NeutralModeValue.Brake);
+
+    if (talon2.isPresent()){
+      talon2.get().getConfigurator().apply(config);
+      talon2.get().setNeutralMode(NeutralModeValue.Brake);
+      talon2.get().setControl(new Follower(talon.getDeviceID(), oposeFirst.get()));
+    }
+
 
     // STATUS SIGNALS
     velocityRPS = talon.getVelocity();

@@ -10,7 +10,9 @@ public class ElevatorIOTalonFX extends GenericSuperstructureIOTalonFX implements
   public ElevatorIOTalonFX() {
     super(
         ELEVATOR_CONFIG.motorID(),
+        ELEVATOR_CONFIG.motorID2(),
         INVERT_MOTOR,
+        OPOSE_MOTOR,
         SUPPLY_CURRENT_LIMIT,
         Optional.empty(),
         ELEVATOR_CONFIG.reduction(),

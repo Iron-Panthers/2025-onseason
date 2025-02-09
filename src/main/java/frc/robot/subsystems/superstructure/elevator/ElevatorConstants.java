@@ -7,15 +7,15 @@ import java.util.Optional;
 public class ElevatorConstants {
   public static final ElevatorConfig ELEVATOR_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new ElevatorConfig(0, 1);
-        case PROG -> new ElevatorConfig(0, 1);
-        case ALPHA -> new ElevatorConfig(37, 9.0 / 4.0); // FIXME
-        case SIM -> new ElevatorConfig(0, 1); // FIXME
+        case COMP -> new ElevatorConfig(0, Optional.of(0), (58.0 / 14.0) / 6);
+        case PROG -> new ElevatorConfig(0, Optional.empty(), 1);
+        case ALPHA -> new ElevatorConfig(37, Optional.empty(), 9.0 / 4.0); // FIXME
+        case SIM -> new ElevatorConfig(0, Optional.empty(), 1); // FIXME
       };
 
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
-        case COMP -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
+        case COMP -> new PIDGains(1, 0, 0, 0, 0.0732, 0.007322, 0.35);
         case PROG -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
         case ALPHA -> new PIDGains(2, 0, 0.2, 0, 0.09, 0, .34);
         case SIM -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
@@ -23,13 +23,13 @@ public class ElevatorConstants {
 
   public static final MotionMagicConfig MOTION_MAGIC_CONFIG =
   switch (Constants.getRobotType()) {
-    case COMP -> new MotionMagicConfig(0, 0);
+    case COMP -> new MotionMagicConfig(50, 2500);
     case PROG -> new MotionMagicConfig(0, 0);
     case ALPHA -> new MotionMagicConfig(50, 50);
     case SIM -> new MotionMagicConfig(0, 0);
   };
 
-  public record ElevatorConfig(int motorID, double reduction) {}
+  public record ElevatorConfig(int motorID, Optional<Integer> motorID2, double reduction) {}
 
   public record PIDGains(
       double kP, double kI, double kD, double kS, double kV, double kA, double kG) {}
@@ -40,6 +40,8 @@ public class ElevatorConstants {
   public static final GravityTypeValue GRAVITY_TYPE = GravityTypeValue.Elevator_Static;
 
   public static final boolean INVERT_MOTOR = true;
+
+  public static final Optional<Boolean> OPOSE_MOTOR = Optional.of(true);
 
   public static final double POSITION_TARGET_EPSILON = 1;
 
