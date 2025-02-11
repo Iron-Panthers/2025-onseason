@@ -7,15 +7,12 @@ import frc.robot.subsystems.superstructure.GenericSuperstructure;
 public class Pivot extends GenericSuperstructure<Pivot.PivotTarget> {
   public enum PivotTarget implements GenericSuperstructure.PositionTarget {
     TOP(90),
-    SETUP_L1(0),
-    SETUP_L2(90),
-    SETUP_L3(90),
-    SETUP_L4(45),
-    SCORE_L1(0),
-    SCORE_L2(20),
-    SCORE_L3(20),
-    SCORE_L4(0),
-    INTAKE(-90);
+    INTAKE(270),
+    STOW(270), // FIXME
+    L1(285),
+    L2(285),
+    L3(0),
+    L4(0);
 
     private double position;
 
@@ -30,7 +27,7 @@ public class Pivot extends GenericSuperstructure<Pivot.PivotTarget> {
 
   public Pivot(PivotIO io) {
     super("Pivot", io);
-    setPositionTarget(PivotTarget.TOP);
+    setPositionTarget(PivotTarget.STOW);
     setControlMode(ControlMode.STOP);
   }
 }
