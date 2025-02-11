@@ -7,16 +7,12 @@ import org.littletonrobotics.junction.Logger;
 
 public class Tongue {
   public enum TongueTarget {
-    TOP(90),
-    SETUP_L1(0),
-    SETUP_L2(90),
-    SETUP_L3(90),
-    SETUP_L4(45),
-    SCORE_L1(0),
-    SCORE_L2(20),
-    SCORE_L3(20),
-    SCORE_L4(0),
-    INTAKE(-90);
+    TOP(0),
+    L1(0),
+    L2(0),
+    L3(90),
+    L4(90),
+    INTAKE(0);
 
     private double position;
 
