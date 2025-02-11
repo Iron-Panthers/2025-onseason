@@ -43,7 +43,7 @@ public class Tongue {
   private TongueIOInputsAutoLogged inputs = new TongueIOInputsAutoLogged(); // FIXME
   private TongueTarget positionTarget;
 
-  public Tongue(TongueIO io) {
+  public Tongue(TongueIO io, String name) {
     this.name = name;
     this.io = io;
 
