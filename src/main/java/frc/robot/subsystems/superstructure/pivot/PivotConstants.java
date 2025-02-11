@@ -9,7 +9,7 @@ public class PivotConstants {
   // FIXME
   public static final PivotConfig PIVOT_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new PivotConfig(0, Optional.empty(), 1);
+        case COMP -> new PivotConfig(8, Optional.empty(), 64/24);
         case ALPHA -> new PivotConfig(15, Optional.empty(), 21.6 / 360);
         case PROG -> new PivotConfig(0, Optional.empty(), 1);
         case SIM -> new PivotConfig(0, Optional.empty(), 1);
