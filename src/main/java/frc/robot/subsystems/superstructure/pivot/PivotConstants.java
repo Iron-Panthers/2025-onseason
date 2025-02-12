@@ -44,10 +44,9 @@ public class PivotConstants {
 
   public static final GravityTypeValue GRAVITY_TYPE = GravityTypeValue.Arm_Cosine;
 
-  public static final boolean INVERT_MOTOR =
-      Constants.getRobotType() == Constants.RobotType.COMP ? false : true;
+  public static final boolean INVERT_MOTOR = true;
 
-  public static final double POSITION_TARGET_EPSILON = 5;
+  public static final double POSITION_TARGET_EPSILON = 0.004;
 
   // SOFT LIMITS
   public static final Optional<Double> UPPER_EXTENSION_LIMIT =
@@ -64,6 +63,6 @@ public class PivotConstants {
 
   // ZEROING CONSTANTS
   public static final double ZEROING_VOLTS = 1;
-  public static final double ZEROING_OFFSET = 110; // offset in degrees
+  public static final double ZEROING_OFFSET = 0; // offset in degrees
   public static final double ZEROING_VOLTAGE_THRESHOLD = 5;
 }

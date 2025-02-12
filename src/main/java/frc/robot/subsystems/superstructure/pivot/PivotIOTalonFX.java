@@ -1,7 +1,7 @@
 package frc.robot.subsystems.superstructure.pivot;
 
-import static frc.robot.subsystems.superstructure.elevator.ElevatorConstants.POSITION_TARGET_EPSILON;
 import static frc.robot.subsystems.superstructure.pivot.PivotConstants.*;
+import static frc.robot.subsystems.superstructure.pivot.PivotConstants.POSITION_TARGET_EPSILON;
 
 import frc.robot.subsystems.superstructure.GenericSuperstructureIOTalonFX;
 import java.util.Optional;
