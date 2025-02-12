@@ -1,18 +1,13 @@
 package frc.robot.subsystems.superstructure.tongue;
 
-import frc.robot.subsystems.superstructure.GenericSuperstructure.ControlMode;
-
-import static frc.robot.subsystems.superstructure.tongue.TongueConstants.offset;
-
-// for intaking a note - TODO: ask the intake people what to do, L4 - 45 degrees, for L2 and L3 - 35
-// degrees, L1 - TODO: need to test
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
-public class Tongue {
+public class Tongue extends SubsystemBase {
   public enum TongueTarget {
     TOP(0),
-    L1(0),
-    L2(0),
+    L1(30),
+    L2(30),
     L3(90),
     L4(90),
     INTAKE(0);
@@ -30,7 +25,6 @@ public class Tongue {
 
   public enum ControlMode {
     POSITION,
-    ZERO,
     STOP,
   }
 
@@ -42,8 +36,8 @@ public class Tongue {
   private TongueIOInputsAutoLogged inputs = new TongueIOInputsAutoLogged(); // FIXME
   private TongueTarget positionTarget;
 
-  public Tongue(TongueIO io, String name) {
-    this.name = name;
+  public Tongue(TongueIO io) {
+    this.name = "Tongue";
     this.io = io;
 
     setPositionTarget(TongueTarget.TOP);
@@ -65,9 +59,9 @@ public class Tongue {
       }
     }
 
-    Logger.recordOutput("Superstructure/" + name + "/Target", positionTarget.toString());
-    Logger.recordOutput("Superstructure/" + name + "/Control Mode", controlMode.toString());
-    Logger.recordOutput("Superstructure/" + name + "/Reached target", reachedTarget());
+    Logger.recordOutput("Tongue/Target", positionTarget.toString());
+    Logger.recordOutput("Tongue/Control Mode", controlMode.toString());
+    Logger.recordOutput("Tongue/Reached target", reachedTarget());
   }
 
   public TongueTarget getPositionTarget() {

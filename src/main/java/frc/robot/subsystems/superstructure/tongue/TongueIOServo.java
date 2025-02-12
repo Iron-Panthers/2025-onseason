@@ -8,9 +8,10 @@ public class TongueIOServo implements TongueIO {
 
   Servo tongueIOServo;
 
-  public TongueIOServo(int servoID) {
+  public TongueIOServo() {
     tongueIOServo = new Servo(7);
-    tongueIOServo.setZeroLatch();
+    // tongueIOServo.setZeroLatch();
+    // tongueIOServo.
 
     // set servo settings
   }
@@ -22,7 +23,7 @@ public class TongueIOServo implements TongueIO {
 
   @Override
   public void stop() {
-    tongueIOServo.setSpeed(0);
+    tongueIOServo.setDisabled();
   }
 
   @Override

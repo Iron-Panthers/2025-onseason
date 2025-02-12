@@ -19,7 +19,7 @@ public class TongueConstants {
 
   public static final double POSITION_TARGET_EPSILON = 5;
 
-  public static final double offset = 0;
+  public static final double OFFSET = 0;
 
   // SOFT LIMITS
   public static final Optional<Double> UPPER_EXTENSION_LIMIT =
