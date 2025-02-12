@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "New New Path"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Station to 7"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "7 to Station"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Station to 7"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "7 to Station"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Testing",
+  "choreoAuto": false
+}
