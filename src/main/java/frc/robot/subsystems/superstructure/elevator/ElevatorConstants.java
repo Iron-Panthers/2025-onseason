@@ -15,7 +15,7 @@ public class ElevatorConstants {
 
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
-        case COMP -> new PIDGains(1, 0, 0, 0, 0.0732, 0.007322, 0.35);
+        case COMP -> new PIDGains(1, 0, 0, 0, 0.08, 0.005, 0.35);
         case PROG -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
         case ALPHA -> new PIDGains(2, 0, 0.2, 0, 0.09, 0, .34);
         case SIM -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
@@ -23,10 +23,10 @@ public class ElevatorConstants {
 
   public static final MotionMagicConfig MOTION_MAGIC_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new MotionMagicConfig(50, 2500);
-        case PROG -> new MotionMagicConfig(0, 0);
-        case ALPHA -> new MotionMagicConfig(50, 50);
-        case SIM -> new MotionMagicConfig(0, 0);
+        case COMP -> new MotionMagicConfig(9000, 1000, 0);
+        case PROG -> new MotionMagicConfig(0, 0, 0);
+        case ALPHA -> new MotionMagicConfig(50, 50, 0);
+        case SIM -> new MotionMagicConfig(0, 0, 0);
       };
 
   public record ElevatorConfig(int motorID, Optional<Integer> motorID2, double reduction) {}
@@ -34,7 +34,7 @@ public class ElevatorConstants {
   public record PIDGains(
       double kP, double kI, double kD, double kS, double kV, double kA, double kG) {}
 
-  public record MotionMagicConfig(double acceleration, double cruiseVelocity) {}
+  public record MotionMagicConfig(double acceleration, double cruiseVelocity, double jerk) {}
 
   public static final GravityTypeValue GRAVITY_TYPE = GravityTypeValue.Elevator_Static;
 
@@ -46,12 +46,12 @@ public class ElevatorConstants {
 
   // SOFT LIMITS
   public static final Optional<Double> UPPER_EXTENSION_LIMIT =
-      Optional.of(121d); // top limit is 121 rotations
+      Optional.of(32.0); // top limit is 121 rotations
   public static final Optional<Double> LOWER_EXTENSION_LIMIT = Optional.empty();
 
   // CURRENT LIMITS
-  public static final double UPPER_VOLT_LIMIT = 3;
-  public static final double LOWER_VOLT_LIMIT = -3;
+  public static final double UPPER_VOLT_LIMIT = 10;
+  public static final double LOWER_VOLT_LIMIT = -7;
   public static final double SUPPLY_CURRENT_LIMIT = 30;
   public static final int ZEROING_CURRENT_LIMIT = 20; // FIXME currently doesn't exist lmao
 

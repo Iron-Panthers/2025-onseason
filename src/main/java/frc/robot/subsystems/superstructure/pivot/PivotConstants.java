@@ -17,7 +17,7 @@ public class PivotConstants {
   // FIXME
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
-        case COMP -> new PIDGains(40, 0, 0, 0, 3.97, 0.280, 0.59);
+        case COMP -> new PIDGains(20, 0, 0, 0, 3.97, 0.280, 0.59);
         case ALPHA -> new PIDGains(1.5, 0, 0.01, 0.03, 0.09, 0, 0.51);
         case PROG -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
         case SIM -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
@@ -25,7 +25,7 @@ public class PivotConstants {
 
   public static final MotionMagicConfig MOTION_MAGIC_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new MotionMagicConfig(3, 1);
+        case COMP -> new MotionMagicConfig(3, 3);
         case PROG -> new MotionMagicConfig(0, 0);
         case ALPHA -> new MotionMagicConfig(0, 0);
         case SIM -> new MotionMagicConfig(0, 0);
@@ -46,19 +46,19 @@ public class PivotConstants {
 
   public static final boolean INVERT_MOTOR = true;
 
-  public static final double POSITION_TARGET_EPSILON = 0.004;
+  public static final double POSITION_TARGET_EPSILON = 0.01;
 
   // SOFT LIMITS
   public static final Optional<Double> UPPER_EXTENSION_LIMIT =
-      Optional.empty(); // top limit is 121 rotations
+      Optional.of(0.45); // top limit is 121 rotations
   public static final Optional<Double> LOWER_EXTENSION_LIMIT =
       Optional.empty(); // top limit is 121 rotations
 
   // top limit is 121 rotations
 
   // CURRENT LIMITS
-  public static final double UPPER_VOLT_LIMIT = 3;
-  public static final double LOWER_VOLT_LIMIT = -3;
+  public static final double UPPER_VOLT_LIMIT = 6;
+  public static final double LOWER_VOLT_LIMIT = -6;
   public static final double SUPPLY_CURRENT_LIMIT = 30;
 
   // ZEROING CONSTANTS

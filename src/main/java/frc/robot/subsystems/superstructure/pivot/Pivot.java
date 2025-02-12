@@ -15,7 +15,11 @@ public class Pivot extends GenericSuperstructure<Pivot.PivotTarget> {
     SCORE_L2(20),
     SCORE_L3(20),
     SCORE_L4(0),
-    INTAKE(-90);
+    INTAKE(-90),
+    TEST_N25(-0.27),
+    TEST_25(0.25),
+    TEST_5(0.45),
+    TEST_0(0);
 
     private double position;
 
@@ -31,6 +35,6 @@ public class Pivot extends GenericSuperstructure<Pivot.PivotTarget> {
   public Pivot(PivotIO io) {
     super("Pivot", io);
     setPositionTarget(PivotTarget.SETUP_L1);
-    setControlMode(ControlMode.POSITION);
+    setControlMode(ControlMode.STOP);
   }
 }

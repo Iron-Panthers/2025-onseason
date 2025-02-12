@@ -31,6 +31,7 @@ public interface GenericSuperstructureIO {
       double kG,
       double motionMagicAcceleration,
       double motionMagicCruiseVelocity,
+      double jerk,
       GravityTypeValue gravityTypeValue) {}
 
   default void stop() {}

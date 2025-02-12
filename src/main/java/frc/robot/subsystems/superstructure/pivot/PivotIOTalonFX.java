@@ -36,6 +36,7 @@ public class PivotIOTalonFX extends GenericSuperstructureIOTalonFX implements Pi
         GAINS.kG(),
         MOTION_MAGIC_CONFIG.acceleration(),
         MOTION_MAGIC_CONFIG.cruiseVelocity(),
+        0,
         GRAVITY_TYPE);
   }
 }

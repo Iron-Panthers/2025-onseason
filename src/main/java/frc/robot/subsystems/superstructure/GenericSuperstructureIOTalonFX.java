@@ -112,7 +112,6 @@ public class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
     config.Voltage.withPeakForwardVoltage(upperVoltLimit);
     config.Voltage.withPeakReverseVoltage(lowerVoltLimit);
     config.Feedback.withSensorToMechanismRatio(reduction);
-
     // CANCODER CONFIG
     if (canCoderID.isPresent()) {
       CANcoder canCoder = new CANcoder(canCoderID.get());
@@ -205,6 +204,7 @@ public class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
       double kG,
       double motionMagicAcceleration,
       double motionMagicCruiseVelocity,
+      double motionMagicJerk,
       GravityTypeValue gravityTypeValue) {
     Slot0Configs gainsConfig = new Slot0Configs();
     gainsConfig.kP = kP;
@@ -219,6 +219,7 @@ public class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
     MotionMagicConfigs motionMagicConfig = new MotionMagicConfigs();
     motionMagicConfig.MotionMagicAcceleration = motionMagicAcceleration;
     motionMagicConfig.MotionMagicCruiseVelocity = motionMagicCruiseVelocity;
+    motionMagicConfig.MotionMagicJerk = motionMagicJerk;
 
     talon.getConfigurator().apply(gainsConfig);
     talon.getConfigurator().apply(motionMagicConfig);

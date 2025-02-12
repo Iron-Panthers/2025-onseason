@@ -35,6 +35,7 @@ public class ElevatorIOTalonFX extends GenericSuperstructureIOTalonFX implements
         GAINS.kG(),
         MOTION_MAGIC_CONFIG.acceleration(),
         MOTION_MAGIC_CONFIG.cruiseVelocity(),
+        MOTION_MAGIC_CONFIG.jerk(),
         GRAVITY_TYPE);
   }
 }
