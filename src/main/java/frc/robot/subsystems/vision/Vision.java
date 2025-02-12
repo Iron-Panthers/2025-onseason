@@ -2,8 +2,8 @@ package frc.robot.subsystems.vision;
 
 import static frc.robot.subsystems.vision.VisionConstants.*;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -82,7 +82,10 @@ public class Vision extends SubsystemBase {
         var measurement =
             new VisionMeasurement(observation.estimatedPose().toPose2d(), observation.timestamp());
 
-        Matrix<N3, N1> visionStdDevs = VecBuilder.fill(0.9, 0.9, 0.9); // FIXME placeholder defaults
+        Matrix<N3, N1> visionStdDevs =
+            TAG_COUNT_DEVIATIONS
+                .get(MathUtil.clamp(observation.tagCount() - 1, 0, TAG_COUNT_DEVIATIONS.size() - 1))
+                .computeDeviation(observation.averageDistance());
 
         RobotState.getInstance().addVisionMeasurement(measurement, visionStdDevs);
       }
