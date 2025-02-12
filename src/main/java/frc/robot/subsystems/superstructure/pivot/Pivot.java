@@ -30,7 +30,7 @@ public class Pivot extends GenericSuperstructure<Pivot.PivotTarget> {
 
   public Pivot(PivotIO io) {
     super("Pivot", io);
-    setPositionTarget(PivotTarget.TOP);
+    setPositionTarget(PivotTarget.SETUP_L1);
     setControlMode(ControlMode.STOP);
   }
 }

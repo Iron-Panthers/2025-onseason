@@ -22,13 +22,11 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
-
 import java.util.Optional;
 
 public class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
   protected final TalonFX talon;
   protected final Optional<TalonFX> talon2;
-
 
   private final StatusSignal<Angle> positionRotations;
   private final StatusSignal<AngularVelocity> velocityRPS;
@@ -70,6 +68,7 @@ public class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
       Optional<Boolean> oposeFirst,
       double supplyCurrentLimit,
       Optional<Integer> canCoderID,
+      Optional<Double> canCoderOffset,
       double reduction,
       Optional<Double> upperLimit,
       Optional<Double> lowerLimit,
@@ -80,10 +79,11 @@ public class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
       double zeroingVoltageThreshold,
       double positionTargetEpsilon) {
     talon = new TalonFX(id);
-    if (id2.isPresent()){
+    if (id2.isPresent()) {
       talon2 = Optional.of(new TalonFX(id2.get()));
+    } else {
+      talon2 = Optional.empty();
     }
-    else{talon2 = Optional.empty();}
 
     // set the zeroing values such that when the robot zeros it will apply the zeroing volts and
     // when it reaches a resistance from part of the mechanism, it sets the position to the zeroing
@@ -123,9 +123,10 @@ public class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
                   .withMagnetSensor(
                       new MagnetSensorConfigs()
                           .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
-                          .withMagnetOffset(0)));
+                          .withMagnetOffset(
+                              canCoderOffset.isPresent() ? canCoderOffset.get() : 0)));
 
-      canCoder.getConfigurator().setPosition(0);
+      // canCoder.getConfigurator().setPosition(0);
       config.Feedback.withRemoteCANcoder(canCoder);
       config.Feedback.withSensorToMechanismRatio(reduction);
     }
@@ -133,12 +134,11 @@ public class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
     setOffset();
     talon.setNeutralMode(NeutralModeValue.Brake);
 
-    if (talon2.isPresent()){
+    if (talon2.isPresent()) {
       talon2.get().getConfigurator().apply(config);
       talon2.get().setNeutralMode(NeutralModeValue.Brake);
       talon2.get().setControl(new Follower(talon.getDeviceID(), oposeFirst.get()));
     }
-
 
     // STATUS SIGNALS
     velocityRPS = talon.getVelocity();
