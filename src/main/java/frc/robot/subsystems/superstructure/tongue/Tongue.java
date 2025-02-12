@@ -1,6 +1,9 @@
 package frc.robot.subsystems.superstructure.tongue;
 
 import frc.robot.subsystems.superstructure.GenericSuperstructure.ControlMode;
+
+import static frc.robot.subsystems.superstructure.tongue.TongueConstants.offset;
+
 // for intaking a note - TODO: ask the intake people what to do, L4 - 45 degrees, for L2 and L3 - 35
 // degrees, L1 - TODO: need to test
 import org.littletonrobotics.junction.Logger;
@@ -55,7 +58,7 @@ public class Tongue {
     // Process control mode
     switch (controlMode) {
       case POSITION -> {
-        io.runPosition(positionTarget.getPosition());
+        io.runPosition(positionTarget.getPosition() + offset);
       }
       case STOP -> {
         io.stop();
@@ -85,11 +88,11 @@ public class Tongue {
   }
 
   public double position() {
-    return inputs.positionRotations;
+    return inputs.angle;
   }
 
   public boolean reachedTarget() {
-    return Math.abs(inputs.positionRotations - positionTarget.getPosition())
+    return Math.abs(inputs.angle - positionTarget.getPosition())
         <= TongueConstants.POSITION_TARGET_EPSILON;
   }
 }
