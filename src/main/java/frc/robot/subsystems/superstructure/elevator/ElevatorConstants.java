@@ -49,6 +49,5 @@ public class ElevatorConstants {
   public static final double ZEROING_VOLTAGE_THRESHOLD = 4;
 
   // MIN HEIGHT TO MOVE PIVOT WITHOUT HITTING INTAKE
-  public static final double MIN_SAFE_HEIGHT_FOR_PIVOT = 15;// FIXME
-
+  public static final double MIN_SAFE_HEIGHT_FOR_PIVOT = 15; // FIXME
 }

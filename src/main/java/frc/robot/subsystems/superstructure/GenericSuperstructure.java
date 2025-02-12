@@ -1,9 +1,6 @@
 package frc.robot.subsystems.superstructure;
 
 import edu.wpi.first.math.filter.LinearFilter;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
 public class GenericSuperstructure<G extends GenericSuperstructure.PositionTarget> {

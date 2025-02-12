@@ -59,7 +59,7 @@ public class Elevator extends GenericSuperstructure<Elevator.ElevatorTarget> {
     return filteredSupplyCurrentAmps;
   }
 
-  public boolean aboveSafeHeightForPivot(){
+  public boolean aboveSafeHeightForPivot() {
     return this.getPosition() > ElevatorConstants.MIN_SAFE_HEIGHT_FOR_PIVOT;
   }
 

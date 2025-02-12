@@ -1,9 +1,5 @@
 package frc.robot.subsystems.superstructure;
 
-import java.util.HashMap;
-
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -30,13 +26,10 @@ public class Superstructure extends SubsystemBase {
     STOW, // Going to the lowest position
     ZERO, // Zero the motor
     STOP; // Stop the superstructure
-
-
   }
 
   private SuperstructureState currentState = SuperstructureState.ZERO; // current state
   private SuperstructureState targetState = SuperstructureState.ZERO; // current target state
-  
 
   private final Elevator elevator;
   private final Pivot pivot;
@@ -62,12 +55,12 @@ public class Superstructure extends SubsystemBase {
         tongue.setPositionTarget(TongueTarget.L1);
 
         // check for state transitions
-        if(this.superstructureReachedTarget()){
-            if(targetState == SuperstructureState.L2){
-                this.currentState = SuperstructureState.L2;
-            } else if(targetState != currentState){
-                this.currentState = SuperstructureState.STOW;
-            }
+        if (this.superstructureReachedTarget()) {
+          if (targetState == SuperstructureState.L2) {
+            this.currentState = SuperstructureState.L2;
+          } else if (targetState != currentState) {
+            this.currentState = SuperstructureState.STOW;
+          }
         }
       }
       case L2 -> {
@@ -91,10 +84,10 @@ public class Superstructure extends SubsystemBase {
 
 
         // check for state transitions
-        if(this.superstructureReachedTarget()){
-            if(targetState != currentState){
-                this.currentState = SuperstructureState.L4;
-            } 
+        if (this.superstructureReachedTarget()) {
+          if (targetState != currentState) {
+            this.currentState = SuperstructureState.L4;
+          }
         }
       }
       case L4 -> {
@@ -104,14 +97,13 @@ public class Superstructure extends SubsystemBase {
 
 
         // check for state transitions
-        if(this.superstructureReachedTarget()){
-            if(targetState == SuperstructureState.L3){
-                this.currentState = SuperstructureState.L3;
-            } else if(targetState != currentState){
-                this.currentState = SuperstructureState.TOP;
-            }
+        if (this.superstructureReachedTarget()) {
+          if (targetState == SuperstructureState.L3) {
+            this.currentState = SuperstructureState.L3;
+          } else if (targetState != currentState) {
+            this.currentState = SuperstructureState.TOP;
+          }
         }
-        
       }
       case TOP -> {
         elevator.setPositionTarget(ElevatorTarget.BOTTOM);
@@ -120,12 +112,12 @@ public class Superstructure extends SubsystemBase {
 
 
         // check for state transitions
-        if(this.superstructureReachedTarget()){
-            if(targetState == SuperstructureState.L4 || targetState == SuperstructureState.L3){
-                this.currentState = SuperstructureState.L4;
-            } else if(targetState != currentState){
-                this.currentState = SuperstructureState.STOW;
-            }
+        if (this.superstructureReachedTarget()) {
+          if (targetState == SuperstructureState.L4 || targetState == SuperstructureState.L3) {
+            this.currentState = SuperstructureState.L4;
+          } else if (targetState != currentState) {
+            this.currentState = SuperstructureState.STOW;
+          }
         }
       }
 
@@ -134,16 +126,16 @@ public class Superstructure extends SubsystemBase {
         pivot.setPositionTarget(PivotTarget.TOP);
         tongue.setPositionTarget(TongueTarget.TOP);
 
-        
         // check for state transitions
-        if(this.superstructureReachedTarget()){
-            if(targetState == SuperstructureState.INTAKE){
-                this.currentState = SuperstructureState.INTAKE;
-            } else if(targetState == SuperstructureState.L1 || targetState == SuperstructureState.L2){
-                this.currentState = SuperstructureState.L1;
-            } else if(targetState != currentState){
-                this.currentState = SuperstructureState.TOP;
-            }
+        if (this.superstructureReachedTarget()) {
+          if (targetState == SuperstructureState.INTAKE) {
+            this.currentState = SuperstructureState.INTAKE;
+          } else if (targetState == SuperstructureState.L1
+              || targetState == SuperstructureState.L2) {
+            this.currentState = SuperstructureState.L1;
+          } else if (targetState != currentState) {
+            this.currentState = SuperstructureState.TOP;
+          }
         }
       }
       case INTAKE -> {
@@ -151,12 +143,11 @@ public class Superstructure extends SubsystemBase {
         pivot.setPositionTarget(PivotTarget.INTAKE);
         tongue.setPositionTarget(TongueTarget.TOP);
 
-        
         // check for state transitions
-        if(this.superstructureReachedTarget()){
-            if(targetState != currentState){
-                this.currentState = SuperstructureState.STOW;
-            }
+        if (this.superstructureReachedTarget()) {
+          if (targetState != currentState) {
+            this.currentState = SuperstructureState.STOW;
+          }
         }
       }
       case ZERO -> {
@@ -199,13 +190,16 @@ public class Superstructure extends SubsystemBase {
 
   // go to target state command factory
   public Command goToStateCommand(SuperstructureState superstructureState) {
-    return new FunctionalCommand(() -> {
-      setTargetState(superstructureState);
-    }, 
-    () -> {}, 
-    (e) -> {}, 
-    () -> {return currentState == targetState && superstructureReachedTarget();}, 
-    this);
+    return new FunctionalCommand(
+        () -> {
+          setTargetState(superstructureState);
+        },
+        () -> {},
+        (e) -> {},
+        () -> {
+          return currentState == targetState && superstructureReachedTarget();
+        },
+        this);
   }
 
   /**
@@ -256,5 +250,4 @@ public class Superstructure extends SubsystemBase {
   public boolean superstructureReachedTarget() {
     return elevator.reachedTarget() && pivot.reachedTarget();
   }
-
 }
