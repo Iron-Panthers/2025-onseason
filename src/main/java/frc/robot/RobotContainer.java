@@ -311,8 +311,8 @@ public class RobotContainer {
             new Rotation2d(Math.toRadians(30))); 
     double closest = DriveConstants.REEF_SNAP_ANGLES[0];
     for (double snap : DriveConstants.REEF_SNAP_ANGLES) {
-      if (Math.abs(relativeAngularDifference(targetHeading.getDegrees(), snap))
-          < Math.abs(relativeAngularDifference(targetHeading.getDegrees(), closest))) {
+      if (Math.abs(relativeAngularDifference(Math.PI + targetHeading.getDegrees(), snap))
+          < Math.abs(relativeAngularDifference(Math.PI + targetHeading.getDegrees(), closest))) {
         closest = snap;
       }
     }
