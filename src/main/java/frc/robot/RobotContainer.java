@@ -7,6 +7,7 @@ import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -56,6 +57,7 @@ public class RobotContainer {
 
   private final CommandXboxController driverA = new CommandXboxController(0);
   private final CommandXboxController driverB = new CommandXboxController(1);
+  private final Joystick joystick = new Joystick(2);
 
   private Drive swerve;
   private Vision vision;
@@ -261,6 +263,21 @@ public class RobotContainer {
                 .alongWith(pivot.goToPositionCommand(PivotTarget.SCORE_L4))
                 .andThen(elevator.goToPositionCommand(ElevatorTarget.L1))
                 .andThen(rollers.setTargetCommand(RollerState.IDLE)));
+    new Trigger(() -> joystick.getTrigger())
+        .onTrue(
+            (elevator
+                .goToPositionCommand(ElevatorTarget.TEST_TOP)
+                .andThen(pivot.goToPositionCommand(PivotTarget.TEST_25))));
+    new Trigger(() -> joystick.getRawButton(3))
+        .onTrue(
+            (pivot
+                .goToPositionCommand(PivotTarget.TEST_N25)
+                .andThen(elevator.goToPositionCommand(ElevatorTarget.TEST_BOTTOM))));
+    new Trigger(() -> joystick.getRawButton(6))
+        .onTrue(
+            (pivot
+                .goToPositionCommand(PivotTarget.TEST_5)
+                .alongWith(elevator.goToPositionCommand(ElevatorTarget.TEST_MIDDLE))));
   }
 
   private void configureAutos() {
