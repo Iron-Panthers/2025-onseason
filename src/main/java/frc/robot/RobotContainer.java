@@ -254,7 +254,10 @@ public class RobotContainer {
                 elevator
                     .goToPositionCommand(ElevatorTarget.BOTTOM)
                     .alongWith(rollers.setTargetCommand(RollerState.IDLE))));
-
+    SmartDashboard.putBoolean("Xbox?", DriverStation.getJoystickIsXbox(0));
+    SmartDashboard.putBoolean("Connected", driverA.isConnected());
+    SmartDashboard.putBoolean("Down pressed?", driverA.povDown().getAsBoolean());
+    SmartDashboard.putNumber("Joysticks?", driverA.getLeftX());
     driverB // eject
         .rightTrigger()
         .onTrue(
