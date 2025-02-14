@@ -4,7 +4,6 @@ import static frc.robot.subsystems.superstructure.elevator.ElevatorConstants.POS
 import static frc.robot.subsystems.superstructure.pivot.PivotConstants.*;
 
 import frc.robot.subsystems.superstructure.GenericSuperstructureIOTalonFX;
-import java.util.Optional;
 
 public class PivotIOTalonFX extends GenericSuperstructureIOTalonFX implements PivotIO {
 

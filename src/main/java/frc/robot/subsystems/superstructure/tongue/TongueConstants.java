@@ -7,19 +7,19 @@ public class TongueConstants {
   // FIXME
   public static final TongueConfig TONGUE_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new TongueConfig(0);
-        case ALPHA -> new TongueConfig(15);
-        case PROG -> new TongueConfig(0);
-        case SIM -> new TongueConfig(0);
+        case COMP -> new TongueConfig(7, 0);
+        case ALPHA -> new TongueConfig(15, 0);
+        case PROG -> new TongueConfig(0, 0);
+        case SIM -> new TongueConfig(0, 0);
       };
 
-  public record TongueConfig(int servoID) {}
+  public record TongueConfig(int servoID, int servoSensorID) {}
 
   public static final boolean INVERT_MOTOR = true;
 
   public static final double POSITION_TARGET_EPSILON = 5;
 
-  public static final double OFFSET = 0;
+  public static final double OFFSET = 0.5;
 
   // SOFT LIMITS
   public static final Optional<Double> UPPER_EXTENSION_LIMIT =

@@ -1,20 +1,15 @@
 package frc.robot.subsystems.superstructure;
 
-import java.util.HashMap;
-
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.superstructure.GenericSuperstructure.ControlMode;
 import frc.robot.subsystems.superstructure.elevator.Elevator;
-import frc.robot.subsystems.superstructure.elevator.ElevatorConstants;
 import frc.robot.subsystems.superstructure.elevator.Elevator.ElevatorTarget;
-import frc.robot.subsystems.superstructure.elevator.ElevatorConstants.ElevatorConfig;
+import frc.robot.subsystems.superstructure.elevator.ElevatorConstants;
 import frc.robot.subsystems.superstructure.pivot.Pivot;
 import frc.robot.subsystems.superstructure.pivot.Pivot.PivotTarget;
-import frc.robot.subsystems.superstructure.pivot.PivotConstants;
+import org.littletonrobotics.junction.Logger;
 
 public class Superstructure extends SubsystemBase {
   public enum SuperstructureState {
@@ -27,13 +22,10 @@ public class Superstructure extends SubsystemBase {
     STOW, // Going to the lowest position
     ZERO, // Zero the motor
     STOP; // Stop the superstructure
-
-
   }
 
   private SuperstructureState currentState = SuperstructureState.ZERO; // current state
   private SuperstructureState targetState = SuperstructureState.ZERO; // current target state
-  
 
   private final Elevator elevator;
   private final Pivot pivot;
@@ -42,8 +34,7 @@ public class Superstructure extends SubsystemBase {
     this.elevator = elevator;
     this.pivot = pivot;
     pivot.setPositionTarget(PivotTarget.TOP);
-    elevator.setPositionTarget(ElevatorTarget.BOTTOM);     
-
+    elevator.setPositionTarget(ElevatorTarget.BOTTOM);
   }
 
   @Override
@@ -55,35 +46,34 @@ public class Superstructure extends SubsystemBase {
         pivot.setPositionTarget(PivotTarget.L1);
 
         // check for state transitions
-        if(this.superstructureReachedTarget()){
-            if(targetState == SuperstructureState.L2){
-                this.currentState = SuperstructureState.L2;
-            } else if(targetState != currentState){
-                this.currentState = SuperstructureState.STOW;
-            }
+        if (this.superstructureReachedTarget()) {
+          if (targetState == SuperstructureState.L2) {
+            this.currentState = SuperstructureState.L2;
+          } else if (targetState != currentState) {
+            this.currentState = SuperstructureState.STOW;
+          }
         }
       }
       case L2 -> {
         elevator.setPositionTarget(ElevatorTarget.L2);
         pivot.setPositionTarget(PivotTarget.L2);
 
-                // check for state transitions
-                if(this.superstructureReachedTarget()){
-                    if(targetState != currentState){
-                        this.currentState = SuperstructureState.L1;
-                    } 
-                }
-        
+        // check for state transitions
+        if (this.superstructureReachedTarget()) {
+          if (targetState != currentState) {
+            this.currentState = SuperstructureState.L1;
+          }
+        }
       }
       case L3 -> {
         elevator.setPositionTarget(ElevatorTarget.L3);
         pivot.setPositionTarget(PivotTarget.L3);
 
         // check for state transitions
-        if(this.superstructureReachedTarget()){
-            if(targetState != currentState){
-                this.currentState = SuperstructureState.L4;
-            } 
+        if (this.superstructureReachedTarget()) {
+          if (targetState != currentState) {
+            this.currentState = SuperstructureState.L4;
+          }
         }
       }
       case L4 -> {
@@ -91,26 +81,25 @@ public class Superstructure extends SubsystemBase {
         pivot.setPositionTarget(PivotTarget.L4);
 
         // check for state transitions
-        if(this.superstructureReachedTarget()){
-            if(targetState == SuperstructureState.L3){
-                this.currentState = SuperstructureState.L3;
-            } else if(targetState != currentState){
-                this.currentState = SuperstructureState.TOP;
-            }
+        if (this.superstructureReachedTarget()) {
+          if (targetState == SuperstructureState.L3) {
+            this.currentState = SuperstructureState.L3;
+          } else if (targetState != currentState) {
+            this.currentState = SuperstructureState.TOP;
+          }
         }
-        
       }
       case TOP -> {
         elevator.setPositionTarget(ElevatorTarget.BOTTOM);
         pivot.setPositionTarget(PivotTarget.TOP);
 
         // check for state transitions
-        if(this.superstructureReachedTarget()){
-            if(targetState == SuperstructureState.L4 || targetState == SuperstructureState.L3){
-                this.currentState = SuperstructureState.L4;
-            } else if(targetState != currentState){
-                this.currentState = SuperstructureState.STOW;
-            }
+        if (this.superstructureReachedTarget()) {
+          if (targetState == SuperstructureState.L4 || targetState == SuperstructureState.L3) {
+            this.currentState = SuperstructureState.L4;
+          } else if (targetState != currentState) {
+            this.currentState = SuperstructureState.STOW;
+          }
         }
       }
 
@@ -118,40 +107,41 @@ public class Superstructure extends SubsystemBase {
         elevator.setPositionTarget(ElevatorTarget.BOTTOM);
         pivot.setPositionTarget(PivotTarget.TOP);
 
-        
         // check for state transitions
-        if(this.superstructureReachedTarget()){
-            if(targetState == SuperstructureState.INTAKE){
-                this.currentState = SuperstructureState.INTAKE;
-            } else if(targetState == SuperstructureState.L1 || targetState == SuperstructureState.L2){
-                this.currentState = SuperstructureState.L1;
-            } else if(targetState != currentState){
-                this.currentState = SuperstructureState.TOP;
-            }
+        if (this.superstructureReachedTarget()) {
+          if (targetState == SuperstructureState.INTAKE) {
+            this.currentState = SuperstructureState.INTAKE;
+          } else if (targetState == SuperstructureState.L1
+              || targetState == SuperstructureState.L2) {
+            this.currentState = SuperstructureState.L1;
+          } else if (targetState != currentState) {
+            this.currentState = SuperstructureState.TOP;
+          }
         }
       }
       case INTAKE -> {
         elevator.setPositionTarget(ElevatorTarget.INTAKE);
         pivot.setPositionTarget(PivotTarget.INTAKE);
 
-        
         // check for state transitions
-        if(this.superstructureReachedTarget()){
-            if(targetState != currentState){
-                this.currentState = SuperstructureState.STOW;
-            }
+        if (this.superstructureReachedTarget()) {
+          if (targetState != currentState) {
+            this.currentState = SuperstructureState.STOW;
+          }
         }
       }
       case ZERO -> {
-          elevator.setZeroing(true);
-          if (elevator.getFilteredSupplyCurrentAmps() > ElevatorConstants.ZEROING_VOLTAGE_THRESHOLD) { // check if the elevator is done zeroing and set
-            // offsets accordingly
-            elevator.setOffset();
-            elevator.setControlMode(ControlMode.POSITION);
-            elevator.setZeroing(false);
+        elevator.setZeroing(true);
+        if (elevator.getFilteredSupplyCurrentAmps()
+            > ElevatorConstants
+                .ZEROING_VOLTAGE_THRESHOLD) { // check if the elevator is done zeroing and set
+          // offsets accordingly
+          elevator.setOffset();
+          elevator.setControlMode(ControlMode.POSITION);
+          elevator.setZeroing(false);
 
-            setTargetState(SuperstructureState.STOW);
-          }
+          setTargetState(SuperstructureState.STOW);
+        }
       }
       case STOP -> {
         elevator.setControlMode(ControlMode.STOP);
@@ -179,13 +169,16 @@ public class Superstructure extends SubsystemBase {
 
   // go to target state command factory
   public Command goToStateCommand(SuperstructureState superstructureState) {
-    return new FunctionalCommand(() -> {
-      setTargetState(superstructureState);
-    }, 
-    () -> {}, 
-    (e) -> {}, 
-    () -> {return currentState == targetState && superstructureReachedTarget();}, 
-    this);
+    return new FunctionalCommand(
+        () -> {
+          setTargetState(superstructureState);
+        },
+        () -> {},
+        (e) -> {},
+        () -> {
+          return currentState == targetState && superstructureReachedTarget();
+        },
+        this);
   }
 
   /**
@@ -236,5 +229,4 @@ public class Superstructure extends SubsystemBase {
   public boolean superstructureReachedTarget() {
     return elevator.reachedTarget() && pivot.reachedTarget();
   }
-
 }

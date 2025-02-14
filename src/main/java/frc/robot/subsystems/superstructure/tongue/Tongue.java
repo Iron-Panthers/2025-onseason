@@ -7,8 +7,8 @@ public class Tongue extends SubsystemBase {
   public enum TongueTarget {
     TOP(0),
     L1(30),
-    L2(30),
-    L3(90),
+    L2(60),
+    L3(180),
     L4(90),
     INTAKE(0);
 
@@ -44,6 +44,7 @@ public class Tongue extends SubsystemBase {
     setControlMode(ControlMode.STOP);
   }
 
+  @Override
   public void periodic() {
     // Process inputs
     io.updateInputs(inputs);
@@ -52,7 +53,7 @@ public class Tongue extends SubsystemBase {
     // Process control mode
     switch (controlMode) {
       case POSITION -> {
-        io.runPosition(positionTarget.getPosition() + offset);
+        io.runPosition(positionTarget.getPosition()); // +TongueConstants.OFFSET);
       }
       case STOP -> {
         io.stop();
