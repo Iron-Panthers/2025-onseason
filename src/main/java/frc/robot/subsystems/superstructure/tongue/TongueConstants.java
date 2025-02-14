@@ -19,8 +19,6 @@ public class TongueConstants {
 
   public static final double POSITION_TARGET_EPSILON = 5;
 
-  public static final double OFFSET = 0.5;
-
   // SOFT LIMITS
   public static final Optional<Double> UPPER_EXTENSION_LIMIT =
       Optional.empty(); // top limit is 121 rotations

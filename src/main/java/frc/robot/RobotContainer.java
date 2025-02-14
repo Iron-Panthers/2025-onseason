@@ -30,7 +30,6 @@ import frc.robot.subsystems.superstructure.pivot.Pivot;
 import frc.robot.subsystems.superstructure.pivot.PivotIO;
 import frc.robot.subsystems.superstructure.pivot.PivotIOTalonFX;
 import frc.robot.subsystems.superstructure.tongue.Tongue;
-import frc.robot.subsystems.superstructure.tongue.Tongue.TongueTarget;
 import frc.robot.subsystems.superstructure.tongue.TongueIOServo;
 import frc.robot.subsystems.swerve.Drive;
 import frc.robot.subsystems.swerve.DriveConstants;
@@ -142,7 +141,10 @@ public class RobotContainer {
     if (pivot == null) {
       pivot = new Pivot(new PivotIO() {});
     }
-    superstructure = new Superstructure(elevator, pivot);
+    // if (tongue == null) {
+    //   tongue = new Tongue(new TongueIO() {});
+    // }
+    superstructure = new Superstructure(elevator, pivot, tongue);
 
     configureBindings();
     configureAutos();
@@ -241,9 +243,6 @@ public class RobotContainer {
             new SequentialCommandGroup(
                 superstructure.goToStateCommand(SuperstructureState.INTAKE),
                 rollers.setTargetCommand(RollerState.INTAKE)));
-    driverA.a().onTrue(new InstantCommand(() -> tongue.setPositionTarget(TongueTarget.L3)));
-    driverA.b().onTrue(new InstantCommand(() -> tongue.setPositionTarget(TongueTarget.TOP)));
-    driverA.x().onTrue(new InstantCommand(() -> tongue.setPositionTarget(TongueTarget.L2)));
 
     // new SequentialCommandGroup(
     //     new ParallelCommandGroup(

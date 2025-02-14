@@ -1,9 +1,8 @@
 package frc.robot.subsystems.superstructure.tongue;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
-public class Tongue extends SubsystemBase {
+public class Tongue {
   public enum TongueTarget {
     TOP(0),
     L1(30),
@@ -44,7 +43,6 @@ public class Tongue extends SubsystemBase {
     setControlMode(ControlMode.STOP);
   }
 
-  @Override
   public void periodic() {
     // Process inputs
     io.updateInputs(inputs);
@@ -53,13 +51,12 @@ public class Tongue extends SubsystemBase {
     // Process control mode
     switch (controlMode) {
       case POSITION -> {
-        io.runPosition(positionTarget.getPosition()); // +TongueConstants.OFFSET);
+        io.runPosition(positionTarget.getPosition());
       }
       case STOP -> {
         io.stop();
       }
     }
-
     Logger.recordOutput("Tongue/Target", positionTarget.toString());
     Logger.recordOutput("Tongue/Control Mode", controlMode.toString());
     Logger.recordOutput("Tongue/Reached target", reachedTarget());

@@ -9,6 +9,8 @@ import frc.robot.subsystems.superstructure.elevator.Elevator.ElevatorTarget;
 import frc.robot.subsystems.superstructure.elevator.ElevatorConstants;
 import frc.robot.subsystems.superstructure.pivot.Pivot;
 import frc.robot.subsystems.superstructure.pivot.Pivot.PivotTarget;
+import frc.robot.subsystems.superstructure.tongue.Tongue;
+import frc.robot.subsystems.superstructure.tongue.Tongue.TongueTarget;
 import org.littletonrobotics.junction.Logger;
 
 public class Superstructure extends SubsystemBase {
@@ -29,21 +31,24 @@ public class Superstructure extends SubsystemBase {
 
   private final Elevator elevator;
   private final Pivot pivot;
+  private final Tongue tongue;
 
-  public Superstructure(Elevator elevator, Pivot pivot) {
+  public Superstructure(Elevator elevator, Pivot pivot, Tongue tongue) {
     this.elevator = elevator;
     this.pivot = pivot;
+    this.tongue = tongue;
     pivot.setPositionTarget(PivotTarget.TOP);
     elevator.setPositionTarget(ElevatorTarget.BOTTOM);
+    tongue.setPositionTarget(TongueTarget.TOP);
   }
 
   @Override
   public void periodic() {
-
     switch (currentState) { // switch on the target state
       case L1 -> {
         elevator.setPositionTarget(ElevatorTarget.L1);
         pivot.setPositionTarget(PivotTarget.L1);
+        tongue.setPositionTarget(TongueTarget.L1);
 
         // check for state transitions
         if (this.superstructureReachedTarget()) {
@@ -57,6 +62,7 @@ public class Superstructure extends SubsystemBase {
       case L2 -> {
         elevator.setPositionTarget(ElevatorTarget.L2);
         pivot.setPositionTarget(PivotTarget.L2);
+        tongue.setPositionTarget(TongueTarget.L2);
 
         // check for state transitions
         if (this.superstructureReachedTarget()) {
@@ -68,6 +74,7 @@ public class Superstructure extends SubsystemBase {
       case L3 -> {
         elevator.setPositionTarget(ElevatorTarget.L3);
         pivot.setPositionTarget(PivotTarget.L3);
+        tongue.setPositionTarget(TongueTarget.L3);
 
         // check for state transitions
         if (this.superstructureReachedTarget()) {
@@ -79,6 +86,7 @@ public class Superstructure extends SubsystemBase {
       case L4 -> {
         elevator.setPositionTarget(ElevatorTarget.L4);
         pivot.setPositionTarget(PivotTarget.L4);
+        tongue.setPositionTarget(TongueTarget.L4);
 
         // check for state transitions
         if (this.superstructureReachedTarget()) {
@@ -92,6 +100,7 @@ public class Superstructure extends SubsystemBase {
       case TOP -> {
         elevator.setPositionTarget(ElevatorTarget.BOTTOM);
         pivot.setPositionTarget(PivotTarget.TOP);
+        tongue.setPositionTarget(TongueTarget.TOP);
 
         // check for state transitions
         if (this.superstructureReachedTarget()) {
@@ -106,6 +115,7 @@ public class Superstructure extends SubsystemBase {
       case STOW -> {
         elevator.setPositionTarget(ElevatorTarget.BOTTOM);
         pivot.setPositionTarget(PivotTarget.TOP);
+        tongue.setPositionTarget(TongueTarget.TOP);
 
         // check for state transitions
         if (this.superstructureReachedTarget()) {
@@ -122,6 +132,7 @@ public class Superstructure extends SubsystemBase {
       case INTAKE -> {
         elevator.setPositionTarget(ElevatorTarget.INTAKE);
         pivot.setPositionTarget(PivotTarget.INTAKE);
+        tongue.setPositionTarget(TongueTarget.INTAKE);
 
         // check for state transitions
         if (this.superstructureReachedTarget()) {
@@ -146,11 +157,13 @@ public class Superstructure extends SubsystemBase {
       case STOP -> {
         elevator.setControlMode(ControlMode.STOP);
         pivot.setControlMode(ControlMode.STOP);
+        tongue.setControlMode(Tongue.ControlMode.STOP);
       }
     }
 
     elevator.periodic();
     pivot.periodic();
+    tongue.periodic();
 
     Logger.recordOutput("Superstructure/TargetState", targetState);
     Logger.recordOutput("Superstructure/Elevator reached target", elevator.reachedTarget());
