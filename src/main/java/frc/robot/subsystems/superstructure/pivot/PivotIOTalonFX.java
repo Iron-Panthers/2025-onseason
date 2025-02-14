@@ -1,7 +1,7 @@
 package frc.robot.subsystems.superstructure.pivot;
 
-import static frc.robot.subsystems.superstructure.elevator.ElevatorConstants.POSITION_TARGET_EPSILON;
 import static frc.robot.subsystems.superstructure.pivot.PivotConstants.*;
+import static frc.robot.subsystems.superstructure.pivot.PivotConstants.POSITION_TARGET_EPSILON;
 
 import frc.robot.subsystems.superstructure.GenericSuperstructureIOTalonFX;
 import java.util.Optional;
@@ -11,9 +11,12 @@ public class PivotIOTalonFX extends GenericSuperstructureIOTalonFX implements Pi
   public PivotIOTalonFX() {
     super(
         PIVOT_CONFIG.motorID(),
+        Optional.empty(),
         INVERT_MOTOR,
+        Optional.empty(),
         SUPPLY_CURRENT_LIMIT,
         PIVOT_CONFIG.canCoderID(),
+        PIVOT_CONFIG.canCoderOffset(),
         PIVOT_CONFIG.reduction(),
         UPPER_EXTENSION_LIMIT,
         LOWER_EXTENSION_LIMIT,
@@ -31,6 +34,9 @@ public class PivotIOTalonFX extends GenericSuperstructureIOTalonFX implements Pi
         GAINS.kV(),
         GAINS.kA(),
         GAINS.kG(),
+        MOTION_MAGIC_CONFIG.acceleration(),
+        MOTION_MAGIC_CONFIG.cruiseVelocity(),
+        0,
         GRAVITY_TYPE);
   }
 }
