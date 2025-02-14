@@ -249,30 +249,6 @@ public class RobotContainer {
             new SequentialCommandGroup(
                 superstructure.goToStateCommand(SuperstructureState.INTAKE),
                 rollers.setTargetCommand(RollerState.INTAKE)));
-
-    driverB // eject
-        .rightTrigger()
-        .onTrue(
-            rollers
-                .setTargetCommand(Rollers.RollerState.EJECT)
-                .alongWith(pivot.goToPositionCommand(PivotTarget.SCORE_L4))
-                .andThen(elevator.goToPositionCommand(ElevatorTarget.L1))
-                .andThen(rollers.setTargetCommand(RollerState.IDLE)));
-    new Trigger(() -> joystick.getTrigger())
-        .onTrue(
-            (elevator
-                .goToPositionCommand(ElevatorTarget.TEST_TOP)
-                .andThen(pivot.goToPositionCommand(PivotTarget.TEST_25))));
-    new Trigger(() -> joystick.getRawButton(3))
-        .onTrue(
-            (pivot
-                .goToPositionCommand(PivotTarget.TEST_N25)
-                .andThen(elevator.goToPositionCommand(ElevatorTarget.TEST_BOTTOM))));
-    new Trigger(() -> joystick.getRawButton(6))
-        .onTrue(
-            (pivot
-                .goToPositionCommand(PivotTarget.TEST_5)
-                .alongWith(elevator.goToPositionCommand(ElevatorTarget.TEST_MIDDLE))));
   }
 
   private void configureAutos() {

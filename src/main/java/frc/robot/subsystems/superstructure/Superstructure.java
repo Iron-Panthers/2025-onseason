@@ -44,10 +44,10 @@ public class Superstructure extends SubsystemBase {
 
   @Override
   public void periodic() {
-    switch (currentState) { // switch on the target state
+    switch (targetState) { // switch on the target state
       case L1 -> {
         elevator.setPositionTarget(ElevatorTarget.L1);
-        pivot.setPositionTarget(PivotTarget.L1);
+        pivot.setPositionTarget(PivotTarget.SETUP_L1);
         tongue.setPositionTarget(TongueTarget.L1);
 
         // check for state transitions
@@ -61,7 +61,7 @@ public class Superstructure extends SubsystemBase {
       }
       case L2 -> {
         elevator.setPositionTarget(ElevatorTarget.L2);
-        pivot.setPositionTarget(PivotTarget.L2);
+        pivot.setPositionTarget(PivotTarget.SETUP_L2);
         tongue.setPositionTarget(TongueTarget.L2);
 
         // check for state transitions
@@ -73,7 +73,7 @@ public class Superstructure extends SubsystemBase {
       }
       case L3 -> {
         elevator.setPositionTarget(ElevatorTarget.L3);
-        pivot.setPositionTarget(PivotTarget.L3);
+        pivot.setPositionTarget(PivotTarget.SETUP_L3);
         tongue.setPositionTarget(TongueTarget.L3);
 
         // check for state transitions
@@ -85,7 +85,7 @@ public class Superstructure extends SubsystemBase {
       }
       case L4 -> {
         elevator.setPositionTarget(ElevatorTarget.L4);
-        pivot.setPositionTarget(PivotTarget.L4);
+        pivot.setPositionTarget(PivotTarget.SETUP_L4);
         tongue.setPositionTarget(TongueTarget.L4);
 
         // check for state transitions

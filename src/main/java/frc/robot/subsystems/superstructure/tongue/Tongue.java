@@ -5,10 +5,10 @@ import org.littletonrobotics.junction.Logger;
 public class Tongue {
   public enum TongueTarget {
     TOP(0),
-    L1(30),
-    L2(60),
-    L3(180),
-    L4(90),
+    L1(90),
+    L2(90),
+    L3(0),
+    L4(0),
     INTAKE(0);
 
     private double position;
