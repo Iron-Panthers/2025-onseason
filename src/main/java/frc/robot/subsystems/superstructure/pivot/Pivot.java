@@ -6,13 +6,13 @@ import frc.robot.subsystems.superstructure.GenericSuperstructure;
 
 public class Pivot extends GenericSuperstructure<Pivot.PivotTarget> {
   public enum PivotTarget implements GenericSuperstructure.PositionTarget {
-    TOP(90),
-    INTAKE(-90),
-    STOW(-90), // FIXME
-    L1(-90),
-    L2(-90),
-    L3(180),
-    L4(180);
+    TOP(-96),
+    INTAKE(-94),
+    STOW(-96), // FIXME
+    L1(-96),
+    L2(-96),
+    L3(160),
+    L4(160);
 
     private double position;
 
@@ -29,5 +29,15 @@ public class Pivot extends GenericSuperstructure<Pivot.PivotTarget> {
     super("Pivot", io);
     setPositionTarget(PivotTarget.STOW);
     setControlMode(ControlMode.STOP);
+  }
+
+  /**
+   * This function returns weather or not the subsystem has reached its position target
+   *
+   * @return weather the subsystem has reached its position target
+   */
+  public boolean reachedTarget() {
+    return Math.abs(super.getPosition() - (super.getPositionTarget().getPosition() / 360d))
+        <= superstructureIO.getPositionTargetEpsilon();
   }
 }

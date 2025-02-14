@@ -61,8 +61,8 @@ public class Tongue {
     }
 
     Logger.recordOutput("Superstructure/" + "Tongue" + "/Target", positionTarget.toString());
-    Logger.recordOutput("Superstructure/" + "Tongue"  + "/Control Mode", controlMode.toString());
-    Logger.recordOutput("Superstructure/" + "Tongue"  + "/Reached target", reachedTarget());
+    Logger.recordOutput("Superstructure/" + "Tongue" + "/Control Mode", controlMode.toString());
+    Logger.recordOutput("Superstructure/" + "Tongue" + "/Reached target", reachedTarget());
   }
 
   public TongueTarget getPositionTarget() {

@@ -1,9 +1,8 @@
 package frc.robot.subsystems.superstructure.elevator;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.math.filter.LinearFilter;
 import frc.robot.subsystems.superstructure.GenericSuperstructure;
+import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends GenericSuperstructure<Elevator.ElevatorTarget> {
   public enum ElevatorTarget implements GenericSuperstructure.PositionTarget {
@@ -12,6 +11,7 @@ public class Elevator extends GenericSuperstructure<Elevator.ElevatorTarget> {
     L2(5), // 24 and 53.75
     L3(27), // 0 and 53.75
     L4(31),
+    TOP(31),
     INTAKE(0);
     // TEST_BOTTOM(2),
     // TEST_TOP(31),
@@ -41,6 +41,7 @@ public class Elevator extends GenericSuperstructure<Elevator.ElevatorTarget> {
     // setup the linear filter
     supplyCurrentFilter = LinearFilter.movingAverage(30);
   }
+
   @Override
   public void periodic() {
 
@@ -71,5 +72,4 @@ public class Elevator extends GenericSuperstructure<Elevator.ElevatorTarget> {
   public boolean isZeroing() {
     return zeroing;
   }
-
 }

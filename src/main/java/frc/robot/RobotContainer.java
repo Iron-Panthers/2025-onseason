@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
@@ -80,7 +81,7 @@ public class RobotContainer {
                   new ModuleIOTalonFX(DriveConstants.MODULE_CONFIGS[3]));
           vision = new Vision();
           intake = new Intake(new IntakeIOTalonFX());
-          //superstructure stuff
+          // superstructure stuff
           elevator = new Elevator(new ElevatorIOTalonFX());
           pivot = new Pivot(new PivotIOTalonFX());
         }
@@ -221,7 +222,7 @@ public class RobotContainer {
         .onTrue(
             new InstantCommand(
                 () -> {
-                  superstructure.setTargetState(SuperstructureState.ZERO);
+                  superstructure.setCurrentState(SuperstructureState.ZERO);
                 },
                 superstructure));
     // new ParallelCommandGroup(
@@ -244,7 +245,10 @@ public class RobotContainer {
         .onTrue(
             new SequentialCommandGroup(
                 superstructure.goToStateCommand(SuperstructureState.INTAKE),
-                rollers.setTargetCommand(RollerState.INTAKE)));
+                rollers
+                    .setTargetCommand(RollerState.INTAKE),
+                new WaitUntilCommand(() -> (rollers.getTargetState() == RollerState.HOLD)),
+                superstructure.goToStateCommand(SuperstructureState.L4)));
     // new SequentialCommandGroup(
     //     new ParallelCommandGroup(
     //         elevator.goToPositionCommand(ElevatorTarget.SETUP_INTAKE),

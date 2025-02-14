@@ -1,6 +1,5 @@
 package frc.robot.subsystems.superstructure;
 
-import edu.wpi.first.math.filter.LinearFilter;
 import org.littletonrobotics.junction.Logger;
 
 public class GenericSuperstructure<G extends GenericSuperstructure.PositionTarget> {
@@ -45,6 +44,8 @@ public class GenericSuperstructure<G extends GenericSuperstructure.PositionTarge
     Logger.recordOutput("Superstructure/" + name + "/Target", positionTarget.toString());
     Logger.recordOutput("Superstructure/" + name + "/Control Mode", controlMode.toString());
     Logger.recordOutput("Superstructure/" + name + "/Reached target", reachedTarget());
+    Logger.recordOutput(
+        "TEST/skib", Math.abs(inputs.positionRotations - positionTarget.getPosition()));
   }
 
   public G getPositionTarget() {
@@ -72,7 +73,6 @@ public class GenericSuperstructure<G extends GenericSuperstructure.PositionTarge
     return inputs.supplyCurrentAmps;
   }
 
-
   public double getPosition() {
     return inputs.positionRotations;
   }
@@ -83,7 +83,7 @@ public class GenericSuperstructure<G extends GenericSuperstructure.PositionTarge
    * @return weather the subsystem has reached its position target
    */
   public boolean reachedTarget() {
-    return Math.abs(inputs.positionRotations - positionTarget.getPosition())
+    return Math.abs(inputs.positionRotations - (positionTarget.getPosition()))
         <= superstructureIO.getPositionTargetEpsilon();
   }
 
