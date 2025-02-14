@@ -43,8 +43,7 @@ public class Drive extends SubsystemBase {
 
   private final TeleopController teleopController;
   private TrajectoryController trajectoryController = null;
-  private HeadingController headingController =
-      new HeadingController(() -> new Rotation2d(4), arbitraryYaw);
+  private HeadingController headingController = null;
 
   public Drive(GyroIO gyroIO, ModuleIO fl, ModuleIO fr, ModuleIO bl, ModuleIO br) {
     this.gyroIO = gyroIO;
