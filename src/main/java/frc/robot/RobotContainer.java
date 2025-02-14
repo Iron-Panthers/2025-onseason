@@ -30,6 +30,8 @@ import frc.robot.subsystems.superstructure.elevator.ElevatorIOTalonFX;
 import frc.robot.subsystems.superstructure.pivot.Pivot;
 import frc.robot.subsystems.superstructure.pivot.PivotIO;
 import frc.robot.subsystems.superstructure.pivot.PivotIOTalonFX;
+import frc.robot.subsystems.superstructure.tongue.Tongue;
+import frc.robot.subsystems.superstructure.tongue.TongueIO;
 import frc.robot.subsystems.swerve.Drive;
 import frc.robot.subsystems.swerve.DriveConstants;
 import frc.robot.subsystems.swerve.GyroIO;
@@ -61,6 +63,7 @@ public class RobotContainer {
   private Rollers rollers;
   private Elevator elevator;
   private Pivot pivot;
+  private Tongue tongue;
   private Superstructure superstructure;
 
   public RobotContainer() {
@@ -77,6 +80,7 @@ public class RobotContainer {
                   new ModuleIOTalonFX(DriveConstants.MODULE_CONFIGS[3]));
           vision = new Vision();
           intake = new Intake(new IntakeIOTalonFX());
+          //superstructure stuff
           elevator = new Elevator(new ElevatorIOTalonFX());
           pivot = new Pivot(new PivotIOTalonFX());
         }
@@ -143,7 +147,10 @@ public class RobotContainer {
     if (pivot == null) {
       pivot = new Pivot(new PivotIO() {});
     }
-    superstructure = new Superstructure(elevator, pivot);
+    if (tongue == null) {
+      tongue = new Tongue(new TongueIO() {});
+    }
+    superstructure = new Superstructure(elevator, pivot, tongue);
 
     configureBindings();
     configureAutos();

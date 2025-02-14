@@ -33,14 +33,12 @@ public class Tongue {
 
   private ControlMode controlMode = ControlMode.STOP;
 
-  private final String name;
   private final TongueIO io;
 
   private TongueIOInputsAutoLogged inputs = new TongueIOInputsAutoLogged(); // FIXME
   private TongueTarget positionTarget;
 
-  public Tongue(TongueIO io, String name) {
-    this.name = name;
+  public Tongue(TongueIO io) {
     this.io = io;
 
     setPositionTarget(TongueTarget.TOP);
@@ -50,7 +48,7 @@ public class Tongue {
   public void periodic() {
     // Process inputs
     io.updateInputs(inputs);
-    Logger.processInputs(name, inputs);
+    Logger.processInputs("Tongue", inputs);
 
     // Process control mode
     switch (controlMode) {
@@ -62,9 +60,9 @@ public class Tongue {
       }
     }
 
-    Logger.recordOutput("Superstructure/" + name + "/Target", positionTarget.toString());
-    Logger.recordOutput("Superstructure/" + name + "/Control Mode", controlMode.toString());
-    Logger.recordOutput("Superstructure/" + name + "/Reached target", reachedTarget());
+    Logger.recordOutput("Superstructure/" + "Tongue" + "/Target", positionTarget.toString());
+    Logger.recordOutput("Superstructure/" + "Tongue"  + "/Control Mode", controlMode.toString());
+    Logger.recordOutput("Superstructure/" + "Tongue"  + "/Reached target", reachedTarget());
   }
 
   public TongueTarget getPositionTarget() {
