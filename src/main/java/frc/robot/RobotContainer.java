@@ -7,6 +7,7 @@ import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -54,6 +55,7 @@ public class RobotContainer {
 
   private final CommandXboxController driverA = new CommandXboxController(0);
   private final CommandXboxController driverB = new CommandXboxController(1);
+  private final Joystick joystick = new Joystick(2);
 
   private Drive swerve;
   private Vision vision;
@@ -102,7 +104,11 @@ public class RobotContainer {
                   new ModuleIOTalonFX(DriveConstants.MODULE_CONFIGS[1]),
                   new ModuleIOTalonFX(DriveConstants.MODULE_CONFIGS[2]),
                   new ModuleIOTalonFX(DriveConstants.MODULE_CONFIGS[3]));
-          vision = new Vision(new VisionIOPhotonvision(1));
+          vision =
+              new Vision(
+                  new VisionIOPhotonvision(1),
+                  new VisionIOPhotonvision(2),
+                  new VisionIOPhotonvision(3));
           intake = new Intake(new IntakeIOTalonFX());
           pivot = new Pivot(new PivotIOTalonFX());
           elevator = new Elevator(new ElevatorIOTalonFX());
@@ -244,27 +250,29 @@ public class RobotContainer {
                 superstructure.goToStateCommand(SuperstructureState.INTAKE),
                 rollers.setTargetCommand(RollerState.INTAKE)));
 
-    // new SequentialCommandGroup(
-    //     new ParallelCommandGroup(
-    //         elevator.goToPositionCommand(ElevatorTarget.SETUP_INTAKE),
-    //         pivot.goToPositionCommand(PivotTarget.INTAKE)),
-    //     rollers.setTargetCommand(RollerState.INTAKE),
-    //     elevator.goToPositionCommand(ElevatorTarget.INTAKE),
-    //     new WaitUntilCommand(() -> rollers.getTargetState() == RollerState.HOLD),
-    //     elevator.goToPositionCommand(ElevatorTarget.SETUP_INTAKE),
-    //     pivot.goToPositionCommand(PivotTarget.TOP),
-    //     elevator
-    //         .goToPositionCommand(ElevatorTarget.BOTTOM)
-    //         .alongWith(rollers.setTargetCommand(RollerState.IDLE))));
-
-    // driverB // eject
-    //     .rightTrigger()
-    //     .onTrue(
-    //         rollers
-    //             .setTargetCommand(Rollers.RollerState.EJECT)
-    //             .alongWith(pivot.goToPositionCommand(PivotTarget.SCORE_L4))
-    //             .andThen(elevator.goToPositionCommand(ElevatorTarget.L1))
-    //             .andThen(rollers.setTargetCommand(RollerState.IDLE)));
+    driverB // eject
+        .rightTrigger()
+        .onTrue(
+            rollers
+                .setTargetCommand(Rollers.RollerState.EJECT)
+                .alongWith(pivot.goToPositionCommand(PivotTarget.SCORE_L4))
+                .andThen(elevator.goToPositionCommand(ElevatorTarget.L1))
+                .andThen(rollers.setTargetCommand(RollerState.IDLE)));
+    new Trigger(() -> joystick.getTrigger())
+        .onTrue(
+            (elevator
+                .goToPositionCommand(ElevatorTarget.TEST_TOP)
+                .andThen(pivot.goToPositionCommand(PivotTarget.TEST_25))));
+    new Trigger(() -> joystick.getRawButton(3))
+        .onTrue(
+            (pivot
+                .goToPositionCommand(PivotTarget.TEST_N25)
+                .andThen(elevator.goToPositionCommand(ElevatorTarget.TEST_BOTTOM))));
+    new Trigger(() -> joystick.getRawButton(6))
+        .onTrue(
+            (pivot
+                .goToPositionCommand(PivotTarget.TEST_5)
+                .alongWith(elevator.goToPositionCommand(ElevatorTarget.TEST_MIDDLE))));
   }
 
   private void configureAutos() {

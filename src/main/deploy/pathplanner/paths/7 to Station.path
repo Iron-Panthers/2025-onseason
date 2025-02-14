@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.900625,
+        "y": 3.990874999999999
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.9288798464909687,
+        "y": 4.286285546888298
+      },
+      "isLocked": false,
+      "linkedName": "April Tag 7"
+    },
+    {
+      "anchor": {
+        "x": 1.1797500000000003,
+        "y": 0.9391249999999991
+      },
+      "prevControl": {
+        "x": 0.9372326217846639,
+        "y": 0.9998318469248683
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Coral Station Right"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -124.67782792561964
+  },
+  "reversed": false,
+  "folder": "Testing",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": true
+}
