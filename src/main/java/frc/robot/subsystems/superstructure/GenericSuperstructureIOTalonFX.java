@@ -4,10 +4,12 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -24,6 +26,7 @@ import java.util.Optional;
 
 public class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
   protected final TalonFX talon;
+  protected final Optional<TalonFX> talon2;
 
   private final StatusSignal<Angle> positionRotations;
   private final StatusSignal<AngularVelocity> velocityRPS;
@@ -40,7 +43,7 @@ public class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
 
   protected final VoltageOut voltageOutput = new VoltageOut(0).withUpdateFreqHz(0);
   private final NeutralOut neutralOutput = new NeutralOut();
-  private final PositionVoltage positionControl = new PositionVoltage(0).withUpdateFreqHz(0);
+  private final MotionMagicVoltage positionControl = new MotionMagicVoltage(0).withUpdateFreqHz(0);
 
   /**
    * Constructs a new GenericSuperstructureIOTalonFX.
@@ -60,9 +63,12 @@ public class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
    */
   public GenericSuperstructureIOTalonFX(
       int id,
+      Optional<Integer> id2,
       boolean inverted,
+      Optional<Boolean> oposeFirst,
       double supplyCurrentLimit,
       Optional<Integer> canCoderID,
+      Optional<Double> canCoderOffset,
       double reduction,
       Optional<Double> upperLimit,
       Optional<Double> lowerLimit,
@@ -73,6 +79,11 @@ public class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
       double zeroingVoltageThreshold,
       double positionTargetEpsilon) {
     talon = new TalonFX(id);
+    if (id2.isPresent()) {
+      talon2 = Optional.of(new TalonFX(id2.get()));
+    } else {
+      talon2 = Optional.empty();
+    }
 
     // set the zeroing values such that when the robot zeros it will apply the zeroing volts and
     // when it reaches a resistance from part of the mechanism, it sets the position to the zeroing
@@ -101,7 +112,6 @@ public class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
     config.Voltage.withPeakForwardVoltage(upperVoltLimit);
     config.Voltage.withPeakReverseVoltage(lowerVoltLimit);
     config.Feedback.withSensorToMechanismRatio(reduction);
-
     // CANCODER CONFIG
     if (canCoderID.isPresent()) {
       CANcoder canCoder = new CANcoder(canCoderID.get());
@@ -112,15 +122,22 @@ public class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
                   .withMagnetSensor(
                       new MagnetSensorConfigs()
                           .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
-                          .withMagnetOffset(0)));
+                          .withMagnetOffset(
+                              canCoderOffset.isPresent() ? canCoderOffset.get() : 0)));
 
-      canCoder.getConfigurator().setPosition(0);
+      // canCoder.getConfigurator().setPosition(0);
       config.Feedback.withRemoteCANcoder(canCoder);
       config.Feedback.withSensorToMechanismRatio(reduction);
     }
     talon.getConfigurator().apply(config);
     setOffset();
     talon.setNeutralMode(NeutralModeValue.Brake);
+
+    if (talon2.isPresent()) {
+      talon2.get().getConfigurator().apply(config);
+      talon2.get().setNeutralMode(NeutralModeValue.Brake);
+      talon2.get().setControl(new Follower(talon.getDeviceID(), oposeFirst.get()));
+    }
 
     // STATUS SIGNALS
     velocityRPS = talon.getVelocity();
@@ -185,6 +202,9 @@ public class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
       double kV,
       double kA,
       double kG,
+      double motionMagicAcceleration,
+      double motionMagicCruiseVelocity,
+      double motionMagicJerk,
       GravityTypeValue gravityTypeValue) {
     Slot0Configs gainsConfig = new Slot0Configs();
     gainsConfig.kP = kP;
@@ -196,6 +216,12 @@ public class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
     gainsConfig.kG = kG;
     gainsConfig.GravityType = gravityTypeValue;
 
+    MotionMagicConfigs motionMagicConfig = new MotionMagicConfigs();
+    motionMagicConfig.MotionMagicAcceleration = motionMagicAcceleration;
+    motionMagicConfig.MotionMagicCruiseVelocity = motionMagicCruiseVelocity;
+    motionMagicConfig.MotionMagicJerk = motionMagicJerk;
+
     talon.getConfigurator().apply(gainsConfig);
+    talon.getConfigurator().apply(motionMagicConfig);
   }
 }
