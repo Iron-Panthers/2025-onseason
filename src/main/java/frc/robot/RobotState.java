@@ -32,8 +32,7 @@ public class RobotState {
   public record VisionMeasurement(Pose2d visionPose, double timestamp) {}
 
   private static final double poseBufferSizeSeconds = 2; // shorter?
-  private static final Matrix<N3, N1> stateStdDevs =
-      VecBuilder.fill(0.1, 0.1, 0.1); // FIXME defaults
+  private static final Matrix<N3, N1> stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
   private static final Pose2d initialPose =
       DriverStation.getAlliance().get() == Alliance.Red
           ? mirrorPose(DriveConstants.INITAL_POSE)
