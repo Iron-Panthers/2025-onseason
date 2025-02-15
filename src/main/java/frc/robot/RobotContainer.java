@@ -242,49 +242,6 @@ public class RobotContainer {
                   superstructure.setTargetState(SuperstructureState.STOP);
                   rollers.setTargetState(RollerState.IDLE);
                 }));
-
-    driverB // intake
-        .leftTrigger()
-        .onTrue(
-            new SequentialCommandGroup(
-                new ParallelCommandGroup(
-                    elevator.goToPositionCommand(ElevatorTarget.SETUP_INTAKE),
-                    pivot.goToPositionCommand(PivotTarget.INTAKE)),
-                rollers.setTargetCommand(RollerState.INTAKE),
-                elevator.goToPositionCommand(ElevatorTarget.INTAKE),
-                new WaitUntilCommand(() -> rollers.getTargetState() == RollerState.HOLD),
-                elevator.goToPositionCommand(ElevatorTarget.SETUP_INTAKE),
-                pivot.goToPositionCommand(PivotTarget.TOP),
-                elevator
-                    .goToPositionCommand(ElevatorTarget.BOTTOM)
-                    .alongWith(rollers.setTargetCommand(RollerState.IDLE))));
-    SmartDashboard.putBoolean("Xbox?", DriverStation.getJoystickIsXbox(0));
-    SmartDashboard.putBoolean("Connected", driverA.isConnected());
-    SmartDashboard.putBoolean("Down pressed?", driverA.povDown().getAsBoolean());
-    SmartDashboard.putNumber("Joysticks?", driverA.getLeftX());
-    driverB // eject
-        .rightTrigger()
-        .onTrue(
-            rollers
-                .setTargetCommand(Rollers.RollerState.EJECT)
-                .alongWith(pivot.goToPositionCommand(PivotTarget.SCORE_L4))
-                .andThen(elevator.goToPositionCommand(ElevatorTarget.L1))
-                .andThen(rollers.setTargetCommand(RollerState.IDLE)));
-    new Trigger(() -> joystick.getTrigger())
-        .onTrue(
-            (elevator
-                .goToPositionCommand(ElevatorTarget.TEST_TOP)
-                .andThen(pivot.goToPositionCommand(PivotTarget.TEST_25))));
-    new Trigger(() -> joystick.getRawButton(3))
-        .onTrue(
-            (pivot
-                .goToPositionCommand(PivotTarget.TEST_N25)
-                .andThen(elevator.goToPositionCommand(ElevatorTarget.TEST_BOTTOM))));
-    new Trigger(() -> joystick.getRawButton(6))
-        .onTrue(
-            (pivot
-                .goToPositionCommand(PivotTarget.TEST_5)
-                .alongWith(elevator.goToPositionCommand(ElevatorTarget.TEST_MIDDLE))));
   }
 
   private void configureAutos() {
