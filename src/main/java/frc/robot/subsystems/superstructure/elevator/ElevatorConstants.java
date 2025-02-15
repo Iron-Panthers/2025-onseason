@@ -7,7 +7,7 @@ import java.util.Optional;
 public class ElevatorConstants {
   public static final ElevatorConfig ELEVATOR_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new ElevatorConfig(43, Optional.of(44), (58.0 / 14.0) / 6);
+        case COMP -> new ElevatorConfig(0, Optional.of(0), (58.0 / 14.0) / 6);
         case PROG -> new ElevatorConfig(0, Optional.empty(), 1);
         case ALPHA -> new ElevatorConfig(37, Optional.empty(), 9.0 / 4.0); // FIXME
         case SIM -> new ElevatorConfig(0, Optional.empty(), 1); // FIXME
@@ -59,4 +59,7 @@ public class ElevatorConstants {
   public static final double ZEROING_VOLTS = -1;
   public static final double ZEROING_OFFSET = 2.25; // offset in inches
   public static final double ZEROING_VOLTAGE_THRESHOLD = 4;
+
+  // MIN HEIGHT TO MOVE PIVOT WITHOUT HITTING INTAKE
+  public static final double MIN_SAFE_HEIGHT_FOR_PIVOT = 15; // FIXME
 }

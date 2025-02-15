@@ -13,27 +13,25 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
 import frc.robot.autonomous.PathCommand;
-import frc.robot.commands.ScoringSequenceCommand;
 import frc.robot.subsystems.rollers.Rollers;
 import frc.robot.subsystems.rollers.Rollers.RollerState;
 import frc.robot.subsystems.rollers.intake.Intake;
 import frc.robot.subsystems.rollers.intake.IntakeIOTalonFX;
-import frc.robot.subsystems.superstructure.GenericSuperstructure.ControlMode;
+import frc.robot.subsystems.superstructure.Superstructure;
+import frc.robot.subsystems.superstructure.Superstructure.SuperstructureState;
 import frc.robot.subsystems.superstructure.elevator.Elevator;
-import frc.robot.subsystems.superstructure.elevator.Elevator.ElevatorTarget;
 import frc.robot.subsystems.superstructure.elevator.ElevatorIO;
 import frc.robot.subsystems.superstructure.elevator.ElevatorIOTalonFX;
 import frc.robot.subsystems.superstructure.pivot.Pivot;
-import frc.robot.subsystems.superstructure.pivot.Pivot.PivotTarget;
 import frc.robot.subsystems.superstructure.pivot.PivotIO;
 import frc.robot.subsystems.superstructure.pivot.PivotIOTalonFX;
+import frc.robot.subsystems.superstructure.tongue.Tongue;
+import frc.robot.subsystems.superstructure.tongue.TongueIOServo;
 import frc.robot.subsystems.swerve.Drive;
 import frc.robot.subsystems.swerve.DriveConstants;
 import frc.robot.subsystems.swerve.GyroIO;
@@ -65,6 +63,8 @@ public class RobotContainer {
   private Rollers rollers;
   private Elevator elevator;
   private Pivot pivot;
+  private Tongue tongue;
+  private Superstructure superstructure;
 
   public RobotContainer() {
     intake = null;
@@ -82,6 +82,7 @@ public class RobotContainer {
           intake = new Intake(new IntakeIOTalonFX());
           elevator = new Elevator(new ElevatorIOTalonFX());
           pivot = new Pivot(new PivotIOTalonFX());
+          tongue = new Tongue(new TongueIOServo());
         }
         case PROG -> {
           swerve =
@@ -146,6 +147,10 @@ public class RobotContainer {
     if (pivot == null) {
       pivot = new Pivot(new PivotIO() {});
     }
+    // if (tongue == null) {
+    //   tongue = new Tongue(new TongueIO() {});
+    // }
+    superstructure = new Superstructure(elevator, pivot, tongue);
 
     configureBindings();
     configureAutos();
@@ -195,92 +200,48 @@ public class RobotContainer {
         .onTrue(
             new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(Math.toRadians(232)))));
 
+    // driverA
+    //     .y()
+    //     .onTrue(
+    //         new InstantCommand(() -> tongue.setPositionTarget()));
     // -----Superstructure Controls-----
     driverB // GO TO BOTTOM
         .povDown()
-        .onTrue(
-            new ParallelCommandGroup(
-                elevator.goToPositionCommand(ElevatorTarget.BOTTOM),
-                pivot.goToPositionCommand(PivotTarget.TOP)));
+        .onTrue(superstructure.goToStateCommand(SuperstructureState.STOW));
 
     driverB // GO TO L2
         .povRight()
-        .onTrue(
-            new ScoringSequenceCommand(
-                elevator, pivot, rollers, ElevatorTarget.L2, PivotTarget.SETUP_L2));
+        .onTrue(superstructure.goToStateCommand(SuperstructureState.L2));
     driverB // GO TO L3
         .povLeft()
-        .onTrue(
-            new ScoringSequenceCommand(
-                elevator, pivot, rollers, ElevatorTarget.L3, PivotTarget.SETUP_L3));
+        .onTrue(superstructure.goToStateCommand(SuperstructureState.L3));
 
     driverB // GO TO L4
         .povUp()
-        .onTrue(
-            new ScoringSequenceCommand(
-                elevator, pivot, rollers, ElevatorTarget.L4, PivotTarget.SETUP_L4));
+        .onTrue(superstructure.goToStateCommand(SuperstructureState.L4));
 
     driverB // ZERO our mechanism
         .a()
         .onTrue(
-            new ParallelCommandGroup(
-                elevator
-                    .zeroingCommand()
-                    .andThen(elevator.goToPositionCommand(ElevatorTarget.BOTTOM)),
-                pivot.zeroingCommand().andThen(pivot.goToPositionCommand(PivotTarget.TOP))));
+            new InstantCommand(
+                () -> {
+                  superstructure.setTargetState(SuperstructureState.ZERO);
+                },
+                superstructure));
+    // new ParallelCommandGroup(
+    //     elevator
+    //         .zeroingCommand()
+    //         .andThen(elevator.goToPositionCommand(ElevatorTarget.BOTTOM)),
+    //     pivot.zeroingCommand().andThen(pivot.goToPositionCommand(PivotTarget.TOP))));
 
     driverB
         .x()
         .onTrue(
             new InstantCommand(
                 () -> {
-                  elevator.setControlMode(ControlMode.STOP);
-                  pivot.setControlMode(ControlMode.STOP);
+                  superstructure.setTargetState(SuperstructureState.STOP);
                   rollers.setTargetState(RollerState.IDLE);
                 }));
-
-    driverB // intake
-        .leftTrigger()
-        .onTrue(
-            new SequentialCommandGroup(
-                new ParallelCommandGroup(
-                    elevator.goToPositionCommand(ElevatorTarget.SETUP_INTAKE),
-                    pivot.goToPositionCommand(PivotTarget.INTAKE)),
-                rollers.setTargetCommand(RollerState.INTAKE),
-                elevator.goToPositionCommand(ElevatorTarget.INTAKE),
-                new WaitUntilCommand(() -> rollers.getTargetState() == RollerState.HOLD),
-                elevator.goToPositionCommand(ElevatorTarget.SETUP_INTAKE),
-                pivot.goToPositionCommand(PivotTarget.TOP),
-                elevator
-                    .goToPositionCommand(ElevatorTarget.BOTTOM)
-                    .alongWith(rollers.setTargetCommand(RollerState.IDLE))));
-    SmartDashboard.putBoolean("Xbox?", DriverStation.getJoystickIsXbox(0));
-    SmartDashboard.putBoolean("Connected", driverA.isConnected());
-    SmartDashboard.putBoolean("Down pressed?", driverA.povDown().getAsBoolean());
-    SmartDashboard.putNumber("Joysticks?", driverA.getLeftX());
-    driverB // eject
-        .rightTrigger()
-        .onTrue(
-            rollers
-                .setTargetCommand(Rollers.RollerState.EJECT)
-                .alongWith(pivot.goToPositionCommand(PivotTarget.SCORE_L4))
-                .andThen(elevator.goToPositionCommand(ElevatorTarget.L1))
-                .andThen(rollers.setTargetCommand(RollerState.IDLE)));
-    new Trigger(() -> joystick.getTrigger())
-        .onTrue(
-            (elevator
-                .goToPositionCommand(ElevatorTarget.TEST_TOP)
-                .andThen(pivot.goToPositionCommand(PivotTarget.TEST_25))));
-    new Trigger(() -> joystick.getRawButton(3))
-        .onTrue(
-            (pivot
-                .goToPositionCommand(PivotTarget.TEST_N25)
-                .andThen(elevator.goToPositionCommand(ElevatorTarget.TEST_BOTTOM))));
-    new Trigger(() -> joystick.getRawButton(6))
-        .onTrue(
-            (pivot
-                .goToPositionCommand(PivotTarget.TEST_5)
-                .alongWith(elevator.goToPositionCommand(ElevatorTarget.TEST_MIDDLE))));
   }
 
   private void configureAutos() {

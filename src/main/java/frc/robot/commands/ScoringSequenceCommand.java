@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.rollers.Rollers;
 import frc.robot.subsystems.superstructure.elevator.Elevator;
@@ -25,9 +24,9 @@ public class ScoringSequenceCommand extends SequentialCommandGroup {
       PivotTarget pivotSetupTarget) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(
-        new ParallelCommandGroup(
-            elevator.goToPositionCommand(elevatorTarget),
-            pivot.goToPositionCommand(pivotSetupTarget)));
+    // addCommands(
+    //     new ParallelCommandGroup(
+    //         elevator.goToPositionCommand(elevatorTarget),
+    //         pivot.goToPositionCommand(pivotSetupTarget)));
   }
 }

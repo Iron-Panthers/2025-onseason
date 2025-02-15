@@ -1,6 +1,8 @@
 package frc.robot.subsystems.superstructure.elevator;
 
+import edu.wpi.first.math.filter.LinearFilter;
 import frc.robot.subsystems.superstructure.GenericSuperstructure;
+import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends GenericSuperstructure<Elevator.ElevatorTarget> {
   public enum ElevatorTarget implements GenericSuperstructure.PositionTarget {
@@ -26,9 +28,49 @@ public class Elevator extends GenericSuperstructure<Elevator.ElevatorTarget> {
     }
   }
 
+  // linear filter for superstrucure
+  private final LinearFilter supplyCurrentFilter;
+  private double filteredSupplyCurrentAmps = 0;
+
+  private boolean zeroing = false;
+
   public Elevator(ElevatorIO io) {
     super("Elevator", io);
     setPositionTarget(ElevatorTarget.L3);
     setControlMode(ControlMode.STOP);
+
+    // setup the linear filter
+    supplyCurrentFilter = LinearFilter.movingAverage(30);
+  }
+
+  @Override
+  public void periodic() {
+
+    super.periodic();
+
+    // for zeroing
+    // calculate our new filtered supply current for the elevator
+    filteredSupplyCurrentAmps = supplyCurrentFilter.calculate(getSupplyCurrentAmps());
+    if (zeroing) {
+      superstructureIO.runCharacterization();
+    }
+    Logger.recordOutput(
+        "Superstructure/" + name + "/Filtered supply current amps", getFilteredSupplyCurrentAmps());
+  }
+
+  public double getFilteredSupplyCurrentAmps() {
+    return filteredSupplyCurrentAmps;
+  }
+
+  public boolean aboveSafeHeightForPivot() {
+    return this.getPosition() > ElevatorConstants.MIN_SAFE_HEIGHT_FOR_PIVOT;
+  }
+
+  public void setZeroing(boolean zeroing) {
+    this.zeroing = zeroing;
+  }
+
+  public boolean isZeroing() {
+    return zeroing;
   }
 }
