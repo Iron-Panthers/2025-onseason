@@ -19,14 +19,15 @@ public class Superstructure extends SubsystemBase {
     L2, // Scoring in L2
     L1, // Scoring in the trough
     TOP, // Apex
+    MIDWAY,// Midway up the elevator
     INTAKE,
     STOW, // Going to the lowest position
     ZERO, // Zero the motor
-    STOP; // Stop the superstructure
   }
 
   private SuperstructureState currentState = SuperstructureState.ZERO; // current state
   private SuperstructureState targetState = SuperstructureState.ZERO; // current target state
+  private boolean stop = false;
 
   private final Elevator elevator;
   private final Pivot pivot;
@@ -43,125 +44,138 @@ public class Superstructure extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if (!stop) {
+      switch (currentState) { // switch on the target state
+        case L1 -> {
+          elevator.setPositionTarget(ElevatorTarget.L1);
+          pivot.setPositionTarget(PivotTarget.L1);
+          // tongue.setPositionTarget(TongueTarget.L1);
 
-    switch (currentState) { // switch on the target state
-      case L1 -> {
-        elevator.setPositionTarget(ElevatorTarget.L1);
-        pivot.setPositionTarget(PivotTarget.L1);
-        // tongue.setPositionTarget(TongueTarget.L1);
+          // check for state transitions
+          if (this.superstructureReachedTarget()) {
+            if (targetState == SuperstructureState.L2) {
+              setCurrentState(SuperstructureState.L2);
+            } else if (targetState != currentState) {
+              setCurrentState(SuperstructureState.STOW);
+            }
+          }
+        }
+        case L2 -> {
+          elevator.setPositionTarget(ElevatorTarget.L2);
+          pivot.setPositionTarget(PivotTarget.L2);
+          // tongue.setPositionTarget(TongueTarget.L2);
 
-        // check for state transitions
-        if (this.superstructureReachedTarget()) {
-          if (targetState == SuperstructureState.L2) {
-            this.currentState = SuperstructureState.L2;
-          } else if (targetState != currentState) {
-            this.currentState = SuperstructureState.STOW;
+          // check for state transitions
+          if (this.superstructureReachedTarget()) {
+            if (targetState != currentState) {
+              setCurrentState(SuperstructureState.L1);
+            }
+          }
+        }
+        case L3 -> {
+          elevator.setPositionTarget(ElevatorTarget.L3);
+          pivot.setPositionTarget(PivotTarget.L3);
+          // tongue.setPositionTarget(TongueTarget.L3);
+
+          // check for state transitions
+          if (this.superstructureReachedTarget()) {
+            if (targetState != currentState) {
+              setCurrentState(SuperstructureState.L4);
+            }
+          }
+        }
+        case L4 -> {
+          elevator.setPositionTarget(ElevatorTarget.L4);
+          pivot.setPositionTarget(PivotTarget.L4);
+          // tongue.setPositionTarget(TongueTarget.L4);
+
+          // check for state transitions
+          if (this.superstructureReachedTarget()) {
+            if (targetState == SuperstructureState.L3) {
+              setCurrentState(SuperstructureState.L3);
+            } else if (targetState != currentState) {
+              setCurrentState(SuperstructureState.TOP);
+            }
+          }
+        }
+        case TOP -> {
+          elevator.setPositionTarget(ElevatorTarget.TOP);
+          pivot.setPositionTarget(PivotTarget.TOP);
+          // tongue.setPositionTarget(TongueTarget.TOP);
+
+          // check for state transitions
+          if (this.superstructureReachedTarget()) {
+            if (targetState == SuperstructureState.L4 || targetState == SuperstructureState.L3) {
+              setCurrentState(SuperstructureState.L4);
+            } else if (targetState != currentState) {
+              setCurrentState(SuperstructureState.MIDWAY);
+            }
+          }
+        }
+
+        case MIDWAY -> {
+          elevator.setPositionTarget(ElevatorTarget.MIDWAY);
+          pivot.setPositionTarget(PivotTarget.MIDWAY);
+          // tongue.setPositionTarget(TongueTarget.MIDWAY);
+
+          // check for state transitions
+          if (this.superstructureReachedTarget()) {
+            if(targetState == SuperstructureState.L4 || targetState == SuperstructureState.L3 || targetState == SuperstructureState.TOP) {
+              setCurrentState(SuperstructureState.TOP);
+            } else if (targetState != currentState) {
+              setCurrentState(SuperstructureState.STOW);
+            }
+          }
+        }
+
+        case STOW -> {
+          elevator.setPositionTarget(ElevatorTarget.BOTTOM);
+          pivot.setPositionTarget(PivotTarget.TOP);
+          // tongue.setPositionTarget(TongueTarget.TOP);
+
+          // check for state transitions
+          if (this.superstructureReachedTarget()) {
+            if (targetState == SuperstructureState.INTAKE) {
+              setCurrentState(SuperstructureState.INTAKE);
+            } else if (targetState == SuperstructureState.L1
+                || targetState == SuperstructureState.L2) {
+              setCurrentState(SuperstructureState.L1);
+            } else if (targetState != currentState) {
+              setCurrentState(SuperstructureState.MIDWAY);
+            }
+          }
+        }
+        case INTAKE -> {
+          elevator.setPositionTarget(ElevatorTarget.INTAKE);
+          pivot.setPositionTarget(PivotTarget.INTAKE);
+          // tongue.setPositionTarget(TongueTarget.TOP);
+
+          // check for state transitions
+          if (this.superstructureReachedTarget()) {
+            if (targetState != currentState) {
+              setCurrentState(SuperstructureState.STOW);
+            }
+          }
+        }
+        case ZERO -> {
+          pivot.setPositionTarget(PivotTarget.STOW);
+          elevator.setZeroing(true);
+          if (elevator.getFilteredSupplyCurrentAmps()
+              > ElevatorConstants
+                  .ZEROING_VOLTAGE_THRESHOLD) { // check if the elevator is done zeroing and set
+            // offsets accordingly
+            elevator.setOffset();
+            elevator.setControlMode(ControlMode.POSITION);
+            elevator.setZeroing(false);
+
+            setTargetState(SuperstructureState.STOW);
+            setCurrentState(SuperstructureState.STOW);
           }
         }
       }
-      case L2 -> {
-        elevator.setPositionTarget(ElevatorTarget.L2);
-        pivot.setPositionTarget(PivotTarget.L2);
-        // tongue.setPositionTarget(TongueTarget.L2);
-
-        // check for state transitions
-        if (this.superstructureReachedTarget()) {
-          if (targetState != currentState) {
-            this.currentState = SuperstructureState.L1;
-          }
-        }
-      }
-      case L3 -> {
-        elevator.setPositionTarget(ElevatorTarget.L3);
-        pivot.setPositionTarget(PivotTarget.L3);
-        // tongue.setPositionTarget(TongueTarget.L3);
-
-        // check for state transitions
-        if (this.superstructureReachedTarget()) {
-          if (targetState != currentState) {
-            this.currentState = SuperstructureState.L4;
-          }
-        }
-      }
-      case L4 -> {
-        elevator.setPositionTarget(ElevatorTarget.L4);
-        pivot.setPositionTarget(PivotTarget.L4);
-        // tongue.setPositionTarget(TongueTarget.L4);
-
-        // check for state transitions
-        if (this.superstructureReachedTarget()) {
-          if (targetState == SuperstructureState.L3) {
-            this.currentState = SuperstructureState.L3;
-          } else if (targetState != currentState) {
-            this.currentState = SuperstructureState.TOP;
-          }
-        }
-      }
-      case TOP -> {
-        elevator.setPositionTarget(ElevatorTarget.TOP);
-        pivot.setPositionTarget(PivotTarget.TOP);
-        // tongue.setPositionTarget(TongueTarget.TOP);
-
-        // check for state transitions
-        if (this.superstructureReachedTarget()) {
-          if (targetState == SuperstructureState.L4 || targetState == SuperstructureState.L3) {
-            this.currentState = SuperstructureState.L4;
-          } else if (targetState != currentState) {
-            this.currentState = SuperstructureState.STOW;
-          }
-        }
-      }
-
-      case STOW -> {
-        elevator.setPositionTarget(ElevatorTarget.BOTTOM);
-        pivot.setPositionTarget(PivotTarget.TOP);
-        // tongue.setPositionTarget(TongueTarget.TOP);
-
-        // check for state transitions
-        if (this.superstructureReachedTarget()) {
-          if (targetState == SuperstructureState.INTAKE) {
-            this.currentState = SuperstructureState.INTAKE;
-          } else if (targetState == SuperstructureState.L1
-              || targetState == SuperstructureState.L2) {
-            this.currentState = SuperstructureState.L1;
-          } else if (targetState != currentState) {
-            this.currentState = SuperstructureState.TOP;
-          }
-        }
-      }
-      case INTAKE -> {
-        elevator.setPositionTarget(ElevatorTarget.INTAKE);
-        pivot.setPositionTarget(PivotTarget.INTAKE);
-        // tongue.setPositionTarget(TongueTarget.TOP);
-
-        // check for state transitions
-        if (this.superstructureReachedTarget()) {
-          if (targetState != currentState) {
-            this.currentState = SuperstructureState.STOW;
-          }
-        }
-      }
-      case ZERO -> {
-        pivot.setPositionTarget(PivotTarget.STOW);
-        elevator.setZeroing(true);
-        if (elevator.getFilteredSupplyCurrentAmps()
-            > ElevatorConstants
-                .ZEROING_VOLTAGE_THRESHOLD) { // check if the elevator is done zeroing and set
-          // offsets accordingly
-          elevator.setOffset();
-          elevator.setControlMode(ControlMode.POSITION);
-          elevator.setZeroing(false);
-
-          setTargetState(SuperstructureState.STOW);
-          this.currentState = SuperstructureState.STOW;
-        }
-      }
-      case STOP -> {
-        elevator.setControlMode(ControlMode.STOP);
-        pivot.setControlMode(ControlMode.STOP);
-
-        // FIXME Do we need to make tongue stop?
-      }
+    } else {
+      elevator.setControlMode(ControlMode.STOP);
+      pivot.setControlMode(ControlMode.STOP);
     }
 
     elevator.periodic();
@@ -177,6 +191,7 @@ public class Superstructure extends SubsystemBase {
 
   // Target state getter and setter
   public void setTargetState(SuperstructureState superstructureState) {
+    this.stop = false;
     this.targetState = superstructureState;
   }
 
@@ -186,11 +201,20 @@ public class Superstructure extends SubsystemBase {
 
   // Current state getter and setter
   public void setCurrentState(SuperstructureState superstructureState) {
+    this.stop = false;
     this.currentState = superstructureState;
   }
 
   public SuperstructureState getCurrentState() {
     return currentState;
+  }
+
+  public void setStopped(boolean stopped) {
+    this.stop = stopped;
+  }
+
+  public boolean getStopped() {
+    return stop;
   }
 
   // go to target state command factory

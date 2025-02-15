@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -236,7 +237,8 @@ public class RobotContainer {
         .onTrue(
             new InstantCommand(
                 () -> {
-                  superstructure.setTargetState(SuperstructureState.STOP);
+                  superstructure.setStopped(true);
+                  ;
                   rollers.setTargetState(RollerState.IDLE);
                 }));
 
@@ -245,10 +247,22 @@ public class RobotContainer {
         .onTrue(
             new SequentialCommandGroup(
                 superstructure.goToStateCommand(SuperstructureState.INTAKE),
-                rollers
-                    .setTargetCommand(RollerState.INTAKE),
-                new WaitUntilCommand(() -> (rollers.getTargetState() == RollerState.HOLD)),
-                superstructure.goToStateCommand(SuperstructureState.L4)));
+                rollers.setTargetCommand(RollerState.INTAKE)));
+    
+    driverB.leftBumper().onTrue(
+      new SequentialCommandGroup(
+        rollers.setTargetCommand(RollerState.HOLD),
+        superstructure.goToStateCommand(SuperstructureState.L4)
+      )
+    );
+
+    driverB
+        .rightTrigger() // eject
+        .onTrue(
+            rollers
+                .setTargetCommand(RollerState.EJECT)
+                .andThen(
+                    new WaitCommand(3000).andThen(rollers.setTargetCommand(RollerState.IDLE))));
     // new SequentialCommandGroup(
     //     new ParallelCommandGroup(
     //         elevator.goToPositionCommand(ElevatorTarget.SETUP_INTAKE),
