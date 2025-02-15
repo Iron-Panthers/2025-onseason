@@ -12,6 +12,14 @@ public class DriveConstants {
   // measures in meters (per sec) and radians (per sec)
   public static final DrivebaseConfig DRIVE_CONFIG =
       switch (getRobotType()) {
+        case COMP -> new DrivebaseConfig(
+            Units.inchesToMeters(2),
+            Units.inchesToMeters(22.5),
+            Units.inchesToMeters(34),
+            Units.inchesToMeters(34),
+            4.5, // FIXME
+            5,
+            3);
         case PROG, SIM -> new DrivebaseConfig(
             Units.inchesToMeters(2),
             Units.inchesToMeters(22.5),
@@ -48,6 +56,13 @@ public class DriveConstants {
   // fl, fr, bl, br; negate offsets
   public static final ModuleConfig[] MODULE_CONFIGS =
       switch (getRobotType()) {
+          // FIXME
+        case COMP -> new ModuleConfig[] {
+          new ModuleConfig(19, 18, 2, new Rotation2d(-1.148), true, false),
+          new ModuleConfig(17, 16, 1, new Rotation2d(-0.405), true, true),
+          new ModuleConfig(21, 20, 3, new Rotation2d(1.012), true, false),
+          new ModuleConfig(23, 22, 4, new Rotation2d(-2.831), true, true)
+        };
         case PROG -> new ModuleConfig[] {
           new ModuleConfig(5, 6, 1, new Rotation2d(-0.1503), false, false),
           new ModuleConfig(7, 8, 2, new Rotation2d(-0.18254), false, true),
@@ -70,6 +85,13 @@ public class DriveConstants {
 
   public static final ModuleConstants MODULE_CONSTANTS =
       switch (getRobotType()) {
+        case COMP -> new ModuleConstants(
+            new Gains(0.25, 2.26, 0, 50, 0, 0),
+            new MotionProfileGains(4, 64, 640),
+            new Gains(0.3, 0.63, 0, 1.5, 0, 0), // FIXME diff gear ratio
+            (45.0 / 15) * (17.0 / 27) * (50.0 / 16), // MK4i L2.5 16 tooth
+            150.0 / 7,
+            3.125);
         case PROG, SIM -> new ModuleConstants(
             new Gains(0.25, 2.26, 0, 50, 0, 0), // revisit kP
             new MotionProfileGains(4, 64, 640), // revisit all
@@ -88,12 +110,17 @@ public class DriveConstants {
 
   public static final TrajectoryFollowerConstants TRAJECTORY_CONFIG =
       switch (getRobotType()) {
-        case PROG, SIM -> new TrajectoryFollowerConstants(0, 0, 0, 0);
+        case COMP -> new TrajectoryFollowerConstants(0, 0, 0, 0);
         case ALPHA -> new TrajectoryFollowerConstants(13, 0, 11, 0);
+        default -> new TrajectoryFollowerConstants(0, 0, 0, 0);
       };
 
   public static final HeadingControllerConstants HEADING_CONTROLLER_CONSTANTS =
-      new HeadingControllerConstants(3, 0, 5, 200, 0.002);
+      switch (getRobotType()) {
+        case COMP -> new HeadingControllerConstants(3, 0, 5, 200, 0.002);
+        case ALPHA -> new HeadingControllerConstants(3, 0, 5, 200, 0.002);
+        default -> new HeadingControllerConstants(0, 0, 0, 0, 0);
+      };
 
   public static final double[] REEF_SNAP_ANGLES = {-120, -60, 0, 60, 120, 180};
 

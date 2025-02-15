@@ -3,11 +3,11 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -53,27 +53,36 @@ import java.util.function.BooleanSupplier;
 public class RobotContainer {
   private final RobotState robotState = RobotState.getInstance();
 
+  private SendableChooser<Command> autoChooser;
+
   private final CommandXboxController driverA = new CommandXboxController(0);
   private final CommandXboxController driverB = new CommandXboxController(1);
+  private final Joystick joystick = new Joystick(2);
 
-  private Rotation2d targetHeading = new Rotation2d();
-
-  private Drive swerve; // FIXME make final, implement other robot types
+  private Drive swerve;
   private Vision vision;
   private Intake intake;
   private Rollers rollers;
-
-  private SendableChooser<Command> autoChooser;
-
-  // superstructure
   private Elevator elevator;
   private Pivot pivot;
-  // private Superstructure superstructure;
 
   public RobotContainer() {
     intake = null;
     if (Constants.getRobotMode() != Mode.REPLAY) {
       switch (Constants.getRobotType()) {
+        case COMP -> {
+          swerve =
+              new Drive(
+                  new GyroIOPigeon2(),
+                  new ModuleIOTalonFX(DriveConstants.MODULE_CONFIGS[0]),
+                  new ModuleIOTalonFX(DriveConstants.MODULE_CONFIGS[1]),
+                  new ModuleIOTalonFX(DriveConstants.MODULE_CONFIGS[2]),
+                  new ModuleIOTalonFX(DriveConstants.MODULE_CONFIGS[3]));
+          vision = new Vision();
+          intake = new Intake(new IntakeIOTalonFX());
+          elevator = new Elevator(new ElevatorIOTalonFX());
+          pivot = new Pivot(new PivotIOTalonFX());
+        }
         case PROG -> {
           swerve =
               new Drive(
@@ -94,7 +103,11 @@ public class RobotContainer {
                   new ModuleIOTalonFX(DriveConstants.MODULE_CONFIGS[1]),
                   new ModuleIOTalonFX(DriveConstants.MODULE_CONFIGS[2]),
                   new ModuleIOTalonFX(DriveConstants.MODULE_CONFIGS[3]));
-          vision = new Vision(new VisionIOPhotonvision(1));
+          vision =
+              new Vision(
+                  new VisionIOPhotonvision(1),
+                  new VisionIOPhotonvision(2),
+                  new VisionIOPhotonvision(3));
           intake = new Intake(new IntakeIOTalonFX());
           pivot = new Pivot(new PivotIOTalonFX());
           elevator = new Elevator(new ElevatorIOTalonFX());
@@ -121,51 +134,19 @@ public class RobotContainer {
               new ModuleIO() {},
               new ModuleIO() {});
     }
+    if (vision == null) {
+      vision = new Vision();
+    }
 
     rollers = new Rollers(intake);
 
-    // superstructure
     if (elevator == null) {
       elevator = new Elevator(new ElevatorIO() {});
     }
     if (pivot == null) {
       pivot = new Pivot(new PivotIO() {});
     }
-    NamedCommands.registerCommand(
-        "Zero",
-        new ParallelCommandGroup(
-            elevator.zeroingCommand().andThen(elevator.goToPositionCommand(ElevatorTarget.BOTTOM)),
-            pivot.zeroingCommand().andThen(pivot.goToPositionCommand(PivotTarget.TOP))));
-    NamedCommands.registerCommand(
-        "Setup Intake",
-        new ScoringSequenceCommand(
-            elevator, pivot, rollers, ElevatorTarget.L3, PivotTarget.SETUP_L3));
-    NamedCommands.registerCommand(
-        "Intake",
-        new SequentialCommandGroup(
-            new ParallelCommandGroup(
-                elevator.goToPositionCommand(ElevatorTarget.SETUP_INTAKE),
-                pivot.goToPositionCommand(PivotTarget.INTAKE)),
-            rollers.setTargetCommand(RollerState.INTAKE),
-            elevator.goToPositionCommand(ElevatorTarget.INTAKE),
-            new WaitUntilCommand(() -> rollers.getTargetState() == RollerState.HOLD),
-            elevator.goToPositionCommand(ElevatorTarget.SETUP_INTAKE),
-            pivot.goToPositionCommand(PivotTarget.TOP),
-            elevator
-                .goToPositionCommand(ElevatorTarget.BOTTOM)
-                .alongWith(rollers.setTargetCommand(RollerState.IDLE))));
-    NamedCommands.registerCommand(
-        "L4",
-        new ScoringSequenceCommand(
-            elevator, pivot, rollers, ElevatorTarget.L4, PivotTarget.SETUP_L4));
-    NamedCommands.registerCommand(
-        "Score",
-        rollers
-            .setTargetCommand(Rollers.RollerState.EJECT)
-            .alongWith(pivot.goToPositionCommand(PivotTarget.SCORE_L4))
-            .andThen(elevator.goToPositionCommand(ElevatorTarget.L1))
-            .andThen(rollers.setTargetCommand(RollerState.IDLE)));
-    // superstructure = new Superstructure(elevator, pivot);
+
     configureBindings();
     configureAutos();
   }
@@ -213,10 +194,6 @@ public class RobotContainer {
         .b()
         .onTrue(
             new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(Math.toRadians(232)))));
-
-    // -----Intake Controls-----
-
-    // -----Flywheel Controls-----
 
     // -----Superstructure Controls-----
     driverB // GO TO BOTTOM
@@ -277,7 +254,10 @@ public class RobotContainer {
                 elevator
                     .goToPositionCommand(ElevatorTarget.BOTTOM)
                     .alongWith(rollers.setTargetCommand(RollerState.IDLE))));
-
+    SmartDashboard.putBoolean("Xbox?", DriverStation.getJoystickIsXbox(0));
+    SmartDashboard.putBoolean("Connected", driverA.isConnected());
+    SmartDashboard.putBoolean("Down pressed?", driverA.povDown().getAsBoolean());
+    SmartDashboard.putNumber("Joysticks?", driverA.getLeftX());
     driverB // eject
         .rightTrigger()
         .onTrue(
@@ -286,18 +266,25 @@ public class RobotContainer {
                 .alongWith(pivot.goToPositionCommand(PivotTarget.SCORE_L4))
                 .andThen(elevator.goToPositionCommand(ElevatorTarget.L1))
                 .andThen(rollers.setTargetCommand(RollerState.IDLE)));
+    new Trigger(() -> joystick.getTrigger())
+        .onTrue(
+            (elevator
+                .goToPositionCommand(ElevatorTarget.TEST_TOP)
+                .andThen(pivot.goToPositionCommand(PivotTarget.TEST_25))));
+    new Trigger(() -> joystick.getRawButton(3))
+        .onTrue(
+            (pivot
+                .goToPositionCommand(PivotTarget.TEST_N25)
+                .andThen(elevator.goToPositionCommand(ElevatorTarget.TEST_BOTTOM))));
+    new Trigger(() -> joystick.getRawButton(6))
+        .onTrue(
+            (pivot
+                .goToPositionCommand(PivotTarget.TEST_5)
+                .alongWith(elevator.goToPositionCommand(ElevatorTarget.TEST_MIDDLE))));
   }
 
   private void configureAutos() {
-    NamedCommands.registerCommand(
-        "TestPrintCommand",
-        new InstantCommand(
-            () ->
-                System.out.println(
-                    "\nWe'd do something if we had the subsystems to do it :( \n"))); // FIXME Only
-    // for testing
-    // event
-    // markers
+
     RobotConfig robotConfig;
     try {
       robotConfig = RobotConfig.fromGUISettings();
