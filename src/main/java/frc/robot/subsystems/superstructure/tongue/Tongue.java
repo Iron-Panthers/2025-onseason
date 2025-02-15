@@ -1,17 +1,14 @@
 package frc.robot.subsystems.superstructure.tongue;
 
-import frc.robot.subsystems.superstructure.GenericSuperstructure.ControlMode;
-// for intaking a note - TODO: ask the intake people what to do, L4 - 45 degrees, for L2 and L3 - 35
-// degrees, L1 - TODO: need to test
 import org.littletonrobotics.junction.Logger;
 
 public class Tongue {
   public enum TongueTarget {
     TOP(0),
-    L1(0),
-    L2(0),
-    L3(90),
-    L4(90),
+    L1(90),
+    L2(90),
+    L3(0),
+    L4(0),
     INTAKE(0);
 
     private double position;
@@ -27,7 +24,6 @@ public class Tongue {
 
   public enum ControlMode {
     POSITION,
-    ZERO,
     STOP,
   }
 
@@ -39,6 +35,7 @@ public class Tongue {
   private TongueTarget positionTarget;
 
   public Tongue(TongueIO io) {
+    this.name = "Tongue";
     this.io = io;
 
     setPositionTarget(TongueTarget.TOP);
@@ -59,6 +56,9 @@ public class Tongue {
         io.stop();
       }
     }
+    Logger.recordOutput("Tongue/Target", positionTarget.toString());
+    Logger.recordOutput("Tongue/Control Mode", controlMode.toString());
+    Logger.recordOutput("Tongue/Reached target", reachedTarget());
 
     Logger.recordOutput("Superstructure/" + "Tongue" + "/Target", positionTarget.toString());
     Logger.recordOutput("Superstructure/" + "Tongue" + "/Control Mode", controlMode.toString());
@@ -83,11 +83,11 @@ public class Tongue {
   }
 
   public double position() {
-    return inputs.positionRotations;
+    return inputs.angle;
   }
 
   public boolean reachedTarget() {
-    return Math.abs(inputs.positionRotations - positionTarget.getPosition())
+    return Math.abs(inputs.angle - positionTarget.getPosition())
         <= TongueConstants.POSITION_TARGET_EPSILON;
   }
 }

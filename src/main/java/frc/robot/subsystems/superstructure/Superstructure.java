@@ -23,6 +23,7 @@ public class Superstructure extends SubsystemBase {
     INTAKE,
     STOW, // Going to the lowest position
     ZERO, // Zero the motor
+    STOP; // Stop the superstructure
   }
 
   private SuperstructureState currentState = SuperstructureState.ZERO; // current state
@@ -39,7 +40,7 @@ public class Superstructure extends SubsystemBase {
     this.tongue = tongue;
     pivot.setPositionTarget(PivotTarget.STOW);
     elevator.setPositionTarget(ElevatorTarget.BOTTOM);
-    // tongue.setPositionTarget(TongueTarget.TOP);
+    tongue.setPositionTarget(TongueTarget.TOP);
   }
 
   @Override

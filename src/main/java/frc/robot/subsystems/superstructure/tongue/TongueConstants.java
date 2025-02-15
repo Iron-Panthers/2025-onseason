@@ -7,13 +7,13 @@ public class TongueConstants {
   // FIXME
   public static final TongueConfig TONGUE_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new TongueConfig(0);
-        case ALPHA -> new TongueConfig(15);
-        case PROG -> new TongueConfig(0);
-        case SIM -> new TongueConfig(0);
+        case COMP -> new TongueConfig(7, 0);
+        case ALPHA -> new TongueConfig(15, 0);
+        case PROG -> new TongueConfig(0, 0);
+        case SIM -> new TongueConfig(0, 0);
       };
 
-  public record TongueConfig(int servoID) {}
+  public record TongueConfig(int servoID, int servoSensorID) {}
 
   public static final boolean INVERT_MOTOR = true;
 

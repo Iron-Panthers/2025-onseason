@@ -32,6 +32,7 @@ import frc.robot.subsystems.superstructure.elevator.ElevatorIOTalonFX;
 import frc.robot.subsystems.superstructure.pivot.Pivot;
 import frc.robot.subsystems.superstructure.pivot.PivotIO;
 import frc.robot.subsystems.superstructure.pivot.PivotIOTalonFX;
+import frc.robot.subsystems.superstructure.tongue.TongueIOServo;
 import frc.robot.subsystems.superstructure.tongue.Tongue;
 import frc.robot.subsystems.superstructure.tongue.TongueIO;
 import frc.robot.subsystems.swerve.Drive;
@@ -85,6 +86,7 @@ public class RobotContainer {
           // superstructure stuff
           elevator = new Elevator(new ElevatorIOTalonFX());
           pivot = new Pivot(new PivotIOTalonFX());
+          tongue = new Tongue(new TongueIOServo());
         }
         case PROG -> {
           swerve =
@@ -202,6 +204,10 @@ public class RobotContainer {
         .onTrue(
             new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(Math.toRadians(232)))));
 
+    // driverA
+    //     .y()
+    //     .onTrue(
+    //         new InstantCommand(() -> tongue.setPositionTarget()));
     // -----Superstructure Controls-----
     driverB // GO TO BOTTOM
         .povDown()
