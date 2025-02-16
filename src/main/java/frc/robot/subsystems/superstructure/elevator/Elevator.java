@@ -12,8 +12,7 @@ public class Elevator extends GenericSuperstructure<Elevator.ElevatorTarget> {
     L3(4.3), // 0 and 53.75
     L4(27.78),
     TOP(31),
-    INTAKE(0),
-    MIDWAY(15); // FIXME
+    INTAKE(0);
     // TEST_BOTTOM(2),
     // TEST_TOP(31),
     // TEST_MIDDLE(15); // FIXME

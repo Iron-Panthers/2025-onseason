@@ -10,6 +10,7 @@ import frc.robot.subsystems.superstructure.elevator.ElevatorConstants;
 import frc.robot.subsystems.superstructure.pivot.Pivot;
 import frc.robot.subsystems.superstructure.pivot.Pivot.PivotTarget;
 import frc.robot.subsystems.superstructure.tongue.Tongue;
+import frc.robot.subsystems.superstructure.tongue.Tongue.TongueTarget;
 import org.littletonrobotics.junction.Logger;
 
 public class Superstructure extends SubsystemBase {
@@ -19,11 +20,9 @@ public class Superstructure extends SubsystemBase {
     L2, // Scoring in L2
     L1, // Scoring in the trough
     TOP, // Apex
-    MIDWAY,// Midway up the elevator
     INTAKE,
     STOW, // Going to the lowest position
-    ZERO, // Zero the motor
-    STOP; // Stop the superstructure
+    ZERO; // Zero the motor
   }
 
   private SuperstructureState currentState = SuperstructureState.ZERO; // current state
@@ -102,27 +101,12 @@ public class Superstructure extends SubsystemBase {
         case TOP -> {
           elevator.setPositionTarget(ElevatorTarget.TOP);
           pivot.setPositionTarget(PivotTarget.TOP);
-          // tongue.setPositionTarget(TongueTarget.TOP);
+          tongue.setPositionTarget(TongueTarget.TOP);
 
           // check for state transitions
           if (this.superstructureReachedTarget()) {
             if (targetState == SuperstructureState.L4 || targetState == SuperstructureState.L3) {
               setCurrentState(SuperstructureState.L4);
-            } else if (targetState != currentState) {
-              setCurrentState(SuperstructureState.MIDWAY);
-            }
-          }
-        }
-
-        case MIDWAY -> {
-          elevator.setPositionTarget(ElevatorTarget.MIDWAY);
-          pivot.setPositionTarget(PivotTarget.MIDWAY);
-          // tongue.setPositionTarget(TongueTarget.MIDWAY);
-
-          // check for state transitions
-          if (this.superstructureReachedTarget()) {
-            if(targetState == SuperstructureState.L4 || targetState == SuperstructureState.L3 || targetState == SuperstructureState.TOP) {
-              setCurrentState(SuperstructureState.TOP);
             } else if (targetState != currentState) {
               setCurrentState(SuperstructureState.STOW);
             }
@@ -131,8 +115,8 @@ public class Superstructure extends SubsystemBase {
 
         case STOW -> {
           elevator.setPositionTarget(ElevatorTarget.BOTTOM);
-          pivot.setPositionTarget(PivotTarget.TOP);
-          // tongue.setPositionTarget(TongueTarget.TOP);
+          pivot.setPositionTarget(PivotTarget.STOW);
+          tongue.setPositionTarget(TongueTarget.STOW);
 
           // check for state transitions
           if (this.superstructureReachedTarget()) {
@@ -142,7 +126,7 @@ public class Superstructure extends SubsystemBase {
                 || targetState == SuperstructureState.L2) {
               setCurrentState(SuperstructureState.L1);
             } else if (targetState != currentState) {
-              setCurrentState(SuperstructureState.MIDWAY);
+              setCurrentState(SuperstructureState.TOP);
             }
           }
         }

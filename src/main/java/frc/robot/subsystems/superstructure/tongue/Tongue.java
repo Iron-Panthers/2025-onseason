@@ -5,11 +5,13 @@ import org.littletonrobotics.junction.Logger;
 public class Tongue {
   public enum TongueTarget {
     TOP(0),
+    INTAKE(90),
+    STOW(90), // FIXME
     L1(90),
     L2(90),
     L3(0),
-    L4(0),
-    INTAKE(0);
+    L4(0);
+    ;
 
     private double position;
 
@@ -35,7 +37,6 @@ public class Tongue {
   private TongueTarget positionTarget;
 
   public Tongue(TongueIO io) {
-    this.name = "Tongue";
     this.io = io;
 
     setPositionTarget(TongueTarget.TOP);

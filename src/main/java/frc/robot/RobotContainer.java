@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
@@ -32,9 +31,9 @@ import frc.robot.subsystems.superstructure.elevator.ElevatorIOTalonFX;
 import frc.robot.subsystems.superstructure.pivot.Pivot;
 import frc.robot.subsystems.superstructure.pivot.PivotIO;
 import frc.robot.subsystems.superstructure.pivot.PivotIOTalonFX;
-import frc.robot.subsystems.superstructure.tongue.TongueIOServo;
 import frc.robot.subsystems.superstructure.tongue.Tongue;
 import frc.robot.subsystems.superstructure.tongue.TongueIO;
+import frc.robot.subsystems.superstructure.tongue.TongueIOServo;
 import frc.robot.subsystems.swerve.Drive;
 import frc.robot.subsystems.swerve.DriveConstants;
 import frc.robot.subsystems.swerve.GyroIO;
@@ -254,13 +253,13 @@ public class RobotContainer {
             new SequentialCommandGroup(
                 superstructure.goToStateCommand(SuperstructureState.INTAKE),
                 rollers.setTargetCommand(RollerState.INTAKE)));
-    
-    driverB.leftBumper().onTrue(
-      new SequentialCommandGroup(
-        rollers.setTargetCommand(RollerState.HOLD),
-        superstructure.goToStateCommand(SuperstructureState.L4)
-      )
-    );
+
+    driverB
+        .leftBumper()
+        .onTrue(
+            new SequentialCommandGroup(
+                rollers.setTargetCommand(RollerState.HOLD),
+                superstructure.goToStateCommand(SuperstructureState.L4)));
 
     driverB
         .rightTrigger() // eject
