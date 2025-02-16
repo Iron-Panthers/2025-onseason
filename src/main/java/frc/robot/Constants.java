@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 public final class Constants {
   public static final double PERIODIC_LOOP_SEC = 0.02;
 
-  public static RobotType ROBOT_TYPE = RobotType.COMP;
+  public static RobotType ROBOT_TYPE = RobotType.ALPHA;
 
   /* running mode of robot */
   public static Mode getRobotMode() {
