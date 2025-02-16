@@ -162,7 +162,7 @@ public class RobotState {
 
   public static Pose2d mirrorPose(Pose2d pose) {
     return new Pose2d(
-        new Translation2d(fieldSizeX - pose.getX(), pose.getY()),
+        new Translation2d(fieldSizeX - pose.getX(), fieldSizeY - pose.getY()),
         Rotation2d.kPi.minus(pose.getRotation()));
   }
 }
