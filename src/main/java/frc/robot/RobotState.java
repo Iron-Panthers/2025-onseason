@@ -150,51 +150,6 @@ public class RobotState {
     poseBuffer.clear();
   }
 
-  @AutoLogOutput(key = "RobotState/KalmanGain<0,0>")
-  public double getKalmanGain00() {
-    return kalmanGain.get(0, 0);
-  }
-
-  @AutoLogOutput(key = "RobotState/KalmanGain<0,1>")
-  public double getKalmanGain01() {
-    return kalmanGain.get(0, 1);
-  }
-
-  @AutoLogOutput(key = "RobotState/KalmanGain<0,2>")
-  public double getKalmanGain02() {
-    return kalmanGain.get(0, 2);
-  }
-
-  @AutoLogOutput(key = "RobotState/KalmanGain<1,0>")
-  public double getKalmanGain10() {
-    return kalmanGain.get(1, 0);
-  }
-
-  @AutoLogOutput(key = "RobotState/KalmanGain<1,1>")
-  public double getKalmanGain11() {
-    return kalmanGain.get(1, 1);
-  }
-
-  @AutoLogOutput(key = "RobotState/KalmanGain<1,2>")
-  public double getKalmanGain12() {
-    return kalmanGain.get(1, 2);
-  }
-
-  @AutoLogOutput(key = "RobotState/KalmanGain<2,0>")
-  public double getKalmanGain20() {
-    return kalmanGain.get(2, 0);
-  }
-
-  @AutoLogOutput(key = "RobotState/KalmanGain<2,1>")
-  public double getKalmanGain21() {
-    return kalmanGain.get(2, 1);
-  }
-
-  @AutoLogOutput(key = "RobotState/KalmanGain<2,2>")
-  public double getKalmanGain22() {
-    return kalmanGain.get(2, 2);
-  }
-
   @AutoLogOutput(key = "RobotState/OdometryPose")
   public Pose2d getOdometryPose() {
     return odometryPose;
