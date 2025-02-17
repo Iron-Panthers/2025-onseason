@@ -102,8 +102,6 @@ public class Superstructure extends SubsystemBase {
           elevator.setPositionTarget(ElevatorTarget.TOP);
           if (elevator.getPosition() > 15) {
             pivot.setPositionTarget(PivotTarget.TOP);
-          } else {
-            pivot.setPositionTarget(PivotTarget.STOW);
           }
           tongue.setPositionTarget(TongueTarget.TOP);
 
