@@ -39,7 +39,7 @@ public class Superstructure extends SubsystemBase {
     this.tongue = tongue;
     pivot.setPositionTarget(PivotTarget.STOW);
     elevator.setPositionTarget(ElevatorTarget.BOTTOM);
-    tongue.setPositionTarget(TongueTarget.TOP);
+    tongue.setPositionTarget(TongueTarget.STOW);
   }
 
   @Override
@@ -49,7 +49,7 @@ public class Superstructure extends SubsystemBase {
         case L1 -> {
           elevator.setPositionTarget(ElevatorTarget.L1);
           pivot.setPositionTarget(PivotTarget.L1);
-          // tongue.setPositionTarget(TongueTarget.L1);
+          tongue.setPositionTarget(TongueTarget.L1);
 
           // check for state transitions
           if (this.superstructureReachedTarget()) {
@@ -63,7 +63,7 @@ public class Superstructure extends SubsystemBase {
         case L2 -> {
           elevator.setPositionTarget(ElevatorTarget.L2);
           pivot.setPositionTarget(PivotTarget.L2);
-          // tongue.setPositionTarget(TongueTarget.L2);
+          tongue.setPositionTarget(TongueTarget.L2);
 
           // check for state transitions
           if (this.superstructureReachedTarget()) {
@@ -75,7 +75,7 @@ public class Superstructure extends SubsystemBase {
         case L3 -> {
           elevator.setPositionTarget(ElevatorTarget.L3);
           pivot.setPositionTarget(PivotTarget.L3);
-          // tongue.setPositionTarget(TongueTarget.L3);
+          tongue.setPositionTarget(TongueTarget.L3);
 
           // check for state transitions
           if (this.superstructureReachedTarget()) {
@@ -87,7 +87,7 @@ public class Superstructure extends SubsystemBase {
         case L4 -> {
           elevator.setPositionTarget(ElevatorTarget.L4);
           pivot.setPositionTarget(PivotTarget.L4);
-          // tongue.setPositionTarget(TongueTarget.L4);
+          tongue.setPositionTarget(TongueTarget.L4);
 
           // check for state transitions
           if (this.superstructureReachedTarget()) {
@@ -100,7 +100,11 @@ public class Superstructure extends SubsystemBase {
         }
         case TOP -> {
           elevator.setPositionTarget(ElevatorTarget.TOP);
-          pivot.setPositionTarget(PivotTarget.TOP);
+          if (elevator.getPosition() > 15) {
+            pivot.setPositionTarget(PivotTarget.TOP);
+          } else {
+            pivot.setPositionTarget(PivotTarget.STOW);
+          }
           tongue.setPositionTarget(TongueTarget.TOP);
 
           // check for state transitions
@@ -133,7 +137,7 @@ public class Superstructure extends SubsystemBase {
         case INTAKE -> {
           elevator.setPositionTarget(ElevatorTarget.INTAKE);
           pivot.setPositionTarget(PivotTarget.INTAKE);
-          // tongue.setPositionTarget(TongueTarget.TOP);
+          tongue.setPositionTarget(TongueTarget.INTAKE);
 
           // check for state transitions
           if (this.superstructureReachedTarget()) {
@@ -145,6 +149,7 @@ public class Superstructure extends SubsystemBase {
         case ZERO -> {
           pivot.setPositionTarget(PivotTarget.STOW);
           elevator.setZeroing(true);
+          tongue.setPositionTarget(TongueTarget.STOW);
           if (elevator.getFilteredSupplyCurrentAmps()
               > ElevatorConstants
                   .ZEROING_VOLTAGE_THRESHOLD) { // check if the elevator is done zeroing and set
@@ -262,6 +267,8 @@ public class Superstructure extends SubsystemBase {
    * @return if both subsystems in the superstructure have reached their target
    */
   public boolean superstructureReachedTarget() {
-    return elevator.reachedTarget() && pivot.reachedTarget();
+    return elevator.reachedTarget()
+        && pivot.reachedTarget()
+        && currentState != SuperstructureState.ZERO;
   }
 }

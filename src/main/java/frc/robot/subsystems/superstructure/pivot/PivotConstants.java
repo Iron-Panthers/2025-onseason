@@ -14,7 +14,7 @@ public class PivotConstants {
       };
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
-        case COMP -> new PIDGains(20, 0, 0, 0, 3.8786, 0.180884, 0.4);
+        case COMP -> new PIDGains(40, 0, 0, 0, 3.8786, 0.180884, 0.4);
         case ALPHA -> new PIDGains(1.5, 0, 0.01, 0.03, 0.09, 0, 0.51);
         case PROG -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
         case SIM -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
@@ -22,7 +22,7 @@ public class PivotConstants {
 
   public static final MotionMagicConfig MOTION_MAGIC_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new MotionMagicConfig(2, 3);
+        case COMP -> new MotionMagicConfig(2, 4);
         case PROG -> new MotionMagicConfig(0, 0);
         case ALPHA -> new MotionMagicConfig(0, 0);
         case SIM -> new MotionMagicConfig(0, 0);
@@ -43,7 +43,7 @@ public class PivotConstants {
 
   public static final boolean INVERT_MOTOR = true;
 
-  public static final double POSITION_TARGET_EPSILON = 0.05;
+  public static final double POSITION_TARGET_EPSILON = 0.005;
 
   // SOFT LIMITS
   public static final Optional<Double> UPPER_EXTENSION_LIMIT =

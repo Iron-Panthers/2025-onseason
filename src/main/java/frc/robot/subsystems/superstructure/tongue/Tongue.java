@@ -4,13 +4,13 @@ import org.littletonrobotics.junction.Logger;
 
 public class Tongue {
   public enum TongueTarget {
-    TOP(0),
-    INTAKE(90),
-    STOW(90), // FIXME
-    L1(90),
-    L2(90),
-    L3(0),
-    L4(0);
+    TOP(90),
+    INTAKE(100),
+    STOW(110), // FIXME
+    L1(100),
+    L2(100),
+    L3(-10),
+    L4(-10);
     ;
 
     private double position;
@@ -88,7 +88,6 @@ public class Tongue {
   }
 
   public boolean reachedTarget() {
-    return Math.abs(inputs.angle - positionTarget.getPosition())
-        <= TongueConstants.POSITION_TARGET_EPSILON;
+    return true;
   }
 }
