@@ -9,7 +9,7 @@ public class Tongue {
     STOW(110), // FIXME
     L1(100),
     L2(100),
-    L3(-10),
+    L3(0),
     L4(-10);
     ;
 

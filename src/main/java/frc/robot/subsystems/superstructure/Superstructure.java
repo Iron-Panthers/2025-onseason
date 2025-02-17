@@ -68,7 +68,11 @@ public class Superstructure extends SubsystemBase {
           // check for state transitions
           if (this.superstructureReachedTarget()) {
             if (targetState != currentState) {
-              setCurrentState(SuperstructureState.L1);
+              if (targetState == SuperstructureState.L1){
+                setCurrentState(SuperstructureState.L1);
+              } else{
+              setCurrentState(SuperstructureState.STOW);
+              }
             }
           }
         }
@@ -100,7 +104,7 @@ public class Superstructure extends SubsystemBase {
         }
         case TOP -> {
           elevator.setPositionTarget(ElevatorTarget.TOP);
-          if (elevator.getPosition() > 15) {
+          if (elevator.getPosition() > 5) {
             pivot.setPositionTarget(PivotTarget.TOP);
           }
           tongue.setPositionTarget(TongueTarget.TOP);
@@ -124,9 +128,10 @@ public class Superstructure extends SubsystemBase {
           if (this.superstructureReachedTarget()) {
             if (targetState == SuperstructureState.INTAKE) {
               setCurrentState(SuperstructureState.INTAKE);
-            } else if (targetState == SuperstructureState.L1
-                || targetState == SuperstructureState.L2) {
+            } else if (targetState == SuperstructureState.L1) {
               setCurrentState(SuperstructureState.L1);
+            } else if (targetState == SuperstructureState.L2){
+              setCurrentState(SuperstructureState.L2);
             } else if (targetState != currentState) {
               setCurrentState(SuperstructureState.TOP);
             }
@@ -138,9 +143,14 @@ public class Superstructure extends SubsystemBase {
           tongue.setPositionTarget(TongueTarget.INTAKE);
 
           // check for state transitions
-          if (this.superstructureReachedTarget()) {
-            if (targetState != currentState) {
-              setCurrentState(SuperstructureState.STOW);
+          if (elevator.reachedTarget()) {
+            if (targetState == SuperstructureState.STOW) {
+              setCurrentState(SuperstructureState.INTAKE);
+            } else if (targetState == SuperstructureState.L1
+                || targetState == SuperstructureState.L2) {
+              setCurrentState(SuperstructureState.L1);
+            } else if (targetState != currentState) {
+              setCurrentState(SuperstructureState.TOP);
             }
           }
         }

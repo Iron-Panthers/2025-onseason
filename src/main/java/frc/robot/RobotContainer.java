@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
 import frc.robot.autonomous.PathCommand;
+import frc.robot.subsystems.rollers.RollerSensorsIOComp;
 import frc.robot.subsystems.rollers.Rollers;
 import frc.robot.subsystems.rollers.Rollers.RollerState;
 import frc.robot.subsystems.rollers.intake.Intake;
@@ -70,6 +71,7 @@ public class RobotContainer {
 
   public RobotContainer() {
     intake = null;
+
     if (Constants.getRobotMode() != Mode.REPLAY) {
       switch (Constants.getRobotType()) {
         case COMP -> {
@@ -142,7 +144,7 @@ public class RobotContainer {
       vision = new Vision();
     }
 
-    rollers = new Rollers(intake);
+    rollers = new Rollers(intake, new RollerSensorsIOComp());
 
     if (elevator == null) {
       elevator = new Elevator(new ElevatorIO() {});
@@ -208,9 +210,9 @@ public class RobotContainer {
     //     .onTrue(
     //         new InstantCommand(() -> tongue.setPositionTarget()));
     // -----Superstructure Controls-----
-    driverB // GO TO BOTTOM
+    driverB // GO TO L1
         .povDown()
-        .onTrue(superstructure.goToStateCommand(SuperstructureState.STOW));
+        .onTrue(superstructure.goToStateCommand(SuperstructureState.L1));
 
     driverB // GO TO L2
         .povRight()
@@ -250,24 +252,21 @@ public class RobotContainer {
     driverB // intake
         .leftTrigger()
         .onTrue(
-            new SequentialCommandGroup(
-                superstructure.goToStateCommand(SuperstructureState.INTAKE),
-                rollers.setTargetCommand(RollerState.INTAKE)));
-
-    driverB
-        .leftBumper()
-        .onTrue(
-            new SequentialCommandGroup(
-                rollers.setTargetCommand(RollerState.HOLD),
-                superstructure.goToStateCommand(SuperstructureState.L4)));
+          new SequentialCommandGroup(
+              superstructure.goToStateCommand(SuperstructureState.INTAKE),
+              rollers.setTargetCommand(RollerState.FORCE_INTAKE)));
 
     driverB
         .rightTrigger() // eject
         .onTrue(
             rollers
                 .setTargetCommand(RollerState.EJECT)
-                .andThen(
-                    new WaitCommand(3000).andThen(rollers.setTargetCommand(RollerState.IDLE))));
+                .andThen(new WaitCommand(2).andThen(rollers.setTargetCommand(RollerState.IDLE))));
+    new Trigger(() -> rollers.poleDetected())
+        .onTrue(
+            new WaitCommand(0.5)
+                .andThen(superstructure.goToStateCommand(SuperstructureState.STOW))
+                .alongWith(rollers.setTargetCommand(RollerState.INTAKE)));
     // new SequentialCommandGroup(
     //     new ParallelCommandGroup(
     //         elevator.goToPositionCommand(ElevatorTarget.SETUP_INTAKE),
