@@ -22,7 +22,7 @@ public class PivotConstants {
 
   public static final MotionMagicConfig MOTION_MAGIC_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new MotionMagicConfig(2, 4);
+        case COMP -> new MotionMagicConfig(2, 10);
         case PROG -> new MotionMagicConfig(0, 0);
         case ALPHA -> new MotionMagicConfig(0, 0);
         case SIM -> new MotionMagicConfig(0, 0);
@@ -46,10 +46,8 @@ public class PivotConstants {
   public static final double POSITION_TARGET_EPSILON = 0.005;
 
   // SOFT LIMITS
-  public static final Optional<Double> UPPER_EXTENSION_LIMIT =
-      Optional.of(0.465); // top limit is 121 rotations
-  public static final Optional<Double> LOWER_EXTENSION_LIMIT =
-      Optional.empty(); // top limit is 121 rotations
+  public static final Optional<Double> UPPER_EXTENSION_LIMIT = Optional.of(0.465);
+  public static final Optional<Double> LOWER_EXTENSION_LIMIT = Optional.empty();
 
   // top limit is 121 rotations
 

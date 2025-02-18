@@ -23,7 +23,7 @@ public class ElevatorConstants {
 
   public static final MotionMagicConfig MOTION_MAGIC_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new MotionMagicConfig(9000, 90, 0);
+        case COMP -> new MotionMagicConfig(9000, 1000, 0);
         case PROG -> new MotionMagicConfig(0, 0, 0);
         case ALPHA -> new MotionMagicConfig(50, 50, 0);
         case SIM -> new MotionMagicConfig(0, 0, 0);

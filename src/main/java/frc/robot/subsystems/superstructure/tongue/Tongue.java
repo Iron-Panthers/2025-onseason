@@ -9,8 +9,8 @@ public class Tongue {
     STOW(110), // FIXME
     L1(100),
     L2(100),
-    L3(0),
-    L4(-10);
+    L3(60),
+    L4(0);
     ;
 
     private double position;
@@ -89,5 +89,9 @@ public class Tongue {
 
   public boolean reachedTarget() {
     return true;
+  }
+
+  public boolean poleDetected() {
+    return inputs.pole1Detected && inputs.pole2Detected;
   }
 }

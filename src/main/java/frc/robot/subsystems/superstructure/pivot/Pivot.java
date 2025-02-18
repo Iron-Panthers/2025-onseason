@@ -6,13 +6,14 @@ import frc.robot.subsystems.superstructure.GenericSuperstructure;
 
 public class Pivot extends GenericSuperstructure<Pivot.PivotTarget> {
   public enum PivotTarget implements GenericSuperstructure.PositionTarget {
-    TOP(-85),
-    INTAKE(-99),
-    STOW(-99), // FIXME
-    L1(-96),
-    L2(-96),
+    TOP(-82),
+    INTAKE(-97),
+    STOW(-97), // FIXME
+    L1(-110),
+    L2(-110),
     L3(130.68),
-    L4(128.88);
+    SETUP_L4(140),
+    SCORE_L4(146);
 
     private double position;
 

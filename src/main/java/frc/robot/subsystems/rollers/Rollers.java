@@ -55,9 +55,6 @@ public class Rollers extends SubsystemBase {
       }
       case HOLD -> {
         intake.setVoltageTarget(Intake.Target.HOLD);
-        if (poleDetected()) {
-          this.targetState = RollerState.EJECT;
-        }
       }
       case EJECT -> {
         ejectTime += 0.02;
@@ -91,9 +88,5 @@ public class Rollers extends SubsystemBase {
 
   public boolean intakeDetected() {
     return sensorsInputs.intakeDetected;
-  }
-
-  public boolean poleDetected() {
-    return sensorsInputs.pole1Detected && sensorsInputs.pole2Detected;
   }
 }

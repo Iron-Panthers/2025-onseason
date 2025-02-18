@@ -15,7 +15,8 @@ import org.littletonrobotics.junction.Logger;
 
 public class Superstructure extends SubsystemBase {
   public enum SuperstructureState {
-    L4, // Scoring in L4
+    SETUP_L4, // Setting up in L4
+    SCORE_L4, // Scoreing in L4
     L3, // Scoring in L3
     L2, // Scoring in L2
     L1, // Scoring in the trough
@@ -68,10 +69,10 @@ public class Superstructure extends SubsystemBase {
           // check for state transitions
           if (this.superstructureReachedTarget()) {
             if (targetState != currentState) {
-              if (targetState == SuperstructureState.L1){
+              if (targetState == SuperstructureState.L1) {
                 setCurrentState(SuperstructureState.L1);
-              } else{
-              setCurrentState(SuperstructureState.STOW);
+              } else {
+                setCurrentState(SuperstructureState.STOW);
               }
             }
           }
@@ -84,22 +85,34 @@ public class Superstructure extends SubsystemBase {
           // check for state transitions
           if (this.superstructureReachedTarget()) {
             if (targetState != currentState) {
-              setCurrentState(SuperstructureState.L4);
+              setCurrentState(SuperstructureState.SETUP_L4);
             }
           }
         }
-        case L4 -> {
-          elevator.setPositionTarget(ElevatorTarget.L4);
-          pivot.setPositionTarget(PivotTarget.L4);
+        case SETUP_L4 -> {
+          elevator.setPositionTarget(ElevatorTarget.SETUP_L4);
+          pivot.setPositionTarget(PivotTarget.SETUP_L4);
           tongue.setPositionTarget(TongueTarget.L4);
-
           // check for state transitions
           if (this.superstructureReachedTarget()) {
             if (targetState == SuperstructureState.L3) {
               setCurrentState(SuperstructureState.L3);
+            } else if (targetState == SuperstructureState.SCORE_L4) {
+              if (tonguePoleDetected()) {
+                setCurrentState(SuperstructureState.SCORE_L4);
+              }
             } else if (targetState != currentState) {
               setCurrentState(SuperstructureState.TOP);
             }
+          }
+        }
+        case SCORE_L4 -> {
+          elevator.setPositionTarget(ElevatorTarget.SCORE_L4);
+          pivot.setPositionTarget(PivotTarget.SCORE_L4);
+          tongue.setPositionTarget(TongueTarget.STOW);
+          // check for state transitions
+          if (this.superstructureReachedTarget() && targetState != currentState) {
+            setCurrentState(SuperstructureState.SETUP_L4);
           }
         }
         case TOP -> {
@@ -111,8 +124,10 @@ public class Superstructure extends SubsystemBase {
 
           // check for state transitions
           if (this.superstructureReachedTarget()) {
-            if (targetState == SuperstructureState.L4 || targetState == SuperstructureState.L3) {
-              setCurrentState(SuperstructureState.L4);
+            if (targetState == SuperstructureState.SETUP_L4
+                || targetState == SuperstructureState.SCORE_L4
+                || targetState == SuperstructureState.L3) {
+              setCurrentState(SuperstructureState.SETUP_L4);
             } else if (targetState != currentState) {
               setCurrentState(SuperstructureState.STOW);
             }
@@ -130,7 +145,7 @@ public class Superstructure extends SubsystemBase {
               setCurrentState(SuperstructureState.INTAKE);
             } else if (targetState == SuperstructureState.L1) {
               setCurrentState(SuperstructureState.L1);
-            } else if (targetState == SuperstructureState.L2){
+            } else if (targetState == SuperstructureState.L2) {
               setCurrentState(SuperstructureState.L2);
             } else if (targetState != currentState) {
               setCurrentState(SuperstructureState.TOP);
@@ -278,5 +293,9 @@ public class Superstructure extends SubsystemBase {
     return elevator.reachedTarget()
         && pivot.reachedTarget()
         && currentState != SuperstructureState.ZERO;
+  }
+
+  public boolean tonguePoleDetected() {
+    return tongue.poleDetected();
   }
 }
