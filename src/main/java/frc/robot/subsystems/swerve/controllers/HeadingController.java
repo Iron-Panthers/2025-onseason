@@ -7,16 +7,18 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
-import frc.robot.RobotState;
+import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 
 public class HeadingController {
   private ProfiledPIDController controller;
+  private Supplier<Rotation2d> headingSupplier;
 
   private Rotation2d targetHeading;
 
-  public HeadingController(Rotation2d targetHeadingSupplier) {
-    this.targetHeading = targetHeadingSupplier;
+  public HeadingController(Supplier<Rotation2d> headingSupplier, Rotation2d targetHeading) {
+    this.headingSupplier = headingSupplier;
+    this.targetHeading = targetHeading;
 
     controller =
         new ProfiledPIDController(
@@ -29,14 +31,12 @@ public class HeadingController {
             Constants.PERIODIC_LOOP_SEC);
     controller.setTolerance(Units.degreesToRadians(HEADING_CONTROLLER_CONSTANTS.tolerance()));
     controller.enableContinuousInput(-Math.PI, Math.PI);
-    controller.reset(RobotState.getInstance().getOdometryPose().getRotation().getRadians());
+    controller.reset(headingSupplier.get().getRadians());
   }
 
   public double update() {
     double output =
-        controller.calculate(
-            RobotState.getInstance().getOdometryPose().getRotation().getRadians(),
-            targetHeading.getRadians());
+        controller.calculate(headingSupplier.get().getRadians(), targetHeading.getRadians());
 
     return Math.abs(output) > 0.02 ? output : 0; // To prevent jittering
   }

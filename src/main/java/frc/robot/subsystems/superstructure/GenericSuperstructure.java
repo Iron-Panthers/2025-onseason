@@ -9,14 +9,13 @@ public class GenericSuperstructure<G extends GenericSuperstructure.PositionTarge
 
   public enum ControlMode {
     POSITION,
-    ZERO,
     STOP,
   }
 
   private ControlMode controlMode = ControlMode.STOP;
 
-  private final String name;
-  private final GenericSuperstructureIO superstructureIO;
+  protected final String name;
+  protected final GenericSuperstructureIO superstructureIO;
 
   private GenericSuperstructureIOInputsAutoLogged inputs =
       new GenericSuperstructureIOInputsAutoLogged();
@@ -37,9 +36,6 @@ public class GenericSuperstructure<G extends GenericSuperstructure.PositionTarge
       case POSITION -> {
         superstructureIO.runPosition(positionTarget.getPosition());
       }
-      case ZERO -> {
-        superstructureIO.runCharacterization();
-      }
       case STOP -> {
         superstructureIO.stop();
       }
@@ -47,9 +43,10 @@ public class GenericSuperstructure<G extends GenericSuperstructure.PositionTarge
 
     Logger.recordOutput("Superstructure/" + name + "/Target", positionTarget.toString());
     Logger.recordOutput("Superstructure/" + name + "/Control Mode", controlMode.toString());
+    Logger.recordOutput("Superstructure/" + name + "/Reached target", reachedTarget());
   }
 
-  public G getGetPositionTarget() {
+  public G getPositionTarget() {
     return positionTarget;
   }
 
@@ -74,7 +71,48 @@ public class GenericSuperstructure<G extends GenericSuperstructure.PositionTarge
     return inputs.supplyCurrentAmps;
   }
 
-  public double position() {
+  public double getPosition() {
     return inputs.positionRotations;
   }
+
+  /**
+   * This function returns weather or not the subsystem has reached its position target
+   *
+   * @return weather the subsystem has reached its position target
+   */
+  public boolean reachedTarget() {
+    return Math.abs(inputs.positionRotations - positionTarget.getPosition())
+        <= superstructureIO.getPositionTargetEpsilon();
+  }
+
+  // public Command zeroingCommand() {
+  //   return new FunctionalCommand(
+  //       () -> {},
+  //       () -> { // execute
+  //         // nothing needs to happen here
+  //         setControlMode(ControlMode.ZERO);
+  //       },
+  //       (e) -> { // on end
+  //         setOffset();
+  //         setControlMode(ControlMode.POSITION);
+  //       },
+  //       () ->
+  //           (getFilteredSupplyCurrentAmps()
+  //               > superstructureIO.getZeroingVoltageThreshold()) // TODO: Make this work for both
+  //       ,
+  //       this);
+  // }
+
+  // public Command goToPositionCommand(G position) {
+  //   return new FunctionalCommand(
+  //       () -> {
+  //         setPositionTarget(position);
+  //       },
+  //       () -> { // execute
+  //       },
+  //       (e) -> { // on end
+  //       },
+  //       () -> reachedTarget(),
+  //       this);
+  // }
 }
