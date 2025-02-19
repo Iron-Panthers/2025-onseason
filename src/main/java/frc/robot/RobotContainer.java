@@ -247,13 +247,14 @@ public class RobotContainer {
                   rollers.setTargetState(RollerState.IDLE);
                 }));
 
-    driverB
-      .b()
-      .onTrue(
-        superstructure.goToStateCommand(SuperstructureState.STOW));
+    driverB.b().onTrue(superstructure.goToStateCommand(SuperstructureState.STOW));
 
     // Manual override
-    driverB.y().onTrue( new InstantCommand(() -> superstructure.setCurrentState(superstructure.getTargetState())));
+    driverB
+        .y()
+        .onTrue(
+            new InstantCommand(
+                () -> superstructure.setCurrentState(superstructure.getTargetState())));
 
     driverB // intake
         .leftTrigger()

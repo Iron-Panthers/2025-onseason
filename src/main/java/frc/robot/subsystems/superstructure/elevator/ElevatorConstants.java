@@ -15,7 +15,7 @@ public class ElevatorConstants {
 
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
-        case COMP -> new PIDGains(1, 0, 0, 0, 0.08, 0.005, 0.35);
+        case COMP -> new PIDGains(1, 0, 0, 0, 0.08, 0.002, 0.35);
         case PROG -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
         case ALPHA -> new PIDGains(2, 0, 0.2, 0, 0.09, 0, .34);
         case SIM -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
