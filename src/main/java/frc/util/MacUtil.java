@@ -5,39 +5,33 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
+import com.ctre.phoenix6.signals.RobotEnableValue;
+
+import frc.robot.Constants.RobotType;
+
 public class MacUtil {
   private MacUtil() {}
+  public static final String macAddress;
+  public static RobotType robotType;
 
-  /**
-   * is the robot code is running on the competition robot? defaults to true, better to assume comp
-   * then practice
-   */
+  //determining the type of the robot based on the mac address (from their respective rio's) default is alpha bot
   static {
-    String macAddress = macToString(getMacAddress());
+    macAddress = macToString(getMacAddress());
     SmartDashboard.putString("MAC address", macAddress);
-    /* FIXME: FIND THE MAC ADDRESSES OF THE RIOS AND MAKE A SWITCH STATEMENT (or if statement) about the stuff above*/
     switch(macAddress) {
       //Alphabot MAC Address Below
       case "00:80:2F:32:FD:81"-> {
-
+        robotType = RobotType.ALPHA;
       }
-      case/*FIXME: Add Second MAC Address*/ -> {
-
+      //Comp Bot MAC Address Below
+      case "00:80:2F:38:81:D4" -> {
+        robotType = RobotType.COMP;
+      } 
+      default -> {
+        robotType = RobotType.ALPHA;
       }
-      //FIXME: Add the other switch statement when the new robot is built, and put that MAC Address in the case below
-      // case -> {
-
-      // }
     
     }
-    //FIXME: Delete this code later but first make THE SWITCH STATEMENT THAT I TALKED ABOUT ABOVE
-     // IS_COMP_BOT =
-    //     !(macAddress.equals(
-    //             // this value is the mac address of the practice bot
-    //             // if the read mac address is not the practice bot, we default to comp bot
-    //             "00:80:2F:32:FD:81")
-    //         // this is the mac address of the practice bot with cable
-    //         || macAddress.equals("00:80:2F:28:AC:B1"));
   }
 
   private static void logErr(SocketException e) {

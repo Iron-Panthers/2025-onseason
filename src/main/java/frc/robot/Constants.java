@@ -12,6 +12,7 @@
 // GNU General Public License for more details.
 
 package frc.robot;
+import static frc.util.MacUtil.macAddress;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.util.MacUtil;
@@ -23,8 +24,8 @@ import frc.util.MacUtil;
  */
 public final class Constants {
   public static final double PERIODIC_LOOP_SEC = 0.02;
+  public static RobotType ROBOT_TYPE = MacUtil.robotType;
 
-  public static RobotType ROBOT_TYPE = RobotType.ALPHA;
 
   /* running mode of robot */
   public static Mode getRobotMode() {
@@ -38,6 +39,7 @@ public final class Constants {
   public static RobotType getRobotType() {
     return ROBOT_TYPE;
   }
+
 
   public enum Mode {
     /** Running on a real robot. */
