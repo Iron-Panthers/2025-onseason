@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.superstructure.GenericSuperstructure.ControlMode;
+import frc.robot.subsystems.superstructure.climb.Climb;
 import frc.robot.subsystems.superstructure.elevator.Elevator;
 import frc.robot.subsystems.superstructure.elevator.Elevator.ElevatorTarget;
 import frc.robot.subsystems.superstructure.elevator.ElevatorConstants;
@@ -23,6 +24,8 @@ public class Superstructure extends SubsystemBase {
     INTAKE,
     STOW, // Going to the lowest position
     ZERO, // Zero the motor
+    CLIMB_UP, //Climb up
+    CLIMB_DOWN, //Climb down
     STOP; // Stop the superstructure
   }
 
@@ -32,11 +35,13 @@ public class Superstructure extends SubsystemBase {
   private final Elevator elevator;
   private final Pivot pivot;
   private final Tongue tongue;
+  private final Climb climb;
 
-  public Superstructure(Elevator elevator, Pivot pivot, Tongue tongue) {
+  public Superstructure(Elevator elevator, Pivot pivot, Tongue tongue, Climb climb) {
     this.elevator = elevator;
     this.pivot = pivot;
     this.tongue = tongue;
+    this.climb = climb;
     pivot.setPositionTarget(PivotTarget.TOP);
     elevator.setPositionTarget(ElevatorTarget.BOTTOM);
     tongue.setPositionTarget(TongueTarget.TOP);
@@ -153,6 +158,12 @@ public class Superstructure extends SubsystemBase {
 
           setTargetState(SuperstructureState.STOW);
         }
+      }
+      case CLIMB_UP -> {
+        // climb up FIXME
+      }
+      case CLIMB_DOWN -> {
+        //climb down FIXME
       }
       case STOP -> {
         elevator.setControlMode(ControlMode.STOP);

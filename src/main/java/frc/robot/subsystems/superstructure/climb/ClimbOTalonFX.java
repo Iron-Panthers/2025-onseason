@@ -9,11 +9,11 @@ public class ClimbOTalonFX extends GenericSuperstructureIOTalonFX implements Cli
 
   public ClimbOTalonFX() {
     super(
-        ELEVATOR_CONFIG.motorID(),
+        CLIMB_CONFIG.motorID(),
         INVERT_MOTOR,
         SUPPLY_CURRENT_LIMIT,
         Optional.empty(),
-        ELEVATOR_CONFIG.reduction(),
+        CLIMB_CONFIG.reduction(),
         UPPER_EXTENSION_LIMIT,
         LOWER_EXTENSION_LIMIT,
         UPPER_VOLT_LIMIT,

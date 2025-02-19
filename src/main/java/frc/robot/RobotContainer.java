@@ -24,6 +24,9 @@ import frc.robot.subsystems.rollers.intake.Intake;
 import frc.robot.subsystems.rollers.intake.IntakeIOTalonFX;
 import frc.robot.subsystems.superstructure.Superstructure;
 import frc.robot.subsystems.superstructure.Superstructure.SuperstructureState;
+import frc.robot.subsystems.superstructure.climb.Climb;
+import frc.robot.subsystems.superstructure.climb.ClimbConstants;
+import frc.robot.subsystems.superstructure.climb.Climb.ClimbTarget;
 import frc.robot.subsystems.superstructure.elevator.Elevator;
 import frc.robot.subsystems.superstructure.elevator.ElevatorIO;
 import frc.robot.subsystems.superstructure.elevator.ElevatorIOTalonFX;
@@ -64,6 +67,7 @@ public class RobotContainer {
   private Elevator elevator;
   private Pivot pivot;
   private Tongue tongue;
+  private Climb climb;
   private Superstructure superstructure;
 
   public RobotContainer() {
@@ -147,10 +151,10 @@ public class RobotContainer {
     if (pivot == null) {
       pivot = new Pivot(new PivotIO() {});
     }
-    // if (tongue == null) {
-    //   tongue = new Tongue(new TongueIO() {});
-    // }
-    superstructure = new Superstructure(elevator, pivot, tongue);
+        // if (tongue == null) {
+        //   tongue = new Tongue(new TongueIO() {});
+        // }
+        superstructure = new Superstructure(elevator, pivot, tongue, climb);
 
     configureBindings();
     configureAutos();
@@ -242,6 +246,16 @@ public class RobotContainer {
                   superstructure.setTargetState(SuperstructureState.STOP);
                   rollers.setTargetState(RollerState.IDLE);
                 }));
+    
+    driverB
+          .y()
+          .onTrue(
+            new InstantCommand(
+              () -> {
+                //climb up
+              }
+            )
+          );
   }
 
   private void configureAutos() {
