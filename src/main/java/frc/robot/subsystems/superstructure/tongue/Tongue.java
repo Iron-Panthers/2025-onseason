@@ -11,7 +11,6 @@ public class Tongue {
     L2(100),
     L3(60),
     L4(0);
-    ;
 
     private double position;
 
