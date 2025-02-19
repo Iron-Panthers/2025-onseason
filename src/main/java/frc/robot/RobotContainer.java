@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
@@ -158,14 +159,32 @@ public class RobotContainer {
     configureAutos();
   }
 
-  private void registerCommands(){
+  private void registerCommands() {
     NamedCommands.registerCommand("L1", superstructure.goToStateCommand(SuperstructureState.L1));
     NamedCommands.registerCommand("L2", superstructure.goToStateCommand(SuperstructureState.L2));
     NamedCommands.registerCommand("L3", superstructure.goToStateCommand(SuperstructureState.L3));
     NamedCommands.registerCommand("L4", superstructure.goToStateCommand(SuperstructureState.L4));
-    NamedCommands.registerCommand("ZERO", superstructure.goToStateCommand(SuperstructureState.ZERO));
-    NamedCommands.registerCommand("STOP", superstructure.goToStateCommand(SuperstructureState.STOP));
-  };
+    NamedCommands.registerCommand(
+        "ZERO", superstructure.goToStateCommand(SuperstructureState.ZERO));
+    NamedCommands.registerCommand(
+        "STOP", superstructure.goToStateCommand(SuperstructureState.STOP));
+
+    NamedCommands.registerCommand(
+        "STOw", superstructure.goToStateCommand(SuperstructureState.STOW));
+
+    // FIXME: THIS INTAKE SOLUTION SHOULD BE FIXED
+    // INTAKE SHOULD EITHER BE GOING INTO SUPERSTRUCTURE
+    // OR WE HAVE TO FIX THE OTHER NAMED COMMANDS TO LET GO OF PIECE
+    // BECAUSE INTAKE IS NOT CURRENTLY CONTROLLED BY SUPERSTRUCTURE
+    NamedCommands.registerCommand(
+        "INTAKE",
+        new SequentialCommandGroup(
+            superstructure.goToStateCommand(SuperstructureState.INTAKE),
+            rollers.setTargetCommand(RollerState.INTAKE),
+            new WaitCommand(5),
+            rollers.setTargetCommand(RollerState.HOLD)));
+  }
+  ;
 
   private void configureBindings() {
 
