@@ -3,6 +3,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -152,9 +153,19 @@ public class RobotContainer {
     // }
     superstructure = new Superstructure(elevator, pivot, tongue);
 
+    registerCommands();
     configureBindings();
     configureAutos();
   }
+
+  private void registerCommands(){
+    NamedCommands.registerCommand("L1", superstructure.goToStateCommand(SuperstructureState.L1));
+    NamedCommands.registerCommand("L2", superstructure.goToStateCommand(SuperstructureState.L2));
+    NamedCommands.registerCommand("L3", superstructure.goToStateCommand(SuperstructureState.L3));
+    NamedCommands.registerCommand("L4", superstructure.goToStateCommand(SuperstructureState.L4));
+    NamedCommands.registerCommand("ZERO", superstructure.goToStateCommand(SuperstructureState.ZERO));
+    NamedCommands.registerCommand("STOP", superstructure.goToStateCommand(SuperstructureState.STOP));
+  };
 
   private void configureBindings() {
 
