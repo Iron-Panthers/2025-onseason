@@ -203,6 +203,13 @@ public class Superstructure extends SubsystemBase {
     return elevator.getPosition();
   }
 
+  public double getElevatorPositionScalar() {
+    if (ElevatorConstants.UPPER_EXTENSION_LIMIT.isEmpty()) {
+      return 1;
+    }
+    return elevator.getPosition() / ElevatorConstants.UPPER_EXTENSION_LIMIT.get();
+  }
+
   /**
    * Get the position of the pivot
    *
@@ -240,6 +247,6 @@ public class Superstructure extends SubsystemBase {
    * @return if both subsystems in the superstructure have reached their target
    */
   public boolean superstructureReachedTarget() {
-    return elevator.reachedTarget() && pivot.reachedTarget();
+    return elevator.reachedTarget(); // && pivot.reachedTarget();
   }
 }

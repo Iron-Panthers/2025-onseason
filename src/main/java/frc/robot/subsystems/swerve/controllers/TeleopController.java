@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.Constants;
+import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 
@@ -20,9 +21,12 @@ public class TeleopController {
   private Translation2d pastLinearVelocity = new Translation2d();
   private double clampedVelocityDiff = 0;
 
+  private DoubleSupplier accelerationScalar;
+
   /* teleop control with specified yaw supplier, typically "arbitrary" yaw */
-  public TeleopController(Supplier<Rotation2d> yawSupplier) {
+  public TeleopController(Supplier<Rotation2d> yawSupplier, DoubleSupplier accelerationScalar) {
     this.yawSupplier = yawSupplier;
+    this.accelerationScalar = accelerationScalar;
   }
 
   /* accept driver input from joysticks */
@@ -45,7 +49,9 @@ public class TeleopController {
         MathUtil.clamp(
             Math.abs(linearVelocity.getDistance(pastLinearVelocity)),
             0,
-            DRIVE_CONFIG.maxLinearAcceleration() * (Constants.PERIODIC_LOOP_SEC));
+            DRIVE_CONFIG.maxLinearAcceleration()
+                * (1 - 0.5 * accelerationScalar.getAsDouble())
+                * (Constants.PERIODIC_LOOP_SEC));
     Rotation2d velocityTheta;
     if (linearVelocityDiff.getX() != 0 || linearVelocityDiff.getY() != 0)
       velocityTheta = linearVelocityDiff.getAngle();

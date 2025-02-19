@@ -18,6 +18,7 @@ import frc.robot.subsystems.swerve.controllers.HeadingController;
 import frc.robot.subsystems.swerve.controllers.TeleopController;
 import frc.robot.subsystems.swerve.controllers.TrajectoryController;
 import java.util.Arrays;
+import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -45,7 +46,13 @@ public class Drive extends SubsystemBase {
   private TrajectoryController trajectoryController = null;
   private HeadingController headingController = null;
 
-  public Drive(GyroIO gyroIO, ModuleIO fl, ModuleIO fr, ModuleIO bl, ModuleIO br) {
+  public Drive(
+      GyroIO gyroIO,
+      ModuleIO fl,
+      ModuleIO fr,
+      ModuleIO bl,
+      ModuleIO br,
+      DoubleSupplier accelerationScalar) {
     this.gyroIO = gyroIO;
 
     modules[0] = new Module(fl, 0);
@@ -53,7 +60,7 @@ public class Drive extends SubsystemBase {
     modules[2] = new Module(bl, 2);
     modules[3] = new Module(br, 3);
 
-    teleopController = new TeleopController(() -> arbitraryYaw);
+    teleopController = new TeleopController(() -> arbitraryYaw, accelerationScalar);
   }
 
   @Override
