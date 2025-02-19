@@ -184,7 +184,6 @@ public class RobotContainer {
             new WaitCommand(5),
             rollers.setTargetCommand(RollerState.HOLD)));
   }
-  ;
 
   private void configureBindings() {
 
