@@ -27,5 +27,8 @@ public class Climb extends GenericSuperstructure<Climb.ClimbTarget> {
     setPositionTarget(ClimbTarget.BOTTOM);
     setControlMode(ControlMode.STOP);
   }
-  private double 
+
+  // make a boolean function, that returns whether we're touching cage or not
+
+  public boolean 
 }

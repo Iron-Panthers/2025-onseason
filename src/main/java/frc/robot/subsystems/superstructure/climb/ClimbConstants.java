@@ -13,12 +13,12 @@ import java.util.Optional;
 //
 
 public class ClimbConstants {
-  public static final ElevatorConfig CLIMB_CONFIG =
+  public static final ClimbConfig CLIMB_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new ElevatorConfig(0,0); //FIXME
-        case PROG -> new ElevatorConfig(0, 1);
-        case ALPHA -> new ElevatorConfig(37, 9.0 / 4.0); // FIXME
-        case SIM -> new ElevatorConfig(0, 1); // FIXME
+        case COMP -> new ClimbConfig(0,0); //FIXME
+        case PROG -> new ClimbConfig(0, 1);
+        case ALPHA -> new ClimbConfig(37, 9.0 / 4.0); // FIXME
+        case SIM -> new ClimbConfig(0, 1); // FIXME
       };
 
   public static final PIDGains GAINS =
@@ -29,12 +29,12 @@ public class ClimbConstants {
         case SIM -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
 
-  public record ElevatorConfig(int motorID, double reduction) {}
+  public record ClimbConfig(int motorID, double reduction) {}
 
   public record PIDGains(
       double kP, double kI, double kD, double kS, double kV, double kA, double kG) {}
 
-  public static final GravityTypeValue GRAVITY_TYPE = GravityTypeValue.Elevator_Static;
+  public static final GravityTypeValue GRAVITY_TYPE = GravityTypeValue.Arm_Cosine;
 
   public static final boolean INVERT_MOTOR = true;
 
