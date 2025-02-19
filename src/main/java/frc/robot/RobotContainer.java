@@ -218,7 +218,7 @@ public class RobotContainer {
     //     .povRight()
     //     .onTrue(superstructure.goToStateCommand(SuperstructureState.L2));
     new Trigger(() -> rollers.intakeDetected() && driverB.povLeft().getAsBoolean())
-        .onTrue(superstructure.goToStateCommand(SuperstructureState.L3));
+        .onTrue(superstructure.goToStateCommand(SuperstructureState.SCORE_L3));
 
     new Trigger(() -> rollers.intakeDetected() && driverB.povUp().getAsBoolean())
         .onTrue(superstructure.goToStateCommand(SuperstructureState.SCORE_L4));
@@ -246,6 +246,11 @@ public class RobotContainer {
                   ;
                   rollers.setTargetState(RollerState.IDLE);
                 }));
+
+    driverB
+      .b()
+      .onTrue(
+        superstructure.goToStateCommand(SuperstructureState.STOW));
 
     // Manual override
     driverB.y().onTrue( new InstantCommand(() -> superstructure.setCurrentState(superstructure.getTargetState())));
