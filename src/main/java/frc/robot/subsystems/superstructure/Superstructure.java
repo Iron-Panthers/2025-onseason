@@ -16,8 +16,9 @@ import org.littletonrobotics.junction.Logger;
 public class Superstructure extends SubsystemBase {
   public enum SuperstructureState {
     SETUP_L4, // Setting up in L4
-    SCORE_L4, // Scoreing in L4
-    L3, // Scoring in L3
+    SCORE_L4, // Scoring in L4
+    SETUP_L3, // Setting up in L3
+    SCORE_L3, // Scoring in L3
     L2, // Scoring in L2
     L1, // Scoring in the trough
     TOP, // Apex
@@ -77,15 +78,33 @@ public class Superstructure extends SubsystemBase {
             }
           }
         }
-        case L3 -> {
+        
+        case SETUP_L3 -> {
           elevator.setPositionTarget(ElevatorTarget.L3);
-          pivot.setPositionTarget(PivotTarget.L3);
+          pivot.setPositionTarget(PivotTarget.SETUP_L3);
           tongue.setPositionTarget(TongueTarget.L3);
 
           // check for state transitions
           if (this.superstructureReachedTarget()) {
             if (targetState != currentState) {
-              setCurrentState(SuperstructureState.SETUP_L4);
+              if(targetState == SuperstructureState.SCORE_L3){
+                setCurrentState(SuperstructureState.SCORE_L3);
+              }else{
+                setCurrentState(SuperstructureState.TOP);
+              }
+            }
+          }
+        }
+
+        case SCORE_L3 -> {
+          elevator.setPositionTarget(ElevatorTarget.L3);
+          pivot.setPositionTarget(PivotTarget.SCORE_L3);
+          tongue.setPositionTarget(TongueTarget.L3);
+
+          // check for state transitions
+          if (this.superstructureReachedTarget()) {
+            if (targetState != currentState) {
+              setCurrentState(SuperstructureState.SETUP_L3);
             }
           }
         }
@@ -95,8 +114,8 @@ public class Superstructure extends SubsystemBase {
           tongue.setPositionTarget(TongueTarget.L4);
           // check for state transitions
           if (this.superstructureReachedTarget()) {
-            if (targetState == SuperstructureState.L3) {
-              setCurrentState(SuperstructureState.L3);
+            if (targetState == SuperstructureState.SETUP_L3) {
+              setCurrentState(SuperstructureState.SETUP_L3);
             } else if (targetState == SuperstructureState.SCORE_L4) {
               if (tonguePoleDetected()) {
                 setCurrentState(SuperstructureState.SCORE_L4);
@@ -126,7 +145,8 @@ public class Superstructure extends SubsystemBase {
           if (this.superstructureReachedTarget()) {
             if (targetState == SuperstructureState.SETUP_L4
                 || targetState == SuperstructureState.SCORE_L4
-                || targetState == SuperstructureState.L3) {
+                || targetState == SuperstructureState.SETUP_L3
+                || targetState == SuperstructureState.SCORE_L3) {
               setCurrentState(SuperstructureState.SETUP_L4);
             } else if (targetState != currentState) {
               setCurrentState(SuperstructureState.STOW);
