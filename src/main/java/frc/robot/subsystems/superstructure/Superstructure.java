@@ -114,7 +114,8 @@ public class Superstructure extends SubsystemBase {
           tongue.setPositionTarget(TongueTarget.L4);
           // check for state transitions
           if (this.superstructureReachedTarget()) {
-            if (targetState == SuperstructureState.SETUP_L3) {
+            if (targetState == SuperstructureState.SETUP_L3
+                || targetState == SuperstructureState.SCORE_L3) {
               setCurrentState(SuperstructureState.SETUP_L3);
             } else if (targetState == SuperstructureState.SCORE_L4) {
               if (tonguePoleDetected()) {
@@ -130,8 +131,14 @@ public class Superstructure extends SubsystemBase {
           pivot.setPositionTarget(PivotTarget.SCORE_L4);
           tongue.setPositionTarget(TongueTarget.STOW);
           // check for state transitions
-          if (this.superstructureReachedTarget() && targetState != currentState) {
-            setCurrentState(SuperstructureState.SETUP_L4);
+          if (targetState != currentState && this.superstructureReachedTarget()) {
+            if (targetState == SuperstructureState.SETUP_L4
+                || targetState == SuperstructureState.SETUP_L3
+                || targetState == SuperstructureState.SCORE_L3) {
+              setCurrentState(SuperstructureState.SETUP_L4);
+            } else {
+              setCurrentState(SuperstructureState.TOP);
+            }
           }
         }
         case TOP -> {

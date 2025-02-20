@@ -7,7 +7,6 @@ import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -58,7 +57,6 @@ public class RobotContainer {
 
   private final CommandXboxController driverA = new CommandXboxController(0);
   private final CommandXboxController driverB = new CommandXboxController(1);
-  private final Joystick joystick = new Joystick(2);
 
   private Drive swerve;
   private Vision vision;
@@ -275,9 +273,11 @@ public class RobotContainer {
     new Trigger(() -> (superstructure.getCurrentState() == SuperstructureState.SCORE_L4))
         .onTrue(
             new SequentialCommandGroup(
+                new WaitCommand(0.1),
                 rollers.setTargetCommand(RollerState.EJECT),
-                new WaitCommand(0.5),
+                new WaitCommand(0.2),
                 superstructure.goToStateCommand(SuperstructureState.INTAKE),
+                new WaitCommand(0.9),
                 rollers.setTargetCommand(RollerState.INTAKE)));
     // new SequentialCommandGroup(
     //     new ParallelCommandGroup(
