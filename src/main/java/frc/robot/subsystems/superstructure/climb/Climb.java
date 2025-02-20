@@ -7,8 +7,8 @@ import frc.robot.subsystems.superstructure.tongue.TongueIOInputsAutoLogged;
 
 public class Climb extends GenericSuperstructure<Climb.ClimbTarget> {
   public enum ClimbTarget implements GenericSuperstructure.PositionTarget {
-    BOTTOM(2.25), // FIXME NOT REAL
-    TOP( 10); // FIXME NOT REAL
+    BOTTOM(2.25), // FIXME: Just a placeholder value
+    TOP( 10); // FIXME: Just a placeholder value
     private double position = 0;
 
     private ClimbTarget(double position) {
@@ -28,7 +28,6 @@ public class Climb extends GenericSuperstructure<Climb.ClimbTarget> {
     setControlMode(ControlMode.STOP);
   }
 
-  // make a boolean function, that returns whether we're touching cage or not
+  //FIXME: make a boolean function, that returns whether we're touching cage or not
 
-  public boolean 
 }
