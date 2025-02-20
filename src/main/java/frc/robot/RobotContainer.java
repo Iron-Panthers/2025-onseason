@@ -4,7 +4,9 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -304,5 +306,13 @@ public class RobotContainer {
       }
     }
     return new Rotation2d(Math.toRadians(closest));
+  }
+
+  public static Command generateOTFPoseCommand(Pose2d pose) {
+    return AutoBuilder.pathfindToPose(pose, DriveConstants.PP_PATH_CONSTRAINTS);
+  }
+
+  public static Command generateOTFPathCommand(PathPlannerPath path) {
+    return AutoBuilder.pathfindThenFollowPath(path, DriveConstants.PP_PATH_CONSTRAINTS);
   }
 }

@@ -4,6 +4,7 @@ import static frc.robot.Constants.*;
 
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -136,6 +137,10 @@ public class DriveConstants {
           TRAJECTORY_CONFIG.linearPID(),
           TRAJECTORY_CONFIG.rotationPID(),
           Constants.PERIODIC_LOOP_SEC);
+
+  public static final PathConstraints PP_PATH_CONSTRAINTS =
+      new PathConstraints(
+          3, 3, Units.degreesToRadians(540), Units.degreesToRadians(720), 12, false);
 
   public record DrivebaseConfig(
       double wheelRadius,
