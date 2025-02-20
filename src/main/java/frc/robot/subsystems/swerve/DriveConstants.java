@@ -2,11 +2,14 @@ package frc.robot.subsystems.swerve;
 
 import static frc.robot.Constants.*;
 
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import frc.robot.Constants;
 
 public class DriveConstants {
   // measures in meters (per sec) and radians (per sec)
@@ -110,9 +113,11 @@ public class DriveConstants {
 
   public static final TrajectoryFollowerConstants TRAJECTORY_CONFIG =
       switch (getRobotType()) {
-        case COMP -> new TrajectoryFollowerConstants(0, 0, 0, 0);
-        case ALPHA -> new TrajectoryFollowerConstants(13, 0, 11, 0);
-        default -> new TrajectoryFollowerConstants(0, 0, 0, 0);
+        case COMP -> new TrajectoryFollowerConstants(
+            new PIDConstants(0, 0), new PIDConstants(0, 0));
+        case ALPHA -> new TrajectoryFollowerConstants(
+            new PIDConstants(13, 0), new PIDConstants(11, 0));
+        default -> new TrajectoryFollowerConstants(new PIDConstants(0, 0), new PIDConstants(0, 0));
       };
 
   public static final HeadingControllerConstants HEADING_CONTROLLER_CONSTANTS =
@@ -124,8 +129,13 @@ public class DriveConstants {
 
   public static final double[] REEF_SNAP_ANGLES = {-120, -60, 0, 60, 120, 180};
 
-  // FIXME
   public static final Pose2d INITAL_POSE = new Pose2d(2.9, 3.8, new Rotation2d());
+
+  public static final PPHolonomicDriveController HOLONOMIC_DRIVE_CONTROLLER =
+      new PPHolonomicDriveController(
+          TRAJECTORY_CONFIG.linearPID(),
+          TRAJECTORY_CONFIG.rotationPID(),
+          Constants.PERIODIC_LOOP_SEC);
 
   public record DrivebaseConfig(
       double wheelRadius,
@@ -152,8 +162,7 @@ public class DriveConstants {
       double steerReduction,
       double couplingGearReduction) {}
 
-  public record TrajectoryFollowerConstants(
-      double linearKP, double linearKD, double rotationKP, double rotationKD) {}
+  public record TrajectoryFollowerConstants(PIDConstants linearPID, PIDConstants rotationPID) {}
 
   public record Gains(double kS, double kV, double kA, double kP, double kI, double kD) {}
 

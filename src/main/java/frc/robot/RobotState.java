@@ -4,12 +4,12 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -35,7 +35,7 @@ public class RobotState {
   private static final Matrix<N3, N1> stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
   private static final Pose2d initialPose =
       DriverStation.getAlliance().get() == Alliance.Red
-          ? mirrorPose(DriveConstants.INITAL_POSE)
+          ? FlippingUtil.flipFieldPose(DriveConstants.INITAL_POSE)
           : DriveConstants.INITAL_POSE;
 
   private final Matrix<N3, N1> matrixQ = new Matrix<>(Nat.N3(), Nat.N1());
@@ -157,11 +157,5 @@ public class RobotState {
   @AutoLogOutput(key = "RobotState/EstimatedPose")
   public Pose2d getEstimatedPose() {
     return estimatedPose;
-  }
-
-  public static Pose2d mirrorPose(Pose2d pose) {
-    return new Pose2d(
-        new Translation2d(fieldSizeX - pose.getX(), pose.getY()),
-        Rotation2d.kPi.minus(pose.getRotation()));
   }
 }
