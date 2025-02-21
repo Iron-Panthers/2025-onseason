@@ -2,9 +2,6 @@ package frc.robot.subsystems.superstructure.climb;
 
 import static frc.robot.subsystems.superstructure.climb.ClimbConstants.INDUCTION_PORT_NUMBER;
 
-import org.littletonrobotics.junction.Logger;
-
-import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.subsystems.superstructure.GenericSuperstructure;
 
@@ -21,9 +18,6 @@ public class Climb extends GenericSuperstructure<Climb.ClimbTarget> {
       return position;
     }
   }
-   // linear filter for superstrucure
-   private final LinearFilter supplyCurrentFilter;
-   private double filteredSupplyCurrentAmps = 0;
    //induction sensor
    private DigitalInput inductionSensor;
  
@@ -36,38 +30,15 @@ public class Climb extends GenericSuperstructure<Climb.ClimbTarget> {
     inductionSensor = new DigitalInput(INDUCTION_PORT_NUMBER);
     setPositionTarget(ClimbTarget.BOTTOM);
     setControlMode(ControlMode.STOP);
-    // setup the linear filter
-    supplyCurrentFilter = LinearFilter.movingAverage(30);
   }
   //checks if the sensor has hit the cage
   public boolean hitCage() {
     return inductionSensor.get(); 
   }
-  private boolean zeroing = false;
   @Override
   public void periodic() {
 
     super.periodic();
-
-    // for zeroing
-    // calculate our new filtered supply current for the elevator
-    filteredSupplyCurrentAmps = supplyCurrentFilter.calculate(getSupplyCurrentAmps());
-    if (zeroing) {
-      superstructureIO.runCharacterization();
-    }
-    Logger.recordOutput(
-        "Superstructure/" + name + "/Filtered supply current amps", getFilteredSupplyCurrentAmps());
   }
 
-  public double getFilteredSupplyCurrentAmps() {
-    return filteredSupplyCurrentAmps;
-  }
-
-  public void setZeroing(boolean zeroing) {
-    this.zeroing = zeroing;
-  }
-
-  public boolean isZeroing() {
-    return zeroing;
-  }
 }
