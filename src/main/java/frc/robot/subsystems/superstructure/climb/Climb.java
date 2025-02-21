@@ -2,6 +2,10 @@ package frc.robot.subsystems.superstructure.climb;
 
 import static frc.robot.subsystems.superstructure.climb.ClimbConstants.INDUCTION_PORT_NUMBER;
 
+import java.lang.annotation.Target;
+
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -40,6 +44,8 @@ public class Climb extends GenericSuperstructure<Climb.ClimbTarget> {
     });
   }
 
+
+
   //checks if the sensor has hit the cage
   public boolean hitCage() {
     return inductionSensor.get(); 
@@ -48,6 +54,9 @@ public class Climb extends GenericSuperstructure<Climb.ClimbTarget> {
   public void periodic() {
 
     super.periodic();
+    Logger.recordOutput(
+        "Superstructure/Climb/Hit Cage?", hitCage());
+    Logger.recordOutput("Superstructure/Climb/Climb State", getPositionTarget());
   }
 
 }

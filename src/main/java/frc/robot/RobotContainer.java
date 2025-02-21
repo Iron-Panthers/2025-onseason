@@ -250,13 +250,13 @@ public class RobotContainer {
     driverB
           .y()
           .onTrue(
-            climb.setPositionTargetCommand(ClimbTarget.TOP)
+            climb.setPositionTargetCommand(ClimbTarget.TOP) //FIXME: We need to add elevator position up
           );
 
     driverB
           .b()
           .onTrue(
-            climb.setPositionTargetCommand(ClimbTarget.TOP)
+            climb.setPositionTargetCommand(ClimbTarget.BOTTOM)
           );
   }
 
