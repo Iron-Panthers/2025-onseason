@@ -17,25 +17,25 @@ import java.util.Optional;
 public class ClimbConstants {
   public static final ClimbConfig CLIMB_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new ClimbConfig(0,0); //FIXME
+        case COMP -> new ClimbConfig(0,562.5); //FIXME
         case PROG -> new ClimbConfig(0, 1);
-        case ALPHA -> new ClimbConfig(37, 9.0 / 4.0); // FIXME
+        case ALPHA -> new ClimbConfig(0,0); // FIXME
         case SIM -> new ClimbConfig(0, 1); // FIXME
       };
 
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
-        case COMP -> new PIDGains(0, 0, 0, 0, 0, 0, 0); //FIXME
+        case COMP -> new PIDGains(600, 0, 0, 0, 66.5, 5.714, 0); //FIXME
         case PROG -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
-        case ALPHA -> new PIDGains(2, 0, 0.2, 0, 0.09, 0, .34);
+        case ALPHA -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
         case SIM -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
 
   public static final MotionMagicConfig MOTION_MAGIC_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new MotionMagicConfig(9000, 1000, 0);
+        case COMP -> new MotionMagicConfig(2, 0.5, 0);
         case PROG -> new MotionMagicConfig(0, 0, 0);
-        case ALPHA -> new MotionMagicConfig(50, 50, 0);
+        case ALPHA -> new MotionMagicConfig(0, 0, 0);
         case SIM -> new MotionMagicConfig(0, 0, 0);
       };
 
@@ -48,7 +48,7 @@ public class ClimbConstants {
 
   public static final boolean INVERT_MOTOR = true;
 
-  public static final double POSITION_TARGET_EPSILON = 1;
+  public static final double POSITION_TARGET_EPSILON = 0.03;
 
   public record MotionMagicConfig(double acceleration, double cruiseVelocity, double jerk) {}
     
@@ -58,8 +58,8 @@ public class ClimbConstants {
   public static final Optional<Double> LOWER_EXTENSION_LIMIT = Optional.empty();
 
   // CURRENT LIMITS
-  public static final double UPPER_VOLT_LIMIT = 10;
-  public static final double LOWER_VOLT_LIMIT = -7;
+  public static final double UPPER_VOLT_LIMIT = 12;
+  public static final double LOWER_VOLT_LIMIT = -12;
   public static final double SUPPLY_CURRENT_LIMIT = 30;
   public static final int ZEROING_CURRENT_LIMIT = 20; // FIXME currently doesn't exist lmao
 
