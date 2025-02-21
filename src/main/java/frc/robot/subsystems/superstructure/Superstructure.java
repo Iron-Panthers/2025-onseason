@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.superstructure.GenericSuperstructure.ControlMode;
 import frc.robot.subsystems.superstructure.climb.Climb;
+import frc.robot.subsystems.superstructure.climb.Climb.ClimbTarget;
 import frc.robot.subsystems.superstructure.elevator.Elevator;
 import frc.robot.subsystems.superstructure.elevator.Elevator.ElevatorTarget;
 import frc.robot.subsystems.superstructure.elevator.ElevatorConstants;
@@ -24,8 +25,6 @@ public class Superstructure extends SubsystemBase {
     INTAKE,
     STOW, // Going to the lowest position
     ZERO, // Zero the motor
-    CLIMB_UP, //Climb up
-    CLIMB_DOWN, //Climb down
     STOP; // Stop the superstructure
   }
 
@@ -158,12 +157,6 @@ public class Superstructure extends SubsystemBase {
 
           setTargetState(SuperstructureState.STOW);
         }
-      }
-      case CLIMB_UP -> {
-        // climb up FIXME
-      }
-      case CLIMB_DOWN -> {
-        //climb down FIXME
       }
       case STOP -> {
         elevator.setControlMode(ControlMode.STOP);

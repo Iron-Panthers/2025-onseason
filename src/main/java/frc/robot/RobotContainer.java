@@ -250,11 +250,13 @@ public class RobotContainer {
     driverB
           .y()
           .onTrue(
-            new InstantCommand(
-              () -> {
-                //climb up
-              }
-            )
+            climb.setPositionTargetCommand(ClimbTarget.TOP)
+          );
+
+    driverB
+          .b()
+          .onTrue(
+            climb.setPositionTargetCommand(ClimbTarget.TOP)
           );
   }
 

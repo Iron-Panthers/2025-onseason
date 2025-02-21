@@ -3,6 +3,8 @@ package frc.robot.subsystems.superstructure.climb;
 import static frc.robot.subsystems.superstructure.climb.ClimbConstants.INDUCTION_PORT_NUMBER;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.superstructure.GenericSuperstructure;
 
 public class Climb extends GenericSuperstructure<Climb.ClimbTarget> {
@@ -31,6 +33,13 @@ public class Climb extends GenericSuperstructure<Climb.ClimbTarget> {
     setPositionTarget(ClimbTarget.BOTTOM);
     setControlMode(ControlMode.STOP);
   }
+
+  public Command setPositionTargetCommand(ClimbTarget target) {
+    return new InstantCommand(() -> {
+      setPositionTarget(target);
+    });
+  }
+
   //checks if the sensor has hit the cage
   public boolean hitCage() {
     return inductionSensor.get(); 
