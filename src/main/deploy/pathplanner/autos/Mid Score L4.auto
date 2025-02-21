@@ -1,0 +1,31 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Mid to 10"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "STOW"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Testing",
+  "choreoAuto": false
+}

@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.900625,
-        "y": 3.990874999999999
+        "x": 6.225506756756756,
+        "y": 6.979645270265329
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.9288798464909687,
-        "y": 4.286285546888298
+        "x": 7.223564189189185,
+        "y": 6.33733108108108
       },
       "isLocked": false,
-      "linkedName": "April Tag 7"
+      "linkedName": "Push"
     },
     {
       "anchor": {
-        "x": 1.373564189189189,
-        "y": 0.8233108108108104
+        "x": 5.415202702702702,
+        "y": 5.329391891891891
       },
       "prevControl": {
-        "x": 1.1310468109738527,
-        "y": 0.8840176577356794
+        "x": 6.828293918918919,
+        "y": 4.617905405405405
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Coral Station Right"
+      "linkedName": "April Tag 11L"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -126.09828396710803
+    "rotation": 61.60698057861683
   },
   "reversed": false,
   "folder": "Testing",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 179.7961012895332
+    "rotation": 179.99999999933377
   },
   "useDefaultConstraints": true
 }

@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.900625,
-        "y": 3.990874999999999
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 2.9288798464909687,
-        "y": 4.286285546888298
-      },
-      "isLocked": false,
-      "linkedName": "April Tag 7"
-    },
-    {
-      "anchor": {
         "x": 1.373564189189189,
         "y": 0.8233108108108104
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.2826578533356265,
+        "y": 1.194077280958852
+      },
+      "isLocked": false,
+      "linkedName": "Coral Station Right"
+    },
+    {
+      "anchor": {
+        "x": 5.095482954545455,
+        "y": 2.5043323863636364
+      },
       "prevControl": {
-        "x": 1.1310468109738527,
-        "y": 0.8840176577356794
+        "x": 4.008625852517143,
+        "y": 2.0431445163095905
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Coral Station Right"
+      "linkedName": "April Tag 10L"
     }
   ],
   "rotationTargets": [],
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -126.09828396710803
+    "rotation": -58.67130713219579
   },
   "reversed": false,
   "folder": "Testing",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 179.7961012895332
+    "rotation": -126.09828396710803
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

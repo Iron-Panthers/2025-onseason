@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.900625,
-        "y": 3.990874999999999
+        "x": 3.8490340909090905,
+        "y": 2.54421875
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.9288798464909687,
-        "y": 4.286285546888298
+        "x": 2.633641414670534,
+        "y": 1.7309403210670515
       },
       "isLocked": false,
-      "linkedName": "April Tag 7"
+      "linkedName": "April Tag 8R"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 0.8233108108108104
       },
       "prevControl": {
-        "x": 1.1310468109738527,
-        "y": 0.8840176577356794
+        "x": 2.409251194144756,
+        "y": 1.4757374152151996
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -48,7 +48,7 @@
   "folder": "Testing",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 179.7961012895332
+    "rotation": -119.74488129694218
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
