@@ -9,7 +9,8 @@ public class GenericSuperstructure<G extends GenericSuperstructure.PositionTarge
 
   public enum ControlMode {
     POSITION,
-    STOP,
+    ZERO,
+    STOP;
   }
 
   private ControlMode controlMode = ControlMode.STOP;
@@ -35,6 +36,9 @@ public class GenericSuperstructure<G extends GenericSuperstructure.PositionTarge
     switch (controlMode) {
       case POSITION -> {
         superstructureIO.runPosition(positionTarget.getPosition());
+      }
+      case ZERO -> {
+        superstructureIO.runCharacterization();
       }
       case STOP -> {
         superstructureIO.stop();

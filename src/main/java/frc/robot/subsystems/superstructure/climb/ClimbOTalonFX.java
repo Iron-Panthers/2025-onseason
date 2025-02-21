@@ -5,6 +5,7 @@ import static frc.robot.subsystems.superstructure.climb.ClimbConstants.*;
 import frc.robot.subsystems.superstructure.GenericSuperstructureIOTalonFX;
 import java.util.Optional;
 
+
 public class ClimbOTalonFX extends GenericSuperstructureIOTalonFX implements ClimbIO {
 
   public ClimbOTalonFX() {
@@ -14,8 +15,8 @@ public class ClimbOTalonFX extends GenericSuperstructureIOTalonFX implements Cli
       INVERT_MOTOR,
       Optional.empty(),
       SUPPLY_CURRENT_LIMIT,
-      CLIMB_CONFIG.canCoderID(),
-      CLIMB_CONFIG.canCoderOffset(),
+      Optional.empty(),
+      Optional.empty(),
       CLIMB_CONFIG.reduction(),
       UPPER_EXTENSION_LIMIT,
       LOWER_EXTENSION_LIMIT,

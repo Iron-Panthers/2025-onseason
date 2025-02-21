@@ -1,6 +1,8 @@
 package frc.robot.subsystems.superstructure.climb;
 
 import com.ctre.phoenix6.signals.GravityTypeValue;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants;
 import java.util.Optional;
 
@@ -29,6 +31,14 @@ public class ClimbConstants {
         case SIM -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
 
+  public static final MotionMagicConfig MOTION_MAGIC_CONFIG =
+      switch (Constants.getRobotType()) {
+        case COMP -> new MotionMagicConfig(9000, 1000, 0);
+        case PROG -> new MotionMagicConfig(0, 0, 0);
+        case ALPHA -> new MotionMagicConfig(50, 50, 0);
+        case SIM -> new MotionMagicConfig(0, 0, 0);
+      };
+
   public record ClimbConfig(int motorID, double reduction) {}
 
   public record PIDGains(
@@ -40,6 +50,8 @@ public class ClimbConstants {
 
   public static final double POSITION_TARGET_EPSILON = 1;
 
+  public record MotionMagicConfig(double acceleration, double cruiseVelocity, double jerk) {}
+    
   // SOFT LIMITS
   public static final Optional<Double> UPPER_EXTENSION_LIMIT =
       Optional.of(121d); // top limit is 121 rotations
@@ -55,4 +67,9 @@ public class ClimbConstants {
   public static final double ZEROING_VOLTS = -1;
   public static final double ZEROING_OFFSET = 2.25; // offset in inches
   public static final double ZEROING_VOLTAGE_THRESHOLD = 4;
+  
+
+  // INDUCTION SENSOR
+  public static final int INDUCTION_PORT_NUMBER = 6;
+
 }
