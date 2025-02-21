@@ -4,10 +4,14 @@ import java.util.Optional;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.rgb.RGBConstants.Colors;
 import frc.robot.subsystems.rgb.RGBConstants.RGBMessage;
 import frc.robot.subsystems.rgb.RGBConstants.RGBMessage.RGBPattern;
+import frc.robot.subsystems.superstructure.Superstructure.SuperstructureState;
 import frc.robot.subsystems.rgb.RGBConstants.RGBMessage.MessagePriority;
 
 public class RGB extends SubsystemBase{
@@ -64,5 +68,12 @@ public class RGB extends SubsystemBase{
     Logger.processInputs("RGB", inputs);
 
     Logger.recordOutput("RGB/Message", currentMessage.isPresent() ? currentMessage.get().toString() : "None");
+  }
+
+  public Command startMessageCommand(RGBMessages message) {
+    return new InstantCommand(()->message.setIsExpired(false));
+  }
+  public Command endMessageCommand(RGBMessages message) {
+    return new InstantCommand(()->message.setIsExpired(true));
   }
 }
