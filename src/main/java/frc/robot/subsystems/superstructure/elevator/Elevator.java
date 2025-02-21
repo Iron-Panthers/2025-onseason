@@ -9,7 +9,7 @@ public class Elevator extends GenericSuperstructure<Elevator.ElevatorTarget> {
     BOTTOM(0), // 25 and 7.25, made it a bit bigger
     L1(11.8), // FIXME: 26 and 21.5
     L2(20.88), // 24 and 53.75
-    L3(4.3), // 0 and 53.75
+    L3(0), // 0 and 53.75
     SETUP_L4(31.6),
     SCORE_L4(28),
     TOP(31),
