@@ -19,8 +19,7 @@ public class VisionConstants {
   // index 0 -> arducam-1, etc
   public static final Transform3d[] CAMERA_TRANSFORM =
       switch (getRobotType()) {
-        case COMP -> new Transform3d[] {};
-        case ALPHA -> new Transform3d[] {
+        case COMP -> new Transform3d[] {
           // arducam-1 (front left)
           new Transform3d(0.258, 0, 0.454, new Rotation3d(0, -Math.toRadians(35), 0)),
           // arducam-2 (front center)
@@ -34,6 +33,7 @@ public class VisionConstants {
           // arducam-5 (back left)
           new Transform3d(-11.868, 4.471, -14.375, new Rotation3d(Math.PI, -Math.toRadians(0), 0))
         };
+        case ALPHA -> new Transform3d[] {};
         default -> new Transform3d[0];
       };
 
