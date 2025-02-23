@@ -4,28 +4,24 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
 import frc.robot.subsystems.rollers.RollerSensorsIOComp;
 import frc.robot.subsystems.rollers.Rollers;
-import frc.robot.subsystems.rollers.Rollers.RollerState;
 import frc.robot.subsystems.rollers.intake.Intake;
 import frc.robot.subsystems.rollers.intake.IntakeIOTalonFX;
 import frc.robot.subsystems.superstructure.Superstructure;
-import frc.robot.subsystems.superstructure.Superstructure.SuperstructureState;
 import frc.robot.subsystems.superstructure.elevator.Elevator;
 import frc.robot.subsystems.superstructure.elevator.ElevatorIO;
 import frc.robot.subsystems.superstructure.elevator.ElevatorIOTalonFX;
@@ -197,6 +193,19 @@ public class RobotContainer {
 
     driverA
         .x()
+        .whileTrue(
+            RobotState.generateOTFPoseCommand(
+                RobotState.getInstance().getEstimatedPose().exp(new Twist2d(1, 0, 0))));
+    driverA
+        .b()
+        .whileTrue(
+            RobotState.generateOTFPoseCommand(
+                FlippingUtil.flipFieldPose(new Pose2d(5, 6, Rotation2d.kZero))));
+
+    return;
+    /*
+    driverA
+        .x()
         .onTrue(
             new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(Math.toRadians(128)))));
     driverA
@@ -301,6 +310,7 @@ public class RobotContainer {
     //             .alongWith(pivot.goToPositionCommand(PivotTarget.SCORE_L4))
     //             .andThen(elevator.goToPositionCommand(ElevatorTarget.L1))
     //             .andThen(rollers.setTargetCommand(RollerState.IDLE)));
+    */
   }
 
   private void configureAutos() {
@@ -365,13 +375,5 @@ public class RobotContainer {
       }
     }
     return new Rotation2d(Math.toRadians(closest));
-  }
-
-  public static Command generateOTFPoseCommand(Pose2d pose) {
-    return AutoBuilder.pathfindToPose(pose, DriveConstants.PP_PATH_CONSTRAINTS);
-  }
-
-  public static Command generateOTFPathCommand(PathPlannerPath path) {
-    return AutoBuilder.pathfindThenFollowPath(path, DriveConstants.PP_PATH_CONSTRAINTS);
   }
 }

@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
@@ -18,8 +20,11 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.swerve.DriveConstants;
+import frc.robot.subsystems.swerve.DriveConstants.ApproachPose;
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
 /* based on wpimath/../PoseEstimator.java */
 public class RobotState {
@@ -157,5 +162,45 @@ public class RobotState {
   @AutoLogOutput(key = "RobotState/EstimatedPose")
   public Pose2d getEstimatedPose() {
     return estimatedPose;
+  }
+
+  public ApproachPose findApproachPose() {
+    Pose2d currentPose = getEstimatedPose();
+
+    int closestIndex = 0;
+    // absolutely not
+    for (int i = 0; i < DriveConstants.REEF_APPROACH_POSES.length; ++i) {
+      if (currentPose
+              .getTranslation()
+              .getDistance(DriveConstants.REEF_APPROACH_POSES[i].getAlliancePose().getTranslation())
+          < currentPose
+              .getTranslation()
+              .getDistance(
+                  DriveConstants.REEF_APPROACH_POSES[closestIndex]
+                      .getAlliancePose()
+                      .getTranslation())) {
+        closestIndex = i;
+      }
+    }
+
+    Logger.recordOutput(
+        "RobotState/ApproachPose",
+        DriveConstants.REEF_APPROACH_POSES[closestIndex].getAlliancePose());
+
+    return DriveConstants.REEF_APPROACH_POSES[closestIndex];
+  }
+
+  public Command approachReefCommand() {
+    ApproachPose approachPose = findApproachPose();
+
+    return generateOTFPoseCommand(approachPose.getAlliancePose());
+  }
+
+  public static Command generateOTFPoseCommand(Pose2d pose) {
+    return AutoBuilder.pathfindToPose(pose, DriveConstants.PP_PATH_CONSTRAINTS);
+  }
+
+  public static Command generateOTFPathCommand(PathPlannerPath path) {
+    return AutoBuilder.pathfindThenFollowPath(path, DriveConstants.PP_PATH_CONSTRAINTS);
   }
 }

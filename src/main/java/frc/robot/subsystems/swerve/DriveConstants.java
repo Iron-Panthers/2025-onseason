@@ -4,13 +4,23 @@ import static frc.robot.Constants.*;
 
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.IdealStartingState;
 import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
+import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DriveConstants {
   // measures in meters (per sec) and radians (per sec)
@@ -142,6 +152,11 @@ public class DriveConstants {
       new PathConstraints(
           3, 3, Units.degreesToRadians(540), Units.degreesToRadians(720), 12, false);
 
+  // blue alliance, will automatically flip
+  public static final ApproachPose[] REEF_APPROACH_POSES =
+      ApproachPose.fromPose2ds(
+          new Pose2d(5.65, 4.175, Rotation2d.kPi), new Pose2d(5.65, 3.85, Rotation2d.kPi));
+
   public record DrivebaseConfig(
       double wheelRadius,
       double trackWidth,
@@ -185,6 +200,35 @@ public class DriveConstants {
 
     Mk4iReductions(double reduction) {
       this.reduction = reduction;
+    }
+  }
+
+  public record ApproachPose(Pose2d pose) {
+    public static ApproachPose[] fromPose2ds(Pose2d... poses) {
+      List<ApproachPose> approachPoses = new ArrayList<ApproachPose>();
+      for (Pose2d pose : poses) {
+        approachPoses.add(new ApproachPose(pose));
+      }
+      return approachPoses.toArray(new ApproachPose[approachPoses.size()]);
+    }
+
+    public Pose2d getAlliancePose() {
+      return DriverStation.getAlliance().get() == Alliance.Red
+          ? FlippingUtil.flipFieldPose(pose)
+          : pose;
+    }
+
+    public PathPlannerPath generatePath() {
+      // approach @ 12 inch off, advance to 6 in.
+      List<Waypoint> waypoints =
+          PathPlannerPath.waypointsFromPoses(
+              getAlliancePose(), getAlliancePose().exp(new Twist2d(0.1524, 0, 0)));
+
+      return new PathPlannerPath(
+          waypoints,
+          PP_PATH_CONSTRAINTS,
+          new IdealStartingState(2, getAlliancePose().getRotation()),
+          new GoalEndState(0, getAlliancePose().getRotation()));
     }
   }
 }
