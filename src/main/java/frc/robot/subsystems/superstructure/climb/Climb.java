@@ -13,8 +13,8 @@ import frc.robot.subsystems.superstructure.GenericSuperstructure;
 
 public class Climb extends GenericSuperstructure<Climb.ClimbTarget> {
   public enum ClimbTarget implements GenericSuperstructure.PositionTarget {
-    BOTTOM(-0.15), // FIXME: Just a placeholder value
-    TOP( 0.5); // FIXME: Just a placeholder value
+    BOTTOM(0.15), // FIXME: Just a placeholder value
+    TOP( 0.25); // FIXME: Just a placeholder value
     private double position = 0;
     private ClimbTarget(double position) {
       this.position = position;

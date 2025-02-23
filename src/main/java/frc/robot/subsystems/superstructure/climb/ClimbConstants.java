@@ -17,10 +17,10 @@ import java.util.Optional;
 public class ClimbConstants {
   public static final ClimbConfig CLIMB_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new ClimbConfig(0,562.5); //FIXME
-        case PROG -> new ClimbConfig(0, 1);
-        case ALPHA -> new ClimbConfig(0,0); // FIXME
-        case SIM -> new ClimbConfig(0, 1); // FIXME
+        case COMP -> new ClimbConfig(37,562.5, Optional.of(29), Optional.of(0.0)); //FIXME
+        case PROG -> new ClimbConfig(0, 1, Optional.empty(), Optional.empty());
+        case ALPHA -> new ClimbConfig(0,0, Optional.empty(), Optional.empty()); // FIXME
+        case SIM -> new ClimbConfig(0, 1, Optional.empty(), Optional.empty()); // FIXME
       };
 
   public static final PIDGains GAINS =
@@ -39,7 +39,7 @@ public class ClimbConstants {
         case SIM -> new MotionMagicConfig(0, 0, 0);
       };
 
-  public record ClimbConfig(int motorID, double reduction) {}
+  public record ClimbConfig(int motorID, double reduction, Optional<Integer> canCoderID, Optional<Double> canCoderOffset) {}
 
   public record PIDGains(
       double kP, double kI, double kD, double kS, double kV, double kA, double kG) {}
