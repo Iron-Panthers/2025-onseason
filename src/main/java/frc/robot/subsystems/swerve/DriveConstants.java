@@ -70,10 +70,10 @@ public class DriveConstants {
           new ModuleConfig(9, 10, 4, new Rotation2d(2.2426), false, true)
         };
         case ALPHA -> new ModuleConfig[] {
-          new ModuleConfig(5, 6, 1, new Rotation2d(1.1612), true, false),
-          new ModuleConfig(7, 8, 2, new Rotation2d(0.8099), true, true),
-          new ModuleConfig(11, 12, 3, new Rotation2d(1.4327), true, false),
-          new ModuleConfig(9, 10, 4, new Rotation2d(-1.8392), true, true)
+          new ModuleConfig(5, 6, 1, new Rotation2d(0), true, false),
+          new ModuleConfig(7, 8, 2, new Rotation2d(0), true, true),
+          new ModuleConfig(11, 12, 3, new Rotation2d(0), true, false),
+          new ModuleConfig(9, 10, 4, new Rotation2d(0), true, true)
         };
         case SIM -> new ModuleConfig[] {
           new ModuleConfig(0, 0, 0, new Rotation2d(0), true, false),
