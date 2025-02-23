@@ -153,8 +153,8 @@ public class RobotContainer {
     }
     superstructure = new Superstructure(elevator, pivot, tongue);
 
-    configureBindings();
     configureAutos();
+    configureBindings();
   }
 
   private void configureBindings() {

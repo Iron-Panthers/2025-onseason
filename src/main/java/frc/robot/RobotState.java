@@ -141,6 +141,7 @@ public class RobotState {
 
     // apply Kalman-scaled vision adjustment, replay odometry data to get current estimate
     estimatedPose = sample.get().exp(scaledTwist).exp(sampleToOdometry);
+    odometryPose = estimatedPose;
   }
 
   public void addVisionMeasurement(VisionMeasurement measurement, Matrix<N3, N1> visionStdDevs) {
