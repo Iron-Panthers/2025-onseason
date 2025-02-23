@@ -307,7 +307,7 @@ public class Superstructure extends SubsystemBase {
   }
 
   /**
-   * @return a boolean that says weather or not both of our mechanisms have finished zeroing
+   * @return a boolean that says whether or not both of our mechanisms have finished zeroing
    */
   public boolean notZeroing() {
     return !elevator.isZeroing();

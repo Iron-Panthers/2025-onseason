@@ -44,8 +44,6 @@ public class GenericSuperstructure<G extends GenericSuperstructure.PositionTarge
     Logger.recordOutput("Superstructure/" + name + "/Target", positionTarget.toString());
     Logger.recordOutput("Superstructure/" + name + "/Control Mode", controlMode.toString());
     Logger.recordOutput("Superstructure/" + name + "/Reached target", reachedTarget());
-    Logger.recordOutput(
-        "TEST/skib", Math.abs(inputs.positionRotations - positionTarget.getPosition()));
   }
 
   public G getPositionTarget() {
@@ -78,9 +76,9 @@ public class GenericSuperstructure<G extends GenericSuperstructure.PositionTarge
   }
 
   /**
-   * This function returns weather or not the subsystem has reached its position target
+   * This function returns whether or not the subsystem has reached its position target
    *
-   * @return weather the subsystem has reached its position target
+   * @return whether the subsystem has reached its position target
    */
   public boolean reachedTarget() {
     return Math.abs(inputs.positionRotations - (positionTarget.getPosition()))
