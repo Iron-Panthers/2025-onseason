@@ -3,6 +3,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -155,6 +156,13 @@ public class RobotContainer {
       tongue = new Tongue(new TongueIO() {});
     }
     superstructure = new Superstructure(elevator, pivot, tongue);
+
+    // Register Command Names
+    NamedCommands.registerCommand("Intake", 
+            new SequentialCommandGroup(
+                superstructure.goToStateCommand(SuperstructureState.INTAKE),
+                rollers.setTargetCommand(RollerState.FORCE_INTAKE)));
+    NamedCommands.registerCommand("Score_L4", superstructure.goToStateCommand(SuperstructureState.SCORE_L4));
 
     configureBindings();
     configureAutos();
