@@ -136,6 +136,7 @@ public class RobotState {
 
     // apply Kalman-scaled vision adjustment, replay odometry data to get current estimate
     estimatedPose = sample.get().exp(scaledTwist).exp(sampleToOdometry);
+    odometryPose = estimatedPose;
   }
 
   public void addVisionMeasurement(VisionMeasurement measurement, Matrix<N3, N1> visionStdDevs) {
@@ -161,7 +162,7 @@ public class RobotState {
 
   public static Pose2d mirrorPose(Pose2d pose) {
     return new Pose2d(
-        new Translation2d(fieldSizeX - pose.getX(), pose.getY()),
+        new Translation2d(fieldSizeX - pose.getX(), fieldSizeY - pose.getY()),
         Rotation2d.kPi.minus(pose.getRotation()));
   }
 }

@@ -16,12 +16,28 @@
     },
     {
       "anchor": {
-        "x": 8.909,
+        "x": 8.775,
         "y": 7.0
       },
       "prevControl": {
-        "x": 7.909000000000001,
+        "x": 7.775,
         "y": 7.0
+      },
+      "nextControl": {
+        "x": 9.775,
+        "y": 7.0
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 15.030152027027027,
+        "y": 7.0
+      },
+      "prevControl": {
+        "x": 11.938133445945946,
+        "y": 6.7730152027027035
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +61,7 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Testing",
+  "folder": "Autos",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0
