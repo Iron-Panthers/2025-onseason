@@ -4,8 +4,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.superstructure.GenericSuperstructure.ControlMode;
-import frc.robot.subsystems.superstructure.climb.Climb;
-import frc.robot.subsystems.superstructure.climb.Climb.ClimbTarget;
 import frc.robot.subsystems.superstructure.elevator.Elevator;
 import frc.robot.subsystems.superstructure.elevator.Elevator.ElevatorTarget;
 import frc.robot.subsystems.superstructure.elevator.ElevatorConstants;
@@ -34,13 +32,11 @@ public class Superstructure extends SubsystemBase {
   private final Elevator elevator;
   private final Pivot pivot;
   private final Tongue tongue;
-  private final Climb climb;
 
-  public Superstructure(Elevator elevator, Pivot pivot, Tongue tongue, Climb climb) {
+  public Superstructure(Elevator elevator, Pivot pivot, Tongue tongue) {
     this.elevator = elevator;
     this.pivot = pivot;
     this.tongue = tongue;
-    this.climb = climb;
     pivot.setPositionTarget(PivotTarget.TOP);
     elevator.setPositionTarget(ElevatorTarget.BOTTOM);
     tongue.setPositionTarget(TongueTarget.TOP);
@@ -88,7 +84,7 @@ public class Superstructure extends SubsystemBase {
         }
       }
       case L4 -> {
-        elevator.setPositionTarget(ElevatorTarget.L4);
+        elevator.setPositionTarget(ElevatorTarget.SETUP_L4);
         pivot.setPositionTarget(PivotTarget.SETUP_L4);
         tongue.setPositionTarget(TongueTarget.L4);
 

@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
@@ -22,11 +21,12 @@ import frc.robot.subsystems.rollers.Rollers;
 import frc.robot.subsystems.rollers.Rollers.RollerState;
 import frc.robot.subsystems.rollers.intake.Intake;
 import frc.robot.subsystems.rollers.intake.IntakeIOTalonFX;
+import frc.robot.subsystems.superstructure.ClimbController;
 import frc.robot.subsystems.superstructure.Superstructure;
 import frc.robot.subsystems.superstructure.Superstructure.SuperstructureState;
 import frc.robot.subsystems.superstructure.climb.Climb;
-import frc.robot.subsystems.superstructure.climb.ClimbConstants;
 import frc.robot.subsystems.superstructure.climb.Climb.ClimbTarget;
+import frc.robot.subsystems.superstructure.climb.ClimbOTalonFX;
 import frc.robot.subsystems.superstructure.elevator.Elevator;
 import frc.robot.subsystems.superstructure.elevator.ElevatorIO;
 import frc.robot.subsystems.superstructure.elevator.ElevatorIOTalonFX;
@@ -34,6 +34,7 @@ import frc.robot.subsystems.superstructure.pivot.Pivot;
 import frc.robot.subsystems.superstructure.pivot.PivotIO;
 import frc.robot.subsystems.superstructure.pivot.PivotIOTalonFX;
 import frc.robot.subsystems.superstructure.tongue.Tongue;
+import frc.robot.subsystems.superstructure.tongue.TongueIO;
 import frc.robot.subsystems.superstructure.tongue.TongueIOServo;
 import frc.robot.subsystems.swerve.Drive;
 import frc.robot.subsystems.swerve.DriveConstants;
@@ -69,6 +70,7 @@ public class RobotContainer {
   private Tongue tongue;
   private Climb climb;
   private Superstructure superstructure;
+  private ClimbController climbController;
 
   public RobotContainer() {
     intake = null;
@@ -87,6 +89,7 @@ public class RobotContainer {
           elevator = new Elevator(new ElevatorIOTalonFX());
           pivot = new Pivot(new PivotIOTalonFX());
           tongue = new Tongue(new TongueIOServo());
+          climb = new Climb(new ClimbOTalonFX());
         }
         case PROG -> {
           swerve =
@@ -151,10 +154,15 @@ public class RobotContainer {
     if (pivot == null) {
       pivot = new Pivot(new PivotIO() {});
     }
-        // if (tongue == null) {
-        //   tongue = new Tongue(new TongueIO() {});
-        // }
-        superstructure = new Superstructure(elevator, pivot, tongue, climb);
+    if (tongue == null) {
+      tongue = new Tongue(new TongueIO() {});
+    }
+    superstructure = new Superstructure(elevator, pivot, tongue);
+
+    if (climb == null) {
+      climb = new Climb(new ClimbOTalonFX());
+    }
+    climbController = new ClimbController(climb);
 
     configureBindings();
     configureAutos();
@@ -246,18 +254,15 @@ public class RobotContainer {
                   superstructure.setTargetState(SuperstructureState.STOP);
                   rollers.setTargetState(RollerState.IDLE);
                 }));
-    
-    driverB
-          .y()
-          .onTrue(
-            climb.setPositionTargetCommand(ClimbTarget.TOP) //FIXME: We need to add elevator position up
-          );
 
     driverB
-          .b()
-          .onTrue(
-            climb.setPositionTargetCommand(ClimbTarget.BOTTOM)
-          );
+        .y()
+        .onTrue(
+            climbController.setPositionTargetCommand(
+                ClimbTarget.TOP) // FIXME: We need to add elevator position up
+            );
+
+    driverB.b().onTrue(climbController.setPositionTargetCommand(ClimbTarget.BOTTOM));
   }
 
   private void configureAutos() {

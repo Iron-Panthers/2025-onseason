@@ -1,11 +1,8 @@
 package frc.robot.subsystems.superstructure.climb;
 
 import com.ctre.phoenix6.signals.GravityTypeValue;
-
-import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants;
 import java.util.Optional;
-
 
 // TODO:
 // Check if inverted motor needed
@@ -17,15 +14,15 @@ import java.util.Optional;
 public class ClimbConstants {
   public static final ClimbConfig CLIMB_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new ClimbConfig(37,562.5, Optional.of(29), Optional.of(0.0)); //FIXME
+        case COMP -> new ClimbConfig(37, .4, Optional.of(29), Optional.of(0.0)); // FIXME
         case PROG -> new ClimbConfig(0, 1, Optional.empty(), Optional.empty());
-        case ALPHA -> new ClimbConfig(0,0, Optional.empty(), Optional.empty()); // FIXME
+        case ALPHA -> new ClimbConfig(0, 0, Optional.empty(), Optional.empty()); // FIXME
         case SIM -> new ClimbConfig(0, 1, Optional.empty(), Optional.empty()); // FIXME
       };
 
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
-        case COMP -> new PIDGains(600, 0, 0, 0, 66.5, 5.714, 0); //FIXME
+        case COMP -> new PIDGains(600, 0, 0, 0, 66.5, 5.714, 0); // FIXME
         case PROG -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
         case ALPHA -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
         case SIM -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
@@ -39,7 +36,11 @@ public class ClimbConstants {
         case SIM -> new MotionMagicConfig(0, 0, 0);
       };
 
-  public record ClimbConfig(int motorID, double reduction, Optional<Integer> canCoderID, Optional<Double> canCoderOffset) {}
+  public record ClimbConfig(
+      int motorID,
+      double reduction,
+      Optional<Integer> canCoderID,
+      Optional<Double> canCoderOffset) {}
 
   public record PIDGains(
       double kP, double kI, double kD, double kS, double kV, double kA, double kG) {}
@@ -51,7 +52,7 @@ public class ClimbConstants {
   public static final double POSITION_TARGET_EPSILON = 0.03;
 
   public record MotionMagicConfig(double acceleration, double cruiseVelocity, double jerk) {}
-    
+
   // SOFT LIMITS
   public static final Optional<Double> UPPER_EXTENSION_LIMIT =
       Optional.of(121d); // top limit is 121 rotations
@@ -67,9 +68,7 @@ public class ClimbConstants {
   public static final double ZEROING_VOLTS = -1;
   public static final double ZEROING_OFFSET = 2.25; // offset in inches
   public static final double ZEROING_VOLTAGE_THRESHOLD = 4;
-  
 
   // INDUCTION SENSOR
   public static final int INDUCTION_PORT_NUMBER = 6;
-
 }
