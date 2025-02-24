@@ -132,10 +132,8 @@ public class Drive extends SubsystemBase {
   }
 
   public void setTrajectorySpeeds(ChassisSpeeds speeds) {
-    if (DriverStation.isAutonomousEnabled()) {
-      driveMode = DriveModes.TRAJECTORY;
-      this.trajectorySpeeds = speeds;
-    }
+    driveMode = DriveModes.TRAJECTORY;
+    this.trajectorySpeeds = speeds;
   }
 
   private void zeroGyro() {
